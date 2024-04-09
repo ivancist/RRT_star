@@ -15,9 +15,14 @@ const double stayAway = 10;
 const int refreshView = 1000;
 
 struct Node {
+public:
     double x, y;
-    Node *parent;
+    std::shared_ptr<Node> parent;
     double cost;
+
+    Node(double x, double y, std::shared_ptr<Node> parent, double cost) : x(x), y(y), parent(parent), cost(cost) {}
+    Node(double x,double y) : x(x), y(y), parent(nullptr), cost(std::numeric_limits<double>::max()){}
+
 };
 
 struct Circle {
@@ -51,9 +56,15 @@ struct Environment {
 
 Environment env{width, height};
 
-double distance(Node *node1, Node *node2) {
+double distance(std::shared_ptr<Node> &node1, std::shared_ptr<Node> &node2) {
     double dx = node1->x - node2->x;
     double dy = node1->y - node2->y;
+    return std::sqrt(dx * dx + dy * dy);
+}
+
+double distance(std::shared_ptr<Node> &node1, double x, double y) {
+    double dx = node1->x - x;
+    double dy = node1->y - y;
     return std::sqrt(dx * dx + dy * dy);
 }
 
@@ -65,24 +76,24 @@ double randomDouble(double min, double max) {
     return dis(gen);
 }
 
-Node *sampleRandomNode() {
+std::shared_ptr<Node> sampleRandomNode() {
     // Generate random x and y within the environment bounds
     double x = randomDouble(0, env.width);
     double y = randomDouble(0, env.height);
 
     // Create a new node with the random coordinates
-    return new Node{x, y, nullptr};
+    return std::make_shared<Node>(x,y, nullptr, std::numeric_limits<double>::max());
 }
 
-Node *nearestNodeInTree(std::vector<Node *> &tree, Node *randomNode, bool considerCost = false,
-                        const std::vector<Node *> excludeNodes = {}) {
-    Node *nearestNode = nullptr;
+std::shared_ptr<Node> nearestNodeInTree(std::vector<std::shared_ptr<Node>> &tree, std::shared_ptr<Node> &randomNode, bool considerCost = false,
+                        const std::vector<std::shared_ptr<Node>> &excludeNodes = {}) {
+    std::shared_ptr<Node> nearestNode = nullptr;
     double minDistance = std::numeric_limits<double>::max();
     double minCost = randomNode->cost;
 
-    std::unordered_set<Node *> excludeSet(excludeNodes.begin(), excludeNodes.end());
+    std::unordered_set<std::shared_ptr<Node>> excludeSet(excludeNodes.begin(), excludeNodes.end());
 
-    for (Node *node: tree) {
+    for (std::shared_ptr<Node> node: tree) {
         // Skip excluded nodes
         if (excludeSet.count(node) > 0) {
             continue;
@@ -107,10 +118,10 @@ Node *nearestNodeInTree(std::vector<Node *> &tree, Node *randomNode, bool consid
     return nearestNode;
 }
 
-bool checkCollision(Node *node) {
+bool checkCollision(std::shared_ptr<Node> &node) {
     for (const Obstacle &obstacle: env.obstacles) {
         if (obstacle.type == Obstacle::CIRCLE) {
-            double dist = distance(node, new Node{obstacle.circle.x, obstacle.circle.y, nullptr});
+            double dist = distance(node, obstacle.circle.x, obstacle.circle.y);
             if (dist <= obstacle.circle.radius + stayAway) {
                 return true;
             }
@@ -126,7 +137,7 @@ bool checkCollision(Node *node) {
     return false;
 }
 
-bool checkCollision(Node *node1, Node *node2) {
+bool checkCollision(std::shared_ptr<Node> &node1, std::shared_ptr<Node> &node2) {
     double dx = node2->x - node1->x;
     double dy = node2->y - node1->y;
     double dist = std::sqrt(dx * dx + dy * dy);
@@ -137,7 +148,7 @@ bool checkCollision(Node *node1, Node *node2) {
 
     // Check for collisions along the line between the two nodes
     for (double i = 0; i < dist; i += 1) {
-        Node *node = new Node{node1->x + dirX * i, node1->y + dirY * i, nullptr};
+        std::shared_ptr<Node> node = std::make_shared<Node>(node1->x + dirX * i, node1->y + dirY * i);
         if (checkCollision(node)) {
             return true;
         }
@@ -146,7 +157,7 @@ bool checkCollision(Node *node1, Node *node2) {
     return false;
 }
 
-Node *extendTree(Node *nearestNode, Node *randomNode, double stepLength, std::vector<Node *> &tree) {
+std::shared_ptr<Node> extendTree(std::shared_ptr<Node> &nearestNode, std::shared_ptr<Node> &randomNode, std::vector<std::shared_ptr<Node>> &tree) {
     // Calculate the direction from the nearest node to the random node
     double dx = randomNode->x - nearestNode->x;
     double dy = randomNode->y - nearestNode->y;
@@ -163,30 +174,30 @@ Node *extendTree(Node *nearestNode, Node *randomNode, double stepLength, std::ve
     // Calculate the cost of the new node
 //    double newCost = nearestNode->cost + distance(nearestNode, new Node{newX, newY, nullptr});
 
-    Node tempNode{newX, newY, nullptr, std::numeric_limits<double>::max()};
-    if (checkCollision(&tempNode)) {
+    std::shared_ptr<Node> tempNode = std::make_shared<Node>(newX, newY);
+    if (checkCollision(tempNode)) {
         return nullptr; // Collision detected, do not extend the tree
     }
 
-    std::vector<Node *> excludeNodes;
-    Node *parentNode = nullptr;
+    std::vector<std::shared_ptr<Node>> excludeNodes;
+    std::shared_ptr<Node> parentNode = nullptr;
     do {
-        parentNode = nearestNodeInTree(tree, &tempNode, true, excludeNodes);
+        parentNode = nearestNodeInTree(tree, tempNode, true, excludeNodes);
         if (parentNode == nullptr) {
             return nullptr;
         }
         excludeNodes.push_back(parentNode);
-    } while (checkCollision(parentNode, &tempNode) && excludeNodes.size() < tree.size());
+    } while (checkCollision(parentNode, tempNode) && excludeNodes.size() < tree.size());
 
 
-    double newCost = parentNode->cost + distance(parentNode, &tempNode);
+    double newCost = parentNode->cost + distance(parentNode, tempNode);
 
     // Create a new node at the new position with the calculated cost
-    Node *newNode = new Node{newX, newY, parentNode, newCost};
+    std::shared_ptr<Node> newNode = std::make_shared<Node>(newX, newY, parentNode, newCost);
     return newNode;
 }
 
-void connectToGoal(Node *lastNode, Node *goal) {
+void connectToGoal(std::shared_ptr<Node> &lastNode, std::shared_ptr<Node> &goal) {
     // Calculate the cost of the goal node
     double goalCost = lastNode->cost + distance(lastNode, goal);
 
@@ -195,7 +206,7 @@ void connectToGoal(Node *lastNode, Node *goal) {
     goal->cost = goalCost;
 }
 
-void visualize(const std::vector<Node *> &tree, Node *goal, bool finished = false) {
+void visualize(const std::vector<std::shared_ptr<Node>> &tree, std::shared_ptr<Node> &goal, bool finished = false) {
     cv::Mat image(height, width, CV_8UC3, cv::Scalar(255, 255, 255));
     cv::namedWindow("RRT* Visualization", cv::WINDOW_AUTOSIZE);
 
@@ -216,7 +227,7 @@ void visualize(const std::vector<Node *> &tree, Node *goal, bool finished = fals
     cv::circle(image, cv::Point(tree[0]->x, tree[0]->y), 5, cv::Scalar(255, 0, 0), -1);
 
     // Draw the tree
-    for (Node *node: tree) {
+    for (std::shared_ptr<Node> node: tree) {
         if (node->parent != nullptr) {
             cv::Point pt1(node->x, node->y);
             cv::Point pt2(node->parent->x, node->parent->y);
@@ -226,7 +237,7 @@ void visualize(const std::vector<Node *> &tree, Node *goal, bool finished = fals
     }
     if (finished) {
         // Draw the path
-        Node *node = goal;
+        std::shared_ptr<Node> node = goal;
         int numNodes = 1;
         while (node->parent != nullptr) {
             cv::Point pt1(node->x, node->y);
@@ -248,20 +259,20 @@ void visualize(const std::vector<Node *> &tree, Node *goal, bool finished = fals
     cv::waitKey(1); // Wait for 1 millisecond to allow the window to update
 }
 
-void recalculateCosts(Node *node) {
+void recalculateCosts(std::shared_ptr<Node> &node) {
     if (node->parent != nullptr) {
         recalculateCosts(node->parent);
         node->cost = node->parent->cost + distance(node, node->parent);
     }
 }
 
-std::vector<Node *> rrtStar(Node *start, Node *goal) {
+std::vector<std::shared_ptr<Node>> rrtStar(std::shared_ptr<Node> &start, std::shared_ptr<Node> &goal) {
 
     auto start_ts = std::chrono::high_resolution_clock::now();
 
     // Initialize the tree with the start node
-    std::vector<Node *> tree;
-    tree.push_back(new Node{start->x, start->y, nullptr, 0});
+    std::vector<std::shared_ptr<Node>> tree;
+    tree.push_back(start);
     bool finish = false;
     int iteration_after_finish = 0;
     // Main loop of the RRT* algorithm
@@ -271,19 +282,19 @@ std::vector<Node *> rrtStar(Node *start, Node *goal) {
 
 
         // Sample a random point in the environment
-        Node *randomNode = sampleRandomNode();
+        std::shared_ptr<Node> randomNode = sampleRandomNode();
         // Find the nearest node in the tree to the random point
-        Node *nearestNode = nearestNodeInTree(tree, randomNode);
+        std::shared_ptr<Node> nearestNode = nearestNodeInTree(tree, randomNode);
 
         // Extend the tree towards the random point
-        Node *newNode = extendTree(nearestNode, randomNode, stepLength, tree);
+        std::shared_ptr<Node> newNode = extendTree(nearestNode, randomNode, tree);
         if (newNode == nullptr) {
             continue; // Collision detected, skip to the next iteration
         }
 
         // TODO: Optimize
         double dist;
-        for (Node *node: tree) {
+        for (std::shared_ptr<Node> node: tree) {
             dist = distance(node, newNode);
             if (dist < treshold && node->cost > newNode->cost + dist) {
                 if (checkCollision(node, newNode)) {
@@ -309,7 +320,7 @@ std::vector<Node *> rrtStar(Node *start, Node *goal) {
         if (iter % refreshView == 0) {
             auto stop_ts = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop_ts - start_ts);
-            std::cout << "Iteration: " << iter << " Time: "<< duration.count() << " microseconds" << std::endl;
+            std::cout << "Iteration: " << iter << " Time: " << duration.count() << " microseconds" << std::endl;
             visualize(tree, goal, finish);
         }
         iter++;
@@ -325,10 +336,11 @@ int main() {
     env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{300, 100, 200, 50});
     env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{520, 80, 20, 470});
 
-    Node start{450, 50, nullptr, 0};
-    Node goal{440, 550, nullptr, std::numeric_limits<double>::max()};
+    std::shared_ptr<Node> start = std::make_shared<Node>(450, 50, nullptr, 0);
+    std::shared_ptr<Node> goal = std::make_shared<Node>(440, 550, nullptr, std::numeric_limits<double>::max());
 
-    std::vector<Node *> tree = rrtStar(&start, &goal);
+    std::vector<std::shared_ptr<Node>> tree = rrtStar(start, goal);
+
     cv::waitKey(5000);
     return 0;
 }
