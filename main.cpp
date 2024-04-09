@@ -9,7 +9,7 @@
 const int MAX_ITERATIONS = 15000;
 const int width = 600;
 const int height = 600;
-const int treshold = 30;
+const int threshold = 30;
 double stepLength = 20;
 const double stayAway = 10;
 const int refreshView = 1000;
@@ -97,7 +97,7 @@ Node *nearestNodeInTree(std::vector<Node *> &tree, Node *randomNode, bool consid
         } else {
             // Calculate the total cost considering the distance to the random node
             double totalCost = node->cost + dist;
-            if (dist <= treshold && totalCost < minCost) {
+            if (dist <= threshold && totalCost < minCost) {
                 minCost = totalCost;
                 nearestNode = node;
             }
@@ -248,6 +248,11 @@ void visualize(const std::vector<Node *> &tree, Node *goal, bool finished = fals
     cv::waitKey(1); // Wait for 1 millisecond to allow the window to update
 }
 
+
+// IN QUESTO MODO UN NODO GENITORE PUO' ESSERE RICALCOLATO PIU' VOLTE
+// TODO: Optimize
+// SI PUO' LAVORARE CON UN ARRAY RIORDINATO PRIMA
+// SI PUO' CREARE NODE CON FIGLI, PER EVITARE DI RICALCOLARE I COSTI
 void recalculateCosts(Node *node) {
     if (node->parent != nullptr) {
         recalculateCosts(node->parent);
@@ -285,7 +290,7 @@ std::vector<Node *> rrtStar(Node *start, Node *goal) {
         double dist;
         for (Node *node: tree) {
             dist = distance(node, newNode);
-            if (dist < treshold && node->cost > newNode->cost + dist) {
+            if (dist < threshold && node->cost > newNode->cost + dist) {
                 if (checkCollision(node, newNode)) {
                     continue;
                 }
@@ -295,11 +300,12 @@ std::vector<Node *> rrtStar(Node *start, Node *goal) {
             recalculateCosts(node);
         }
 
+
         tree.push_back(newNode);
 
         // If the new node is close enough to the goal, connect it to the goal
         double distanceToGoal = distance(newNode, goal);
-        if (distanceToGoal < treshold && (goal->cost > newNode->cost + distanceToGoal)) {
+        if (distanceToGoal < threshold && (goal->cost > newNode->cost + distanceToGoal)) {
             connectToGoal(newNode, goal);
             finish = true;
         }
