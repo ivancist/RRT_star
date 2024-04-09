@@ -20,7 +20,8 @@ public:
     std::shared_ptr<Node> parent;
     double cost;
 
-    Node(double x, double y, std::shared_ptr<Node> parent, double cost) : x(x), y(y), parent(parent), cost(cost) {}
+    Node(double x, double y, std::shared_ptr<Node> &parent, double cost) : x(x), y(y), parent(parent), cost(cost) {}
+    Node(double x, double y, double cost) : x(x), y(y), parent(nullptr), cost(cost) {}
     Node(double x,double y) : x(x), y(y), parent(nullptr), cost(std::numeric_limits<double>::max()){}
 
 };
@@ -82,7 +83,7 @@ std::shared_ptr<Node> sampleRandomNode() {
     double y = randomDouble(0, env.height);
 
     // Create a new node with the random coordinates
-    return std::make_shared<Node>(x,y, nullptr, std::numeric_limits<double>::max());
+    return std::make_shared<Node>(x,y);
 }
 
 std::shared_ptr<Node> nearestNodeInTree(std::vector<std::shared_ptr<Node>> &tree, std::shared_ptr<Node> &randomNode, bool considerCost = false,
@@ -336,8 +337,8 @@ int main() {
     env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{300, 100, 200, 50});
     env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{520, 80, 20, 470});
 
-    std::shared_ptr<Node> start = std::make_shared<Node>(450, 50, nullptr, 0);
-    std::shared_ptr<Node> goal = std::make_shared<Node>(440, 550, nullptr, std::numeric_limits<double>::max());
+    std::shared_ptr<Node> start = std::make_shared<Node>(450, 50, 0);
+    std::shared_ptr<Node> goal = std::make_shared<Node>(440, 550);
 
     std::vector<std::shared_ptr<Node>> tree = rrtStar(start, goal);
 
