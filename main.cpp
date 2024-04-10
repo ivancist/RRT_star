@@ -3,21 +3,21 @@
 #include <vector>
 #include <cmath>
 #include <random>
-#include <unordered_set>
 #include <chrono>
 
-const int MAX_ITERATIONS = 15000;
+const int MAX_ITERATIONS = 20000;
 const int width = 600;
 const int height = 600;
 const int threshold = 30;
 double stepLength = 20;
 const double stayAway = 10;
-const int refreshView = 1000;
+const int refreshView = 2500;
 
 struct Node {
     double x, y;
     Node *parent;
     double cost;
+    std::vector<Node *> children;
 };
 
 struct Circle {
@@ -57,6 +57,12 @@ double distance(Node *node1, Node *node2) {
     return std::sqrt(dx * dx + dy * dy);
 }
 
+double distance(Node *node, double x, double y) {
+    double dx = node->x - x;
+    double dy = node->y - y;
+    return std::sqrt(dx * dx + dy * dy);
+}
+
 // Function to generate a random double within a given range
 double randomDouble(double min, double max) {
     static std::random_device rd;
@@ -74,56 +80,53 @@ Node *sampleRandomNode() {
     return new Node{x, y, nullptr};
 }
 
-Node *nearestNodeInTree(std::vector<Node *> &tree, Node *randomNode, bool considerCost = false,
-                        const std::vector<Node *> excludeNodes = {}) {
+Node *nearestNodeInTree(std::vector<Node *> &tree, Node *randomNode) {
     Node *nearestNode = nullptr;
     double minDistance = std::numeric_limits<double>::max();
-    double minCost = randomNode->cost;
-
-    std::unordered_set<Node *> excludeSet(excludeNodes.begin(), excludeNodes.end());
 
     for (Node *node: tree) {
-        // Skip excluded nodes
-        if (excludeSet.count(node) > 0) {
-            continue;
-        }
-
         double dist = distance(node, randomNode);
-        if (!considerCost) {
-            if (dist < minDistance) {
-                minDistance = dist;
-                nearestNode = node;
-            }
-        } else {
-            // Calculate the total cost considering the distance to the random node
-            double totalCost = node->cost + dist;
-            if (dist <= threshold && totalCost < minCost) {
-                minCost = totalCost;
-                nearestNode = node;
-            }
+        if (dist < minDistance) {
+            minDistance = dist;
+            nearestNode = node;
         }
     }
-
     return nearestNode;
 }
 
-bool checkCollision(Node *node) {
-    for (const Obstacle &obstacle: env.obstacles) {
-        if (obstacle.type == Obstacle::CIRCLE) {
-            double dist = distance(node, new Node{obstacle.circle.x, obstacle.circle.y, nullptr});
-            if (dist <= obstacle.circle.radius + stayAway) {
-                return true;
-            }
-        } else {
-            if (node->x >= obstacle.rectangle.x - stayAway &&
-                node->x <= obstacle.rectangle.x + obstacle.rectangle.width + stayAway
-                && node->y >= obstacle.rectangle.y - stayAway &&
-                node->y <= obstacle.rectangle.y + obstacle.rectangle.height + stayAway) {
-                return true;
+std::vector<Node *> nearestNodesInTree(std::vector<Node *> &tree, Node *newNode) {
+    std::vector<Node *> nearestNodes;
+    size_t nNodeIndex;
+    double minCost = newNode->cost;
+
+    for (Node *node: tree) {
+        double dist = distance(node, newNode);
+        double totalCost = node->cost + dist;
+        if (dist <= threshold) {
+            nearestNodes.push_back(node);
+            if (totalCost < minCost) {
+                minCost = totalCost;
+                nNodeIndex = nearestNodes.size() - 1;
             }
         }
     }
-    return false;
+
+    std::rotate(nearestNodes.begin(), nearestNodes.begin() + static_cast<int>(nNodeIndex), nearestNodes.end());
+    return nearestNodes;
+}
+
+bool checkCollision(Node *node) {
+    return std::any_of(env.obstacles.begin(), env.obstacles.end(), [&](const Obstacle &obstacle) {
+        if (obstacle.type == Obstacle::CIRCLE) {
+            double dist = distance(node, obstacle.circle.x, obstacle.circle.y);
+            return dist <= obstacle.circle.radius + stayAway;
+        } else {
+            return node->x >= obstacle.rectangle.x - stayAway &&
+                   node->x <= obstacle.rectangle.x + obstacle.rectangle.width + stayAway &&
+                   node->y >= obstacle.rectangle.y - stayAway &&
+                   node->y <= obstacle.rectangle.y + obstacle.rectangle.height + stayAway;
+        }
+    });
 }
 
 bool checkCollision(Node *node1, Node *node2) {
@@ -136,9 +139,10 @@ bool checkCollision(Node *node1, Node *node2) {
     double dirY = dy / dist;
 
     // Check for collisions along the line between the two nodes
-    for (double i = 0; i < dist; i += 1) {
-        Node *node = new Node{node1->x + dirX * i, node1->y + dirY * i, nullptr};
-        if (checkCollision(node)) {
+    for (int i = 0; i < dist; i++) {
+        Node node{node1->x + dirX * i, node1->y + dirY * i};
+        Node *nodePtr = &node;
+        if (checkCollision(nodePtr)) {
             return true;
         }
     }
@@ -146,7 +150,15 @@ bool checkCollision(Node *node1, Node *node2) {
     return false;
 }
 
-Node *extendTree(Node *nearestNode, Node *randomNode, double stepLength, std::vector<Node *> &tree) {
+// TODO: Optimize
+void recalculateCostOfChildren(Node * node, double delta) {
+    for (Node *child: node->children) {
+        child->cost += delta;
+        recalculateCostOfChildren(child, delta);
+    }
+}
+
+Node *extendTree(Node *nearestNode, Node *randomNode, std::vector<Node *> &tree) {
     // Calculate the direction from the nearest node to the random node
     double dx = randomNode->x - nearestNode->x;
     double dy = randomNode->y - nearestNode->y;
@@ -168,21 +180,34 @@ Node *extendTree(Node *nearestNode, Node *randomNode, double stepLength, std::ve
         return nullptr; // Collision detected, do not extend the tree
     }
 
-    std::vector<Node *> excludeNodes;
-    Node *parentNode = nullptr;
-    do {
-        parentNode = nearestNodeInTree(tree, &tempNode, true, excludeNodes);
-        if (parentNode == nullptr) {
-            return nullptr;
+    std::vector<Node *> nearestNodes = nearestNodesInTree(tree, &tempNode);
+        while (checkCollision(nearestNodes[0], &tempNode)) {
+            nearestNodes.erase(nearestNodes.begin());
+            if (nearestNodes.empty()) {
+                return nullptr;
+            }
         }
-        excludeNodes.push_back(parentNode);
-    } while (checkCollision(parentNode, &tempNode) && excludeNodes.size() < tree.size());
+    Node *parentNode = nearestNodes[0];
 
+    double newNodeCost = parentNode->cost + distance(parentNode, &tempNode);
+    Node *newNode = new Node{newX, newY, parentNode, newNodeCost};
+    parentNode->children.push_back(newNode);
 
-    double newCost = parentNode->cost + distance(parentNode, &tempNode);
+    for (size_t i = 1; i < nearestNodes.size(); i++) {
+        Node *node = nearestNodes[i];
+        double distanceToNewNode = distance(node, &tempNode);
+        if (newNodeCost + distanceToNewNode < node->cost) {
+            Node *parent = node->parent;
+            parent->children.erase(std::remove(parent->children.begin(), parent->children.end(), node),
+                                   parent->children.end());
+            node->parent = newNode;
+            double oldCost = node->cost;
+            node->cost = newNodeCost + distanceToNewNode;
+            newNode->children.push_back(node);
+            recalculateCostOfChildren(node, node->cost - oldCost);
+        }
+    }
 
-    // Create a new node at the new position with the calculated cost
-    Node *newNode = new Node{newX, newY, parentNode, newCost};
     return newNode;
 }
 
@@ -195,6 +220,8 @@ void connectToGoal(Node *lastNode, Node *goal) {
     goal->cost = goalCost;
 }
 
+
+//TODO Rivedere e ottimizzare
 void visualize(const std::vector<Node *> &tree, Node *goal, bool finished = false) {
     cv::Mat image(height, width, CV_8UC3, cv::Scalar(255, 255, 255));
     cv::namedWindow("RRT* Visualization", cv::WINDOW_AUTOSIZE);
@@ -248,20 +275,7 @@ void visualize(const std::vector<Node *> &tree, Node *goal, bool finished = fals
     cv::waitKey(1); // Wait for 1 millisecond to allow the window to update
 }
 
-
-// IN QUESTO MODO UN NODO GENITORE PUO' ESSERE RICALCOLATO PIU' VOLTE
-// TODO: Optimize
-// SI PUO' LAVORARE CON UN ARRAY RIORDINATO PRIMA
-// SI PUO' CREARE NODE CON FIGLI, PER EVITARE DI RICALCOLARE I COSTI
-void recalculateCosts(Node *node) {
-    if (node->parent != nullptr) {
-        recalculateCosts(node->parent);
-        node->cost = node->parent->cost + distance(node, node->parent);
-    }
-}
-
 std::vector<Node *> rrtStar(Node *start, Node *goal) {
-
     auto start_ts = std::chrono::high_resolution_clock::now();
 
     // Initialize the tree with the start node
@@ -281,25 +295,10 @@ std::vector<Node *> rrtStar(Node *start, Node *goal) {
         Node *nearestNode = nearestNodeInTree(tree, randomNode);
 
         // Extend the tree towards the random point
-        Node *newNode = extendTree(nearestNode, randomNode, stepLength, tree);
+        Node *newNode = extendTree(nearestNode, randomNode, tree);
         if (newNode == nullptr) {
             continue; // Collision detected, skip to the next iteration
         }
-
-        // TODO: Optimize
-        double dist;
-        for (Node *node: tree) {
-            dist = distance(node, newNode);
-            if (dist < threshold && node->cost > newNode->cost + dist) {
-                if (checkCollision(node, newNode)) {
-                    continue;
-                }
-                node->parent = newNode;
-                node->cost = newNode->cost + dist;
-            }
-            recalculateCosts(node);
-        }
-
 
         tree.push_back(newNode);
 
@@ -315,7 +314,7 @@ std::vector<Node *> rrtStar(Node *start, Node *goal) {
         if (iter % refreshView == 0) {
             auto stop_ts = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop_ts - start_ts);
-            std::cout << "Iteration: " << iter << " Time: "<< duration.count() << " microseconds" << std::endl;
+            std::cout << "Iteration: " << iter << " Time: " << duration.count() << " microseconds" << std::endl;
             visualize(tree, goal, finish);
         }
         iter++;
