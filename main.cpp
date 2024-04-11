@@ -5,19 +5,26 @@
 #include <random>
 #include <chrono>
 
-const int MAX_ITERATIONS = 10000;
+const int MAX_OPTIMIZING_ITERATIONS = 20000;
+const int waitBeforeClosing = 3000;
 const int width = 600;
 const int height = 600;
 const int threshold = 30;
-double stepLength = 20;
+double stepLength = 5;
 const double stayAway = 10;
-const int refreshView = 1000;
+const int refreshView = 500;
 
 struct Node {
-    double x, y;
-    Node *parent;
-    double cost;
+    double x{}, y{};
+    Node *parent{};
+    double cost{};
     std::vector<Node *> children;
+
+    double operator-(const Node &node) const {
+        double dx = x - node.x;
+        double dy = y - node.y;
+        return std::sqrt(dx * dx + dy * dy);
+    }
 };
 
 struct Circle {
@@ -76,8 +83,8 @@ Node *sampleRandomNode() {
     double x = randomDouble(0, env.width);
     double y = randomDouble(0, env.height);
 
-    // Create a new node with the random coordinates
-    return new Node{x, y, nullptr};
+    // Create a node with the random coordinates
+    return new Node{x, y};
 }
 
 Node *nearestNodeInTree(std::vector<Node *> &tree, Node *randomNode) {
@@ -280,14 +287,14 @@ std::vector<Node *> rrtStar(Node *start, Node *goal) {
 
     // Initialize the tree with the start node
     std::vector<Node *> tree;
-    tree.reserve(MAX_ITERATIONS);
-    tree.push_back(new Node{start->x, start->y, nullptr, 0});
+    tree.reserve(MAX_OPTIMIZING_ITERATIONS);
+    tree.push_back(start);
     bool finish = false;
     int iteration_after_finish = 0;
     // Main loop of the RRT* algorithm
 
     int iter = 0;
-    while (!finish || iteration_after_finish < MAX_ITERATIONS) {
+    while (!finish || iteration_after_finish < MAX_OPTIMIZING_ITERATIONS) {
 
 
         // Sample a random point in the environment
@@ -297,6 +304,8 @@ std::vector<Node *> rrtStar(Node *start, Node *goal) {
 
         // Extend the tree towards the random point
         Node *newNode = extendTree(nearestNode, randomNode, tree);
+        delete randomNode;
+        randomNode = nullptr;
         if (newNode == nullptr) {
             continue; // Collision detected, skip to the next iteration
         }
@@ -325,16 +334,36 @@ std::vector<Node *> rrtStar(Node *start, Node *goal) {
 
 int main() {
     env.obstacles.emplace_back(Obstacle::CIRCLE, Circle{250, 180, 30});
+    env.obstacles.emplace_back(Obstacle::CIRCLE, Circle{400, 270, 45});
+    env.obstacles.emplace_back(Obstacle::CIRCLE, Circle{150, 270, 55});
     env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{30, 400, 50, 50});
-    env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{110, 400, 370, 50});
+    env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{110, 400, 200, 50});
+    env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{350, 400, 130, 50});
     env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{0, 100, 30, 500});
-    env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{300, 100, 200, 50});
-    env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{520, 80, 20, 470});
+    env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{280, 100, 250, 20});//w200
+//    env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{300, 300, 150, 20});
+//    env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{60, 350, 90, 20});
+    env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{520, 40, 20, 510});
+    env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{200, 440, 10, 60});
+    env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{200, 540, 10, 60});
+    env.obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{350, 450, 10, 120});
+
+//    Node start;
+//    do {
+////        start = {randomDouble(0, env.width), 50, nullptr, 0};
+//        start = {randomDouble(0, env.width), randomDouble(0,env.height), nullptr, 0};
+//    } while (checkCollision(&start));
+//
+//    Node goal;
+//    do {
+////        goal = {randomDouble(0, env.width), 550, nullptr, std::numeric_limits<double>::max()};
+//        goal = {randomDouble(0, env.width), randomDouble(0,env.height), nullptr, std::numeric_limits<double>::max()};
+//    } while (checkCollision(&goal) || distance(&start, &goal) < 100);
 
     Node start{450, 50, nullptr, 0};
     Node goal{440, 550, nullptr, std::numeric_limits<double>::max()};
 
     std::vector<Node *> tree = rrtStar(&start, &goal);
-    cv::waitKey(5000);
+    cv::waitKey(waitBeforeClosing);
     return 0;
 }
