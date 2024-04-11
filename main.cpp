@@ -12,7 +12,7 @@ const int height = 600;
 const int threshold = 30;
 double stepLength = 5;
 const double stayAway = 10;
-const int refreshView = 500;
+const int refreshView = 1000;
 
 struct Node {
     double x{}, y{};
