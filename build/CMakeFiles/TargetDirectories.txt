@@ -1,3 +1,0 @@
-/Users/ivancist/Documents/CLionProjects/Cpp/RRT_star/build/CMakeFiles/RRT_star.dir
-/Users/ivancist/Documents/CLionProjects/Cpp/RRT_star/build/CMakeFiles/edit_cache.dir
-/Users/ivancist/Documents/CLionProjects/Cpp/RRT_star/build/CMakeFiles/rebuild_cache.dir
