@@ -1,0 +1,12 @@
+[0.008s] Invoking command in '/home/ws/build/RRT_star': /usr/bin/cmake --build /home/ws/build/RRT_star -- -j10 -l10
+[0.027s] [35m[1mConsolidate compiler generated dependencies of target RRT_star[0m
+[0.253s] [ 33%] [32mBuilding CXX object CMakeFiles/RRT_star.dir/Environment.cpp.o[0m
+[0.889s] In file included from [01m[K/usr/local/include/open3d/Open3D.h:12[m[K,
+[0.890s]                  from [01m[K/home/ws/Environment.cpp:5[m[K:
+[0.890s] [01m[K/usr/local/include/open3d/camera/PinholeCameraIntrinsic.h:[m[K In member function ‘[01m[Kstd::pair<double, double> open3d::camera::PinholeCameraIntrinsic::GetFocalLength() const[m[K’:
+[0.891s] [01m[K/usr/local/include/open3d/camera/PinholeCameraIntrinsic.h:87:54:[m[K [01;36m[Knote: [m[Kparameter passing for argument of type ‘[01m[Kstd::pair<double, double>[m[K’ when C++17 is enabled changed to match C++14 in GCC 10.1
+[0.891s]    87 |     std::pair<double, double> GetFocalLength() const [01;36m[K{[m[K
+[0.891s]       |                                                      [01;36m[K^[m[K
+[2.333s] [ 66%] [32m[1mLinking CXX executable RRT_star[0m
+[4.729s] [100%] Built target RRT_star
+[4.734s] Invoked command in '/home/ws/build/RRT_star' returned '0': /usr/bin/cmake --build /home/ws/build/RRT_star -- -j10 -l10

@@ -1,0 +1,18 @@
+[0mCMake Deprecation Warning at /usr/local/lib/cmake/Open3D/Open3DConfig.cmake:18 (cmake_policy):
+  The OLD behavior for policy CMP0072 will be removed from a future version
+  of CMake.
+
+  The cmake-policies(7) manual explains that the OLD behaviors of all
+  policies are deprecated and that a policy should be set to OLD only under
+  specific short-term circumstances.  Projects should be ported to the NEW
+  behavior and not rely on setting a policy to OLD.
+Call Stack (most recent call first):
+  CMakeLists.txt:22 (find_package)
+
+[0m
+In file included from [01m[K/usr/local/include/open3d/Open3D.h:12[m[K,
+                 from [01m[K/home/ws/Environment.cpp:5[m[K:
+[01m[K/usr/local/include/open3d/camera/PinholeCameraIntrinsic.h:[m[K In member function ‘[01m[Kstd::pair<double, double> open3d::camera::PinholeCameraIntrinsic::GetFocalLength() const[m[K’:
+[01m[K/usr/local/include/open3d/camera/PinholeCameraIntrinsic.h:87:54:[m[K [01;36m[Knote: [m[Kparameter passing for argument of type ‘[01m[Kstd::pair<double, double>[m[K’ when C++17 is enabled changed to match C++14 in GCC 10.1
+   87 |     std::pair<double, double> GetFocalLength() const [01;36m[K{[m[K
+      |                                                      [01;36m[K^[m[K

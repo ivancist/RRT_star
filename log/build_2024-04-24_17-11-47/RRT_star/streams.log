@@ -1,0 +1,10 @@
+[0.009s] Invoking command in '/home/ws/build/RRT_star': /usr/bin/cmake --build /home/ws/build/RRT_star -- -j10 -l10
+[0.024s] -- Configuring done
+[0.038s] -- Generating done
+[0.044s] -- Build files have been written to: /home/ws/build/RRT_star
+[0.055s] [35m[1mConsolidate compiler generated dependencies of target RRT_star[0m
+[0.276s] [ 33%] [32mBuilding CXX object CMakeFiles/RRT_star.dir/main.cpp.o[0m
+[0.276s] [ 66%] [32mBuilding CXX object CMakeFiles/RRT_star.dir/Environment.cpp.o[0m
+[1.387s] [100%] [32m[1mLinking CXX executable RRT_star[0m
+[1.630s] [100%] Built target RRT_star
+[1.635s] Invoked command in '/home/ws/build/RRT_star' returned '0': /usr/bin/cmake --build /home/ws/build/RRT_star -- -j10 -l10

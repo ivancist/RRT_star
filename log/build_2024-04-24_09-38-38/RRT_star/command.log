@@ -1,0 +1,2 @@
+Invoking command in '/home/ws/build/RRT_star': /usr/bin/cmake /home/ws -DCMAKE_INSTALL_PREFIX=/home/ws/install/RRT_star
+Invoked command in '/home/ws/build/RRT_star' returned '1': /usr/bin/cmake /home/ws -DCMAKE_INSTALL_PREFIX=/home/ws/install/RRT_star

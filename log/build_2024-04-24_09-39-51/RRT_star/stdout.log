@@ -1,0 +1,6 @@
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/ws/build/RRT_star
+[ 66%] [32mBuilding CXX object CMakeFiles/RRT_star.dir/Environment.cpp.o[0m
+[ 66%] [32mBuilding CXX object CMakeFiles/RRT_star.dir/main.cpp.o[0m
+[100%] [32m[1mLinking CXX executable RRT_star[0m
