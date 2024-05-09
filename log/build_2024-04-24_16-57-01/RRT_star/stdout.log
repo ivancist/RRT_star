@@ -1,4 +1,0 @@
-[35m[1mConsolidate compiler generated dependencies of target RRT_star[0m
-[ 33%] [32mBuilding CXX object CMakeFiles/RRT_star.dir/Environment.cpp.o[0m
-[ 66%] [32m[1mLinking CXX executable RRT_star[0m
-[100%] Built target RRT_star
