@@ -25,6 +25,11 @@ find_package(octomap REQUIRED)
 include_directories(${OCTOMAP_INCLUDE_DIRS})
 target_link_libraries(RRT_star ${OCTOMAP_LIBRARIES})
 
+set(dynamicEDT3D_DIR "/Users/ivancist/Documents/CLionProjects/lib/octomap-1.10.0/lib/cmake/dynamicEDT3D")
+find_package(dynamicEDT3D REQUIRED)
+include_directories(${DYNAMICEDT3D_INCLUDE_DIRS})
+target_link_libraries(RRT_star ${DYNAMICEDT3D_LIBRARIES})
+
 set(websocketpp_DIR "/Users/ivancist/Documents/CLionProjects/lib/websocketpp/build/wspp/lib/cmake/websocketpp")
 find_package(websocketpp REQUIRED)
 include_directories(${WEBSOCKETPP_INCLUDE_DIR})

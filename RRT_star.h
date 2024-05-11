@@ -24,7 +24,21 @@ struct Node {
         return std::sqrt(dx * dx + dy * dy + dz * dz);
     }
 };
+
+struct ReturnPath{
+    std::vector<Node *>* path;
+    long time_in_microseconds;
+};
+
+struct FinalReturn{
+    std::shared_ptr<std::vector<Node *>> path;
+    long time_in_microseconds;
+    size_t num_nodes;
+    double cost;
+};
 std::vector<Node *> rrtStar(Node *start, Node *goal, int width, int height);
-std::vector<Node *> rrtStar(Node *start, Node *goal, octomap::OcTree *tree,void (*pathFoundCallback)(std::vector<Node*>*,websocketpp::connection_hdl) = nullptr,websocketpp::connection_hdl hdl = {}, const std::shared_ptr<StoppableThread>& stopReq = nullptr);
+FinalReturn rrtStar(Node *start, Node *goal, octomap::OcTree *tree,void (*pathFoundCallback)(ReturnPath*,websocketpp::connection_hdl) = nullptr,websocketpp::connection_hdl hdl = {}, const std::shared_ptr<StoppableThread>& stopReq = nullptr);
+
+bool checkMultipleRayCollision(Node *node1, Node *node2,octomap::OcTree *octree);
 
 #endif //RRT_STAR_RRT_STAR_H

@@ -27,6 +27,9 @@ WebSocketServer::binarySend(websocketpp::connection_hdl hdl, const std::string &
     result.insert(result.end(), encodedTopic.begin(), encodedTopic.end());
     result.insert(result.end(), message.begin(), message.end());
 
+    if (connections.find(hdl) == connections.end()) {
+        return;
+    }
     ws_server.send(hdl, result.data(), result.size(), websocketpp::frame::opcode::binary);
 }
 

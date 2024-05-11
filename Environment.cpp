@@ -4,9 +4,9 @@ Obstacle::Obstacle(Type type, const Circle &circle) : type(type), circle(circle)
 Obstacle::Obstacle(Type type, const Rectangle &rectangle) : type(type), rectangle(rectangle) {}
 
 void initializeEnvironment(Environment* env, double width, double height) {
-    env->width = width;
-    env->height = height;
-    env->depth = 0;
+    env->x = width;
+    env->y = height;
+    env->z = 0;
 
     env->obstacles.emplace_back(Obstacle::CIRCLE, Circle{250, 180, 30});
     env->obstacles.emplace_back(Obstacle::CIRCLE, Circle{400, 270, 45});
@@ -24,14 +24,23 @@ void initializeEnvironment(Environment* env, double width, double height) {
     env->obstacles.emplace_back(Obstacle::RECTANGLE, Rectangle{350, 450, 10, 120});
 }
 
-// 3D Depth is the height of the environment
-void initializeEnvironment(Environment* env, octomap::OcTree* tree, double width, double height, double depth) {
-    env->width = width;
-    env->height = height;
-    env->depth = depth;
+// 3D Depth is the y of the environment
+void initializeEnvironment(Environment* env, octomap::OcTree* tree, double x, double y, double z, double offset_x, double offset_y, double offset_z) {
+    env->x = x;
+    env->y = y;
+    env->z = z;
+    env->offset_x = offset_x;
+    env->offset_y = offset_y;
+    env->offset_z = offset_z;
     env->tree = tree;
 }
 
-void initializeEnvironment(Environment* env, octomap::OcTree* tree) {
-    initializeEnvironment(env, tree, 10, 4, 20);
+void initializeEnvironment(Environment* env, octomap::OcTree* tree, bool autoSize) {
+    if (autoSize){
+        tree->getMetricSize(env->x, env->y, env->z);
+        tree->getMetricMin(env->offset_x, env->offset_y, env->offset_z);
+        env->tree = tree;
+    }else{
+        initializeEnvironment(env, tree, 20, 10, 4);
+    }
 }

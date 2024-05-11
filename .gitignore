@@ -2,6 +2,6 @@ cmake-build-debug/
 .idea/
 build/
 cmake-build-debug/
-cmmake-build-debug/
+cmmake-build-debug-docker/
 log/
 install/

@@ -13,7 +13,7 @@ struct Circle {
 
 struct Rectangle {
     double x, y; // Top-left corner of the rectangle
-    double width, height; // Width and height of the rectangle
+    double width, height; // Width and y of the rectangle
 };
 
 struct Obstacle {
@@ -30,13 +30,14 @@ struct Obstacle {
 };
 
 struct Environment {
-    double width, height, depth;
+    double x, y, z;
+    double offset_x, offset_y, offset_z;
     octomap::OcTree* tree = nullptr;
     std::vector<Obstacle> obstacles;
 };
 
 void initializeEnvironment(Environment* env, double width, double height);
-void initializeEnvironment(Environment* env, octomap::OcTree* tree);
-void initializeEnvironment(Environment* env, octomap::OcTree* tree, double width, double height, double depth);
+void initializeEnvironment(Environment* env, octomap::OcTree* tree, bool autoSize = true);
+void initializeEnvironment(Environment* env, octomap::OcTree* tree, double x, double y, double z, double offset_x = 0, double offset_y = 0, double offset_z = 0);
 
 #endif // ENVIRONMENT_H
