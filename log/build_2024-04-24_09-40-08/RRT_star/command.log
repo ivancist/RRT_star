@@ -1,2 +1,0 @@
-Invoking command in '/home/ws/build/RRT_star': /usr/bin/cmake --build /home/ws/build/RRT_star -- -j10 -l10
-Invoked command in '/home/ws/build/RRT_star' returned '2': /usr/bin/cmake --build /home/ws/build/RRT_star -- -j10 -l10

@@ -1,3 +1,0 @@
-/tmp/RRT_star/cmake-build-debug-docker/CMakeFiles/RRT_star.dir
-/tmp/RRT_star/cmake-build-debug-docker/CMakeFiles/edit_cache.dir
-/tmp/RRT_star/cmake-build-debug-docker/CMakeFiles/rebuild_cache.dir
