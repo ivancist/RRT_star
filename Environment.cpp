@@ -35,12 +35,19 @@ void initializeEnvironment(Environment* env, octomap::OcTree* tree, double x, do
     env->tree = tree;
 }
 
-void initializeEnvironment(Environment* env, octomap::OcTree* tree, bool autoSize) {
-    if (autoSize){
+void initializeEnvironment(Environment* env, octomap::OcTree* tree, bool autoConfig) {
+    if (autoConfig){
         tree->getMetricSize(env->x, env->y, env->z);
         tree->getMetricMin(env->offset_x, env->offset_y, env->offset_z);
+        std::cout << "x: " << env->x << " y: " << env->y << " z: " << env->z << std::endl;
+        std::cout << "offset_x: " << env->offset_x << " offset_y: " << env->offset_y << " offset_z: " << env->offset_z << std::endl;
         env->tree = tree;
     }else{
         initializeEnvironment(env, tree, 20, 10, 4);
     }
+}
+
+void initializeEnvironment(Environment* env, octomap::OcTree* tree, double maxDist) {
+    initializeEnvironment(env, tree, true);
+    env->distmap = new DynamicEDTOctomap(maxDist, tree, octomap::point3d(env->offset_x, env->offset_y, env->offset_z), octomap::point3d(env->x, env->y, env->z), false);
 }

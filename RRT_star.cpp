@@ -56,9 +56,9 @@ double randomDouble(double min, double max) {
 // TODO Other sampling methods
 Node *sampleRandomNode() {
     // Generate random x and y within the environment bounds
-    double x = randomDouble(env.offset_x, env.x - env.offset_x);
-    double y = randomDouble(env.offset_y, env.y - env.offset_y);
-    double z = randomDouble(env.offset_z, env.z - env.offset_z);
+    double x = randomDouble(env.offset_x, env.x + env.offset_x);
+    double y = randomDouble(env.offset_y, env.y + env.offset_y);
+    double z = randomDouble(env.offset_z, env.z + env.offset_z);
 
     // Create a node with the random coordinates
     return new Node{x, y, z};
@@ -187,15 +187,9 @@ void calcolaVerticiQuadrato(octomap::point3d *centro, octomap::point3d *versore,
     vertici[3].x() = centro->x() - lato / 2 * vettoreOrtogonale1.x() + lato / 2 * vettoreOrtogonale2.x();
     vertici[3].y() = centro->y() - lato / 2 * vettoreOrtogonale1.y() + lato / 2 * vettoreOrtogonale2.y();
     vertici[3].z() = centro->z() - lato / 2 * vettoreOrtogonale1.z() + lato / 2 * vettoreOrtogonale2.z();
-
-    std::cout << "Origin: " << centro->x() << " " << centro->y() << " " << centro->z() << std::endl;
-    std::cout << "Vert1: " << vertici[0].x() << " " << vertici[0].y() << " " << vertici[0].z() << std::endl;
-    std::cout << "Vert2: " << vertici[1].x() << " " << vertici[1].y() << " " << vertici[1].z() << std::endl;
-    std::cout << "Vert3: " << vertici[2].x() << " " << vertici[2].y() << " " << vertici[2].z() << std::endl;
-    std::cout << "Vert4: " << vertici[3].x() << " " << vertici[3].y() << " " << vertici[3].z() << std::endl;
 }
 
-bool checkRayCollision(Node *node1, Node *node2,octomap::OcTree *octree = env.tree) {
+bool checkRayCollision(Node *node1, Node *node2, octomap::OcTree *octree = env.tree) {
     Node versor{};
     getDirection(node1, node2, &versor);
     if (versor.x == 0 && versor.y == 0 && versor.z == 0) {
@@ -210,7 +204,7 @@ bool checkRayCollision(Node *node1, Node *node2,octomap::OcTree *octree = env.tr
     return false;
 }
 
-bool checkMultipleRayCollision(Node *node1, Node *node2,octomap::OcTree *octree = env.tree) {
+bool checkMultipleRayCollision(Node *node1, Node *node2, octomap::OcTree *octree = env.tree) {
     Node versor{};
     getVersor(node1, node2, &versor);
     if (versor.x == 0 && versor.y == 0 && versor.z == 0) {
@@ -227,7 +221,7 @@ bool checkMultipleRayCollision(Node *node1, Node *node2,octomap::OcTree *octree 
     octomap::point3d vertexes[4];
     calcolaVerticiQuadrato(&origin, &versorPoint, vertexes);
     for (int i = 0; i < 4; i++) {
-        if(octree->castRay(vertexes[i], versorPoint, collisionPoint, true, *node1 - *node2 + stayAway)){
+        if (octree->castRay(vertexes[i], versorPoint, collisionPoint, true, *node1 - *node2 + stayAway)) {
             return true;
         }
     }
@@ -338,7 +332,7 @@ Node *extend3DTree(Node *nearestNode, Node *randomNode, std::vector<Node *> &tre
     parentNode->children.push_back(newNode);
 
     for (size_t i = 1; i < nearestNodes.size(); i++) {
-        Node* node = nearestNodes[i];
+        Node *node = nearestNodes[i];
         double distanceToNewNode = *node - tempNode;
         if (newNodeCost + distanceToNewNode < node->cost &&
             !checkRayCollision(node, &tempNode)) {
@@ -488,16 +482,14 @@ FinalReturn
 rrtStar(Node *start, Node *goal, octomap::OcTree *octree,
         void (*pathFoundCallback)(ReturnPath *, websocketpp::connection_hdl), websocketpp::connection_hdl hdl,
         const std::shared_ptr<StoppableThread> &stoppableThreadPtr) {
-    initializeEnvironment(&env, octree);
+
+
+    initializeEnvironment(&env, octree, stayAway*1.1);
     int depth = octree->getTreeDepth();
     double resolution = octree->getResolution();
     if (stayAway > resolution) {
         searchAtDepth = depth - ceil(log2(stayAway / resolution));
     }
-    std::cout << "Depth: " << depth << " Resolution: " << resolution << " StayAway: " << stayAway << " SearchAtDepth: "
-              << searchAtDepth << std::endl;
-
-    auto start_ts = std::chrono::high_resolution_clock::now();
 
     // Initialize the tree with the start node
     std::vector<Node *> tree;
@@ -505,9 +497,9 @@ rrtStar(Node *start, Node *goal, octomap::OcTree *octree,
     tree.push_back(start);
     bool finish = false;
     int iteration_after_finish = 0;
-    // Main loop of the RRT* algorithm
-
     int iter = 0;
+    auto start_ts = std::chrono::high_resolution_clock::now();
+
     while ((!finish || iteration_after_finish < MAX_OPTIMIZING_ITERATIONS) && !stoppableThreadPtr->isStopRequested()) {
         // Sample a random point in the environment
         Node *randomNode = sampleRandomNode(goal);
@@ -569,4 +561,10 @@ rrtStar(Node *start, Node *goal, octomap::OcTree *octree,
             std::chrono::high_resolution_clock::now() - start_ts).count(), tree.size(), goal->cost};
 }
 
-
+FinalReturn
+rrtStar(Node *start, Node *goal, std::string treeFileName,
+        void (*pathFoundCallback)(ReturnPath *, websocketpp::connection_hdl), websocketpp::connection_hdl hdl,
+        const std::shared_ptr<StoppableThread> &stoppableThreadPtr){
+    octomap::OcTree *octree = new octomap::OcTree(treeFileName);
+    return rrtStar(start, goal, octree, pathFoundCallback, hdl, stoppableThreadPtr);
+}

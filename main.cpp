@@ -1,7 +1,6 @@
 #include "WebSocketServer.h"
 #include "RRT_star.h"
 #include <nlohmann/json.hpp>
-#include <dynamicEDT3D/dynamicEDTOctomap.h>
 
 WebSocketServer wsServer;
 octomap::OcTree *tree = new octomap::OcTree("../octomap.bt");
@@ -32,6 +31,9 @@ void myCallback(ReturnPath *returnPath, websocketpp::connection_hdl hdl) {
 void onOpenCallback(websocketpp::connection_hdl hdl) {
     auto rrtThreadPtr = std::make_shared<StoppableThread>();
     rrtThreadPtr->startThread([hdl, rrtThreadPtr]() {
+        auto key = tree->coordToKey(0, 1, 4.5);
+        tree->setNodeValue(key, true);
+
         std::stringstream buffer;
         tree->writeBinaryData(buffer);
         std::string str = buffer.str();
@@ -45,8 +47,9 @@ void onOpenCallback(websocketpp::connection_hdl hdl) {
                 {"goal",  {{"x", goal.x},  {"y", goal.y},  {"z", goal.z},  {"color", "green"}}}
         };
         wsServer.binarySend(hdl, "octomap_endpoints", endpointsJson.dump());
-        FinalReturn fRet = rrtStar(&start, &goal, tree, myCallback, hdl, rrtThreadPtr);
 
+        FinalReturn fRet = rrtStar(&start, &goal, tree, myCallback, hdl, rrtThreadPtr);
+//        FinalReturn fRet = rrtStar(&start, &goal, "../octomap.bt", myCallback, hdl, rrtThreadPtr);
         if (!fRet.path->empty()) {
             std::cout << "Final path found in " << fRet.time_in_microseconds << " microseconds" << std::endl;
             std::cout << "Completed with " << fRet.num_nodes << " nodes" << std::endl;
@@ -101,7 +104,6 @@ void onOpenCallback(websocketpp::connection_hdl hdl) {
                                        {"path", optimizedPath}};
             std::string jsonString = optArray.dump();
             wsServer.binarySend(hdl, "octomap_optimized_path", jsonString);
-
         } else {
             std::cout << "Path not found" << std::endl;
         }
@@ -124,12 +126,6 @@ void onOpenCallback(websocketpp::connection_hdl hdl) {
 
 
 int main() {
-    double x, y, z;
-    tree->getMetricSize(x, y, z);
-    double offsetX = 0, offsetY = 0, offsetZ = 0;
-    tree->getMetricMin(offsetX, offsetY, offsetZ);
-    double maxX, maxY, maxZ;
-    tree->getMetricMax(maxX, maxY, maxZ);
     wsServer.setOnOpenCallback([](websocketpp::connection_hdl hdl) {
         onOpenCallback(hdl); // Call your original onOpenCallback function
     });

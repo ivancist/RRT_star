@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <octomap/OcTree.h>
+#include <dynamicEDT3D/dynamicEDTOctomap.h>
 
 
 struct Circle {
@@ -33,11 +34,13 @@ struct Environment {
     double x, y, z;
     double offset_x, offset_y, offset_z;
     octomap::OcTree* tree = nullptr;
+    DynamicEDTOctomap* distmap = nullptr;
     std::vector<Obstacle> obstacles;
 };
 
 void initializeEnvironment(Environment* env, double width, double height);
-void initializeEnvironment(Environment* env, octomap::OcTree* tree, bool autoSize = true);
+void initializeEnvironment(Environment* env, octomap::OcTree* tree, bool autoConfig = true);
 void initializeEnvironment(Environment* env, octomap::OcTree* tree, double x, double y, double z, double offset_x = 0, double offset_y = 0, double offset_z = 0);
+void initializeEnvironment(Environment* env, octomap::OcTree* tree, double maxDist); // autoConfig = true
 
 #endif // ENVIRONMENT_H
