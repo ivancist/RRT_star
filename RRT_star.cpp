@@ -1,15 +1,15 @@
 #include "RRT_star.h"
 
-const int MAX_OPTIMIZING_ITERATIONS = 5 * 1000;
+const int MAX_OPTIMIZING_ITERATIONS = 1 * 1000;
 const int waitBeforeClosing = 3 * 1000;
 //const int threshold = 30;
 //double stepLength = 20;
 //const double stayAway = 10;
-const double threshold = 1;
-double stepLength = 1;
-const double stayAway = .6;
+const double threshold = 2; // with distmap: threshold <= stayAway
+const double stepLength = 1; // stepLength <= threshold
+double stayAway = .6;
 const double bias = 0.2;
-const int refreshView = 5000;
+const int refreshView = 1000;
 int searchAtDepth = 0;
 Environment env;
 
@@ -49,7 +49,7 @@ void getVersor(Node *node1, Node *node2, Node *versor) {
 double randomDouble(double min, double max) {
     static std::random_device rd;
     static std::mt19937 gen(rd());
-    std::uniform_real_distribution<> dis(min, max);
+    std::uniform_real_distribution<double> dis(min, max);
     return dis(gen);
 }
 
@@ -189,7 +189,7 @@ void calcolaVerticiQuadrato(octomap::point3d *centro, octomap::point3d *versore,
     vertici[3].z() = centro->z() - lato / 2 * vettoreOrtogonale1.z() + lato / 2 * vettoreOrtogonale2.z();
 }
 
-bool checkRayCollision(Node *node1, Node *node2, octomap::OcTree *octree = env.tree) {
+bool checkRayCollision(Node *node1, Node *node2, std::shared_ptr<octomap::OcTree> &octree = env.tree) {
     Node versor{};
     getDirection(node1, node2, &versor);
     if (versor.x == 0 && versor.y == 0 && versor.z == 0) {
@@ -204,7 +204,7 @@ bool checkRayCollision(Node *node1, Node *node2, octomap::OcTree *octree = env.t
     return false;
 }
 
-bool checkMultipleRayCollision(Node *node1, Node *node2, octomap::OcTree *octree = env.tree) {
+bool checkMultipleRayCollision(Node *node1, Node *node2, std::shared_ptr<octomap::OcTree> &octree = env.tree) {
     Node versor{};
     getVersor(node1, node2, &versor);
     if (versor.x == 0 && versor.y == 0 && versor.z == 0) {
@@ -225,6 +225,33 @@ bool checkMultipleRayCollision(Node *node1, Node *node2, octomap::OcTree *octree
             return true;
         }
     }
+    return false;
+}
+
+bool
+checkLinkCollisionWithDistMap(Node *node1, Node *node2, std::shared_ptr<DynamicEDTOctomap> &distmap = env.distmap) {
+    Node versor{};
+    getVersor(node1, node2, &versor);
+    if (versor.x == 0 && versor.y == 0 && versor.z == 0) {
+        return true;
+    }
+    double distToTarget = *node1 - *node2;
+    double dist = stayAway;
+    double oldDist;
+    octomap::point3d stepNode = octomap::point3d(node1->x, node1->y, node1->z);
+    while (distToTarget > dist) {
+        stepNode = octomap::point3d(versor.x * dist + stepNode.x(), versor.y * dist + stepNode.y(),
+                                    versor.z * dist + stepNode.z());
+        oldDist = dist;
+        dist = distmap->getDistance(stepNode);
+        std::cout << dist << std::endl;
+        if (dist < stayAway) {
+            return true;
+        }
+        distToTarget -= oldDist;
+        std::cout << distToTarget << std::endl;
+    }
+    std::cout << "FALSE" << std::endl;
     return false;
 }
 
@@ -304,24 +331,40 @@ Node *extend3DTree(Node *nearestNode, Node *randomNode, std::vector<Node *> &tre
 //    double newCost = nearestNode->cost + distance(nearestNode, new Node{newX, newY, nullptr});
 
     Node tempNode{newX, newY, newZ, nullptr, std::numeric_limits<double>::max()};
-    if (env.tree->search(tempNode.x, tempNode.y, tempNode.z, searchAtDepth) != nullptr) {
+//    if (env.tree->search(tempNode.x, tempNode.y, tempNode.z, searchAtDepth) != nullptr) {
+    if (env.distmap->getDistance(octomap::point3d(tempNode.x, tempNode.y, tempNode.z)) < stayAway) {
         return nullptr; // Collision detected, do not extend the tree
     }
 
+
     std::vector<Node *> nearestNodes = nearestNodesInTree(tree, &tempNode);
-    bool collision = true;
-    while (!nearestNodes.empty() && collision) {
-        octomap::point3d tempPoint{};
-        getDirection(nearestNodes[0], &tempNode, &versor);
-        if (versor.x == 0 && versor.y == 0 && versor.z == 0) {
+//    bool collision = true;
+//    while (!nearestNodes.empty() && collision) {
+//        octomap::point3d tempPoint{};
+//        getDirection(nearestNodes[0], &tempNode, &versor);
+//        if (versor.x == 0 && versor.y == 0 && versor.z == 0) {
+//            return nullptr;
+//        }
+//        collision = checkRayCollision(nearestNodes[0], &tempNode);
+//        if (collision) {
+//            nearestNodes.erase(nearestNodes.begin());
+//        }
+//    }
+//    if (collision) {
+//        return nullptr;
+//    }
+    if (threshold > stayAway) {
+        bool collision = true;
+        while (!nearestNodes.empty() && collision) {
+            collision = checkLinkCollisionWithDistMap(nearestNodes[0], &tempNode);
+            if (collision) {
+                nearestNodes.erase(nearestNodes.begin());
+            }
+        }
+        if (collision) {
             return nullptr;
         }
-        collision = checkRayCollision(nearestNodes[0], &tempNode);
-        if (collision) {
-            nearestNodes.erase(nearestNodes.begin());
-        }
-    }
-    if (collision) {
+    } else if (nearestNodes.empty()) {
         return nullptr;
     }
 
@@ -334,8 +377,10 @@ Node *extend3DTree(Node *nearestNode, Node *randomNode, std::vector<Node *> &tre
     for (size_t i = 1; i < nearestNodes.size(); i++) {
         Node *node = nearestNodes[i];
         double distanceToNewNode = *node - tempNode;
-        if (newNodeCost + distanceToNewNode < node->cost &&
-            !checkRayCollision(node, &tempNode)) {
+        if (newNodeCost + distanceToNewNode < node->cost
+            // && !checkRayCollision(node, &tempNode)
+            && !checkLinkCollisionWithDistMap(node, &tempNode)
+                ) {
             Node *parent = node->parent;
             parent->children.erase(std::remove(parent->children.begin(), parent->children.end(), node),
                                    parent->children.end());
@@ -479,12 +524,11 @@ std::vector<Node *> rrtStar(Node *start, Node *goal, int width, int height) {
 }
 
 FinalReturn
-rrtStar(Node *start, Node *goal, octomap::OcTree *octree,
+rrtStar(Node *start, Node *goal, std::shared_ptr<octomap::OcTree> &octree, double stayAwayDesired,
         void (*pathFoundCallback)(ReturnPath *, websocketpp::connection_hdl), websocketpp::connection_hdl hdl,
         const std::shared_ptr<StoppableThread> &stoppableThreadPtr) {
-
-
-    initializeEnvironment(&env, octree, stayAway*1.1);
+    stayAway = stayAwayDesired / cos(M_PI / 6);
+    initializeEnvironment(&env, octree, stayAway * 1.1);
     int depth = octree->getTreeDepth();
     double resolution = octree->getResolution();
     if (stayAway > resolution) {
@@ -506,7 +550,6 @@ rrtStar(Node *start, Node *goal, octomap::OcTree *octree,
 //        Node *randomNode = sampleRandomNode();
         // Find the nearest node in the tree to the random point
         Node *nearestNode = nearestNodeInTree(tree, randomNode);
-
         // Extend the tree towards the random point
         Node *newNode = extend3DTree(nearestNode, randomNode, tree);
         delete randomNode;
@@ -559,12 +602,4 @@ rrtStar(Node *start, Node *goal, octomap::OcTree *octree,
     }
     return FinalReturn{std::move(retPath), std::chrono::duration_cast<std::chrono::microseconds>(
             std::chrono::high_resolution_clock::now() - start_ts).count(), tree.size(), goal->cost};
-}
-
-FinalReturn
-rrtStar(Node *start, Node *goal, std::string treeFileName,
-        void (*pathFoundCallback)(ReturnPath *, websocketpp::connection_hdl), websocketpp::connection_hdl hdl,
-        const std::shared_ptr<StoppableThread> &stoppableThreadPtr){
-    octomap::OcTree *octree = new octomap::OcTree(treeFileName);
-    return rrtStar(start, goal, octree, pathFoundCallback, hdl, stoppableThreadPtr);
 }

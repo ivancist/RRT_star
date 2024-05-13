@@ -3,7 +3,6 @@
 #include <nlohmann/json.hpp>
 
 WebSocketServer wsServer;
-octomap::OcTree *tree = new octomap::OcTree("../octomap.bt");
 
 void myCallback(ReturnPath *returnPath, websocketpp::connection_hdl hdl) {
     // json with time and path (array of nodes with x, y, z coordinates)
@@ -31,9 +30,7 @@ void myCallback(ReturnPath *returnPath, websocketpp::connection_hdl hdl) {
 void onOpenCallback(websocketpp::connection_hdl hdl) {
     auto rrtThreadPtr = std::make_shared<StoppableThread>();
     rrtThreadPtr->startThread([hdl, rrtThreadPtr]() {
-        auto key = tree->coordToKey(0, 1, 4.5);
-        tree->setNodeValue(key, true);
-
+        std::shared_ptr tree = std::make_shared<octomap::OcTree>("../octomap.bt");
         std::stringstream buffer;
         tree->writeBinaryData(buffer);
         std::string str = buffer.str();
@@ -48,7 +45,7 @@ void onOpenCallback(websocketpp::connection_hdl hdl) {
         };
         wsServer.binarySend(hdl, "octomap_endpoints", endpointsJson.dump());
 
-        FinalReturn fRet = rrtStar(&start, &goal, tree, myCallback, hdl, rrtThreadPtr);
+        FinalReturn fRet = rrtStar(&start, &goal, tree,.6, myCallback, hdl, rrtThreadPtr);
 //        FinalReturn fRet = rrtStar(&start, &goal, "../octomap.bt", myCallback, hdl, rrtThreadPtr);
         if (!fRet.path->empty()) {
             std::cout << "Final path found in " << fRet.time_in_microseconds << " microseconds" << std::endl;

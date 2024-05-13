@@ -37,9 +37,9 @@ struct FinalReturn{
     double cost;
 };
 std::vector<Node *> rrtStar(Node *start, Node *goal, int width, int height);
-FinalReturn rrtStar(Node *start, Node *goal, octomap::OcTree *tree,void (*pathFoundCallback)(ReturnPath*,websocketpp::connection_hdl) = nullptr,websocketpp::connection_hdl hdl = {}, const std::shared_ptr<StoppableThread>& stopReq = nullptr);
-FinalReturn rrtStar(Node *start, Node *goal, std::string treeFileName,void (*pathFoundCallback)(ReturnPath*,websocketpp::connection_hdl) = nullptr,websocketpp::connection_hdl hdl = {}, const std::shared_ptr<StoppableThread>& stopReq = nullptr);
+FinalReturn rrtStar(Node *start, Node *goal, std::shared_ptr<octomap::OcTree> &tree,double stayAwayDesired,void (*pathFoundCallback)(ReturnPath*,websocketpp::connection_hdl) = nullptr,websocketpp::connection_hdl hdl = {}, const std::shared_ptr<StoppableThread>& stopReq = nullptr);
 
-bool checkMultipleRayCollision(Node *node1, Node *node2,octomap::OcTree *octree);
+bool checkMultipleRayCollision(Node *node1, Node *node2, std::shared_ptr<octomap::OcTree> &octree);
+bool checkLinkCollisionWithDistmap(Node *node1, Node *node2, std::shared_ptr<DynamicEDTOctomap> &distmap);
 
 #endif //RRT_STAR_RRT_STAR_H
