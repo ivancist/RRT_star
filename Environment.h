@@ -38,9 +38,9 @@ struct Environment {
     std::vector<Obstacle> obstacles;
 };
 
-void initializeEnvironment(Environment* env, double width, double height);
-void initializeEnvironment(Environment* env, std::shared_ptr<octomap::OcTree> &tree, bool autoConfig = true);
-void initializeEnvironment(Environment* env, std::shared_ptr<octomap::OcTree> &tree, double x, double y, double z, double offset_x = 0, double offset_y = 0, double offset_z = 0);
-void initializeEnvironment(Environment* env, std::shared_ptr<octomap::OcTree> &tree, double maxDist); // autoConfig = true
+void initializeEnvironment(std::shared_ptr<Environment> &env, double width, double height);
+void initializeEnvironment(std::shared_ptr<Environment> &env, std::shared_ptr<octomap::OcTree> &tree, bool autoConfig = true);
+void initializeEnvironment(std::shared_ptr<Environment> &env, std::shared_ptr<octomap::OcTree> &tree, double x, double y, double z, double offset_x = 0, double offset_y = 0, double offset_z = 0);
+void initializeEnvironment(std::shared_ptr<Environment> &env, std::shared_ptr<octomap::OcTree> &tree, double maxDist); // autoConfig = true
 
 #endif // ENVIRONMENT_H

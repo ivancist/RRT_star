@@ -3,6 +3,9 @@
 #include <nlohmann/json.hpp>
 
 WebSocketServer wsServer;
+std::shared_ptr<Environment> env = std::make_shared<Environment>();
+std::shared_ptr tree = std::make_shared<octomap::OcTree>("../octomap.bt");
+
 
 void myCallback(ReturnPath *returnPath, websocketpp::connection_hdl hdl) {
     // json with time and path (array of nodes with x, y, z coordinates)
@@ -30,9 +33,9 @@ void myCallback(ReturnPath *returnPath, websocketpp::connection_hdl hdl) {
 void onOpenCallback(websocketpp::connection_hdl hdl) {
     auto rrtThreadPtr = std::make_shared<StoppableThread>();
     rrtThreadPtr->startThread([hdl, rrtThreadPtr]() {
-        std::shared_ptr tree = std::make_shared<octomap::OcTree>("../octomap.bt");
+//        std::shared_ptr tree = std::make_shared<octomap::OcTree>("../octomap.bt");
         std::stringstream buffer;
-        tree->writeBinaryData(buffer);
+        env->tree->writeBinaryData(buffer);
         std::string str = buffer.str();
         wsServer.binarySend(hdl, "octomap", str);
 //        Node start{4, -5, 1.2, nullptr, 0};
@@ -45,7 +48,9 @@ void onOpenCallback(websocketpp::connection_hdl hdl) {
         };
         wsServer.binarySend(hdl, "octomap_endpoints", endpointsJson.dump());
 
-        FinalReturn fRet = rrtStar(&start, &goal, tree,.6, myCallback, hdl, rrtThreadPtr);
+        RRTStar rrt_star;
+
+        FinalReturn fRet = rrt_star.rrtStar(&start, &goal, env, .6, myCallback, hdl, rrtThreadPtr);
 //        FinalReturn fRet = rrtStar(&start, &goal, "../octomap.bt", myCallback, hdl, rrtThreadPtr);
         if (!fRet.path->empty()) {
             std::cout << "Final path found in " << fRet.time_in_microseconds << " microseconds" << std::endl;
@@ -75,7 +80,7 @@ void onOpenCallback(websocketpp::connection_hdl hdl) {
                     octomap::point3d temp;
                     double distance = startNode.distance(goalNode);
 //                    if (!tree->castRay(startNode, direction, temp, true, distance)) {
-                    if (!checkMultipleRayCollision((*fRet.path)[i], (*fRet.path)[j], tree)) {
+                    if (!rrt_star.checkMultipleRayCollision((*fRet.path)[i], (*fRet.path)[j])) {
                         for (int k = i + 1; k < j; ++k) {
                             delete (*fRet.path)[k];
                         }
@@ -123,6 +128,7 @@ void onOpenCallback(websocketpp::connection_hdl hdl) {
 
 
 int main() {
+    initializeEnvironment(env, tree, .6 / cos(M_PI / 6));
     wsServer.setOnOpenCallback([](websocketpp::connection_hdl hdl) {
         onOpenCallback(hdl); // Call your original onOpenCallback function
     });

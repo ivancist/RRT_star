@@ -1,39 +1,26 @@
 #include "RRT_star.h"
 
-const int MAX_OPTIMIZING_ITERATIONS = 1 * 1000;
-const int waitBeforeClosing = 3 * 1000;
-//const int threshold = 30;
-//double stepLength = 20;
-//const double stayAway = 10;
-const double threshold = 2; // with distmap: threshold <= stayAway
-const double stepLength = 1; // stepLength <= threshold
-double stayAway = .6;
-const double bias = 0.2;
-const int refreshView = 1000;
-int searchAtDepth = 0;
-Environment env;
-
-double distance(Node *node1, Node *node2) {
+double RRTStar::distance(Node *node1, Node *node2) {
     double dx = node1->x - node2->x;
     double dy = node1->y - node2->y;
     double dz = node1->z - node2->z;
     return std::sqrt(dx * dx + dy * dy + dz * dz);
 }
 
-double distance(Node *node, double x, double y) {
+double RRTStar::distance(Node *node, double x, double y) {
     double dx = node->x - x;
     double dy = node->y - y;
     return std::sqrt(dx * dx + dy * dy);
 }
 
-void getDirection(Node *node1, Node *node2, Node *direction) {
+void RRTStar::getDirection(Node *node1, Node *node2, Node *direction) {
     // Calculate the direction from the nearest node to the random node
     direction->x = node2->x - node1->x;
     direction->y = node2->y - node1->y;
     direction->z = node2->z - node1->z;
 }
 
-void getVersor(Node *node1, Node *node2, Node *versor) {
+void RRTStar::getVersor(Node *node1, Node *node2, Node *versor) {
     double dx = node2->x - node1->x;
     double dy = node2->y - node1->y;
     double dz = node2->z - node1->z;
@@ -46,7 +33,7 @@ void getVersor(Node *node1, Node *node2, Node *versor) {
 }
 
 // Function to generate a random double within a given range
-double randomDouble(double min, double max) {
+double RRTStar::randomDouble(double min, double max) {
     static std::random_device rd;
     static std::mt19937 gen(rd());
     std::uniform_real_distribution<double> dis(min, max);
@@ -54,17 +41,17 @@ double randomDouble(double min, double max) {
 }
 
 // TODO Other sampling methods
-Node *sampleRandomNode() {
+Node *RRTStar::sampleRandomNode() {
     // Generate random x and y within the environment bounds
-    double x = randomDouble(env.offset_x, env.x + env.offset_x);
-    double y = randomDouble(env.offset_y, env.y + env.offset_y);
-    double z = randomDouble(env.offset_z, env.z + env.offset_z);
+    double x = randomDouble(env->offset_x, env->x + env->offset_x);
+    double y = randomDouble(env->offset_y, env->y + env->offset_y);
+    double z = randomDouble(env->offset_z, env->z + env->offset_z);
 
     // Create a node with the random coordinates
     return new Node{x, y, z};
 }
 
-Node *sampleRandomNode(Node *goal) {
+Node *RRTStar::sampleRandomNode(Node *goal) {
     if (randomDouble(0, 1) < bias) {
         return new Node{goal->x, goal->y, goal->z};
     } else {
@@ -72,7 +59,7 @@ Node *sampleRandomNode(Node *goal) {
     }
 }
 
-Node *nearestNodeInTree(std::vector<Node *> &tree, Node *randomNode) {
+Node *RRTStar::nearestNodeInTree(std::vector<Node *> &tree, Node *randomNode) {
     Node *nearestNode = nullptr;
     double minDistance = std::numeric_limits<double>::max();
 
@@ -86,7 +73,7 @@ Node *nearestNodeInTree(std::vector<Node *> &tree, Node *randomNode) {
     return nearestNode;
 }
 
-std::vector<Node *> nearestNodesInTree(std::vector<Node *> &tree, Node *newNode) {
+std::vector<Node *> RRTStar::nearestNodesInTree(std::vector<Node *> &tree, Node *newNode) {
     std::vector<Node *> nearestNodes;
     size_t nNodeIndex;
     double minCost = newNode->cost;
@@ -110,8 +97,8 @@ std::vector<Node *> nearestNodesInTree(std::vector<Node *> &tree, Node *newNode)
     return nearestNodes;
 }
 
-bool checkCollision(Node *node) {
-    return std::any_of(env.obstacles.begin(), env.obstacles.end(), [&](const Obstacle &obstacle) {
+bool RRTStar::checkCollision(Node *node) {
+    return std::any_of(env->obstacles.begin(), env->obstacles.end(), [&](const Obstacle &obstacle) {
         if (obstacle.type == Obstacle::CIRCLE) {
             double dist = distance(node, obstacle.circle.x, obstacle.circle.y);
             return dist <= obstacle.circle.radius + stayAway;
@@ -124,7 +111,7 @@ bool checkCollision(Node *node) {
     });
 }
 
-bool checkCollision(Node *node1, Node *node2) {
+bool RRTStar::checkCollision(Node *node1, Node *node2) {
     double dx = node2->x - node1->x;
     double dy = node2->y - node1->y;
     double dist = std::sqrt(dx * dx + dy * dy);
@@ -145,8 +132,8 @@ bool checkCollision(Node *node1, Node *node2) {
     return false;
 }
 
-void calcolaVerticiQuadrato(octomap::point3d *centro, octomap::point3d *versore, octomap::point3d vertici[],
-                            double lato = stayAway) {
+void RRTStar::calcolaVerticiQuadrato(octomap::point3d *centro, octomap::point3d *versore, octomap::point3d vertici[],
+                                     double lato) {
     // Calcola il vettore ortogonale al versore
     octomap::point3d vettoreOrtogonale1, vettoreOrtogonale2;
 
@@ -189,47 +176,46 @@ void calcolaVerticiQuadrato(octomap::point3d *centro, octomap::point3d *versore,
     vertici[3].z() = centro->z() - lato / 2 * vettoreOrtogonale1.z() + lato / 2 * vettoreOrtogonale2.z();
 }
 
-bool checkRayCollision(Node *node1, Node *node2, std::shared_ptr<octomap::OcTree> &octree = env.tree) {
+bool RRTStar::checkRayCollision(Node *node1, Node *node2) {
     Node versor{};
     getDirection(node1, node2, &versor);
     if (versor.x == 0 && versor.y == 0 && versor.z == 0) {
         return true;
     }
     octomap::point3d collisionPoint{};
-    if (octree->castRay(octomap::point3d(node1->x, node1->y, node1->z),
-                        octomap::point3d(versor.x, versor.y, versor.z),
-                        collisionPoint, true, *node1 - *node2 + stayAway)) {
+    if (env->tree->castRay(octomap::point3d(node1->x, node1->y, node1->z),
+                           octomap::point3d(versor.x, versor.y, versor.z),
+                           collisionPoint, true, *node1 - *node2 + stayAway)) {
         return true;
     }
     return false;
 }
 
-bool checkMultipleRayCollision(Node *node1, Node *node2, std::shared_ptr<octomap::OcTree> &octree = env.tree) {
+bool RRTStar::checkMultipleRayCollision(Node *node1, Node *node2) {
     Node versor{};
     getVersor(node1, node2, &versor);
     if (versor.x == 0 && versor.y == 0 && versor.z == 0) {
         return true;
     }
     octomap::point3d collisionPoint{};
-    if (octree->castRay(octomap::point3d(node1->x, node1->y, node1->z),
-                        octomap::point3d(versor.x, versor.y, versor.z),
-                        collisionPoint, true, *node1 - *node2 + stayAway)) {
+    if (env->tree->castRay(octomap::point3d(node1->x, node1->y, node1->z),
+                           octomap::point3d(versor.x, versor.y, versor.z),
+                           collisionPoint, true, *node1 - *node2 + stayAway)) {
         return true;
     }
     octomap::point3d origin(node1->x, node1->y, node1->z);
     octomap::point3d versorPoint(versor.x, versor.y, versor.z);
     octomap::point3d vertexes[4];
-    calcolaVerticiQuadrato(&origin, &versorPoint, vertexes);
+    calcolaVerticiQuadrato(&origin, &versorPoint, vertexes, stayAway);
     for (int i = 0; i < 4; i++) {
-        if (octree->castRay(vertexes[i], versorPoint, collisionPoint, true, *node1 - *node2 + stayAway)) {
+        if (env->tree->castRay(vertexes[i], versorPoint, collisionPoint, true, *node1 - *node2 + stayAway)) {
             return true;
         }
     }
     return false;
 }
 
-bool
-checkLinkCollisionWithDistMap(Node *node1, Node *node2, std::shared_ptr<DynamicEDTOctomap> &distmap = env.distmap) {
+bool RRTStar::checkLinkCollisionWithDistMap(Node *node1, Node *node2) {
     Node versor{};
     getVersor(node1, node2, &versor);
     if (versor.x == 0 && versor.y == 0 && versor.z == 0) {
@@ -243,7 +229,7 @@ checkLinkCollisionWithDistMap(Node *node1, Node *node2, std::shared_ptr<DynamicE
         stepNode = octomap::point3d(versor.x * dist + stepNode.x(), versor.y * dist + stepNode.y(),
                                     versor.z * dist + stepNode.z());
         oldDist = dist;
-        dist = distmap->getDistance(stepNode);
+        dist = env->distmap->getDistance(stepNode);
         std::cout << dist << std::endl;
         if (dist < stayAway) {
             return true;
@@ -255,14 +241,14 @@ checkLinkCollisionWithDistMap(Node *node1, Node *node2, std::shared_ptr<DynamicE
     return false;
 }
 
-void recalculateCostOfChildren(Node *node, double delta) {
+void RRTStar::recalculateCostOfChildren(Node *node, double delta) {
     for (Node *child: node->children) {
         child->cost += delta;
         recalculateCostOfChildren(child, delta);
     }
 }
 
-Node *extendTree(Node *nearestNode, Node *randomNode, std::vector<Node *> &tree) {
+Node *RRTStar::extendTree(Node *nearestNode, Node *randomNode, std::vector<Node *> &tree) {
     // Calculate the direction from the nearest node to the random node
     double dx = randomNode->x - nearestNode->x;
     double dy = randomNode->y - nearestNode->y;
@@ -318,7 +304,7 @@ Node *extendTree(Node *nearestNode, Node *randomNode, std::vector<Node *> &tree)
     return newNode;
 }
 
-Node *extend3DTree(Node *nearestNode, Node *randomNode, std::vector<Node *> &tree) {
+Node *RRTStar::extend3DTree(Node *nearestNode, Node *randomNode, std::vector<Node *> &tree) {
     Node versor{};
     getVersor(nearestNode, randomNode, &versor);
 
@@ -331,8 +317,8 @@ Node *extend3DTree(Node *nearestNode, Node *randomNode, std::vector<Node *> &tre
 //    double newCost = nearestNode->cost + distance(nearestNode, new Node{newX, newY, nullptr});
 
     Node tempNode{newX, newY, newZ, nullptr, std::numeric_limits<double>::max()};
-//    if (env.tree->search(tempNode.x, tempNode.y, tempNode.z, searchAtDepth) != nullptr) {
-    if (env.distmap->getDistance(octomap::point3d(tempNode.x, tempNode.y, tempNode.z)) < stayAway) {
+//    if (env->tree->search(tempNode.x, tempNode.y, tempNode.z, searchAtDepth) != nullptr) {
+    if (env->distmap->getDistance(octomap::point3d(tempNode.x, tempNode.y, tempNode.z)) < stayAway) {
         return nullptr; // Collision detected, do not extend the tree
     }
 
@@ -394,7 +380,7 @@ Node *extend3DTree(Node *nearestNode, Node *randomNode, std::vector<Node *> &tre
     return newNode;
 }
 
-void connectToGoal(Node *lastNode, Node *goal) {
+void RRTStar::connectToGoal(Node *lastNode, Node *goal) {
     // Calculate the cost of the goal node
     double goalCost = lastNode->cost + distance(lastNode, goal);
 
@@ -403,7 +389,7 @@ void connectToGoal(Node *lastNode, Node *goal) {
     goal->cost = goalCost;
 }
 
-std::vector<Node *> getPath(Node *goal) {
+std::vector<Node *> RRTStar::getPath(Node *goal) {
     std::vector<Node *> path;
     Node *node = goal;
     while (node != nullptr) {
@@ -416,12 +402,12 @@ std::vector<Node *> getPath(Node *goal) {
 
 
 //TODO Read and optimize
-void visualize(const std::vector<Node *> &tree, Node *goal, bool finished = false) {
-    cv::Mat image(env.y, env.x, CV_8UC3, cv::Scalar(255, 255, 255));
+void RRTStar::visualize(const std::vector<Node *> &tree, Node *goal, bool finished) {
+    cv::Mat image(env->y, env->x, CV_8UC3, cv::Scalar(255, 255, 255));
     cv::namedWindow("RRT* Visualization", cv::WINDOW_AUTOSIZE);
 
     // Draw the obstacles
-    for (const Obstacle &obstacle: env.obstacles) {
+    for (const Obstacle &obstacle: env->obstacles) {
         if (obstacle.type == Obstacle::CIRCLE) {
             cv::circle(image, cv::Point(static_cast<int>(obstacle.circle.x), static_cast<int>(obstacle.circle.y)),
                        static_cast<int>(obstacle.circle.radius),
@@ -436,7 +422,8 @@ void visualize(const std::vector<Node *> &tree, Node *goal, bool finished = fals
     }
 
     // Draw the start
-    cv::circle(image, cv::Point(static_cast<int>(tree[0]->x), static_cast<int>(tree[0]->y)), 5, cv::Scalar(255, 0, 0),
+    cv::circle(image, cv::Point(static_cast<int>(tree[0]->x), static_cast<int>(tree[0]->y)), 5,
+               cv::Scalar(255, 0, 0),
                -1);
 
     // Draw the tree
@@ -466,15 +453,14 @@ void visualize(const std::vector<Node *> &tree, Node *goal, bool finished = fals
     }
 
     // Draw the goal
-    cv::circle(image, cv::Point(static_cast<int>(goal->x), static_cast<int>(goal->y)), 5, cv::Scalar(0, 255, 0), -1);
+    cv::circle(image, cv::Point(static_cast<int>(goal->x), static_cast<int>(goal->y)), 5, cv::Scalar(0, 255, 0),
+               -1);
 
     cv::imshow("RRT* Visualization", image);
     cv::waitKey(1); // Wait for 1 millisecond to allow the window to update
 }
 
-std::vector<Node *> rrtStar(Node *start, Node *goal, int width, int height) {
-    initializeEnvironment(&env, width, height);
-
+std::vector<Node *> RRTStar::rrtStar(Node *start, Node *goal, std::shared_ptr<Environment> &env) {
     auto start_ts = std::chrono::high_resolution_clock::now();
 
     // Initialize the tree with the start node
@@ -524,16 +510,16 @@ std::vector<Node *> rrtStar(Node *start, Node *goal, int width, int height) {
 }
 
 FinalReturn
-rrtStar(Node *start, Node *goal, std::shared_ptr<octomap::OcTree> &octree, double stayAwayDesired,
-        void (*pathFoundCallback)(ReturnPath *, websocketpp::connection_hdl), websocketpp::connection_hdl hdl,
-        const std::shared_ptr<StoppableThread> &stoppableThreadPtr) {
+RRTStar::rrtStar(Node *start, Node *goal, std::shared_ptr<Environment> &environment, double stayAwayDesired,
+                 void (*pathFoundCallback)(ReturnPath *, websocketpp::connection_hdl), websocketpp::connection_hdl hdl,
+                 const std::shared_ptr<StoppableThread> &stoppableThreadPtr) {
+    env = environment;
     stayAway = stayAwayDesired / cos(M_PI / 6);
-    initializeEnvironment(&env, octree, stayAway * 1.1);
-    int depth = octree->getTreeDepth();
-    double resolution = octree->getResolution();
-    if (stayAway > resolution) {
-        searchAtDepth = depth - ceil(log2(stayAway / resolution));
-    }
+//        int depth = env->tree->getTreeDepth();
+//        double resolution = env->tree->getResolution();
+//        if (stayAway > resolution) {
+//            searchAtDepth = depth - ceil(log2(stayAway / resolution));
+//        }
 
     // Initialize the tree with the start node
     std::vector<Node *> tree;
@@ -544,7 +530,8 @@ rrtStar(Node *start, Node *goal, std::shared_ptr<octomap::OcTree> &octree, doubl
     int iter = 0;
     auto start_ts = std::chrono::high_resolution_clock::now();
 
-    while ((!finish || iteration_after_finish < MAX_OPTIMIZING_ITERATIONS) && !stoppableThreadPtr->isStopRequested()) {
+    while ((!finish || iteration_after_finish < MAX_OPTIMIZING_ITERATIONS) &&
+           !stoppableThreadPtr->isStopRequested()) {
         // Sample a random point in the environment
         Node *randomNode = sampleRandomNode(goal);
 //        Node *randomNode = sampleRandomNode();

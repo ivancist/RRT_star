@@ -4,7 +4,7 @@ Obstacle::Obstacle(Type type, const Circle &circle) : type(type), circle(circle)
 
 Obstacle::Obstacle(Type type, const Rectangle &rectangle) : type(type), rectangle(rectangle) {}
 
-void initializeEnvironment(Environment *env, double width, double height) {
+void initializeEnvironment(std::shared_ptr<Environment> &env, double width, double height) {
     env->x = width;
     env->y = height;
     env->z = 0;
@@ -26,7 +26,7 @@ void initializeEnvironment(Environment *env, double width, double height) {
 }
 
 // 3D Depth is the y of the environment
-void initializeEnvironment(Environment *env, std::shared_ptr<octomap::OcTree> &tree, double x, double y, double z, double offset_x,
+void initializeEnvironment(std::shared_ptr<Environment> &env, std::shared_ptr<octomap::OcTree> &tree, double x, double y, double z, double offset_x,
                            double offset_y, double offset_z) {
     env->x = x;
     env->y = y;
@@ -37,7 +37,7 @@ void initializeEnvironment(Environment *env, std::shared_ptr<octomap::OcTree> &t
     env->tree = tree;
 }
 
-void initializeEnvironment(Environment *env, std::shared_ptr<octomap::OcTree> &tree, bool autoConfig) {
+void initializeEnvironment(std::shared_ptr<Environment> &env, std::shared_ptr<octomap::OcTree> &tree, bool autoConfig) {
     if (autoConfig) {
         tree->getMetricSize(env->x, env->y, env->z);
         tree->getMetricMin(env->offset_x, env->offset_y, env->offset_z);
@@ -47,7 +47,7 @@ void initializeEnvironment(Environment *env, std::shared_ptr<octomap::OcTree> &t
     }
 }
 
-void initializeEnvironment(Environment *env, std::shared_ptr<octomap::OcTree> &tree, double maxDist) {
+void initializeEnvironment(std::shared_ptr<Environment> &env, std::shared_ptr<octomap::OcTree> &tree, double maxDist) {
     initializeEnvironment(env, tree, true);
 //    DynamicEDTOctomap distmap(maxDist, tree, octomap::point3d(env->offset_x, env->offset_y, env->offset_z), octomap::point3d(env->x, env->y, env->z), false);
     env->distmap = std::make_shared<DynamicEDTOctomap>(maxDist, &*tree, octomap::point3d(env->offset_x, env->offset_y, env->offset_z), octomap::point3d(env->x, env->y, env->z), false);
