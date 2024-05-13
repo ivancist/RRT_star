@@ -33,14 +33,14 @@ struct Obstacle {
 struct Environment {
     double x, y, z;
     double offset_x, offset_y, offset_z;
-    std::shared_ptr<octomap::OcTree> tree = nullptr;
-    std::shared_ptr<DynamicEDTOctomapBase<octomap::OcTree>> distmap = nullptr;
+    octomap::OcTree* tree = nullptr;
+    DynamicEDTOctomapBase<octomap::OcTree>* distmap = nullptr;
     std::vector<Obstacle> obstacles;
 };
 
 void initializeEnvironment(std::shared_ptr<Environment> &env, double width, double height);
-void initializeEnvironment(std::shared_ptr<Environment> &env, std::shared_ptr<octomap::OcTree> &tree, bool autoConfig = true);
-void initializeEnvironment(std::shared_ptr<Environment> &env, std::shared_ptr<octomap::OcTree> &tree, double x, double y, double z, double offset_x = 0, double offset_y = 0, double offset_z = 0);
-void initializeEnvironment(std::shared_ptr<Environment> &env, std::shared_ptr<octomap::OcTree> &tree, double maxDist); // autoConfig = true
+void initializeEnvironment(std::shared_ptr<Environment> &env, octomap::OcTree* &tree, bool autoConfig = true);
+void initializeEnvironment(std::shared_ptr<Environment> &env, octomap::OcTree* &tree, double x, double y, double z, double offset_x = 0, double offset_y = 0, double offset_z = 0);
+void initializeEnvironment(std::shared_ptr<Environment> &env, octomap::OcTree* &tree, double maxDist); // autoConfig = true
 
 #endif // ENVIRONMENT_H

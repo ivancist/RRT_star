@@ -26,7 +26,8 @@ void initializeEnvironment(std::shared_ptr<Environment> &env, double width, doub
 }
 
 // 3D Depth is the y of the environment
-void initializeEnvironment(std::shared_ptr<Environment> &env, std::shared_ptr<octomap::OcTree> &tree, double x, double y, double z, double offset_x,
+void initializeEnvironment(std::shared_ptr<Environment> &env, octomap::OcTree *&tree, double x, double y, double z,
+                           double offset_x,
                            double offset_y, double offset_z) {
     env->x = x;
     env->y = y;
@@ -37,7 +38,7 @@ void initializeEnvironment(std::shared_ptr<Environment> &env, std::shared_ptr<oc
     env->tree = tree;
 }
 
-void initializeEnvironment(std::shared_ptr<Environment> &env, std::shared_ptr<octomap::OcTree> &tree, bool autoConfig) {
+void initializeEnvironment(std::shared_ptr<Environment> &env, octomap::OcTree *&tree, bool autoConfig) {
     if (autoConfig) {
         tree->getMetricSize(env->x, env->y, env->z);
         tree->getMetricMin(env->offset_x, env->offset_y, env->offset_z);
@@ -47,10 +48,12 @@ void initializeEnvironment(std::shared_ptr<Environment> &env, std::shared_ptr<oc
     }
 }
 
-void initializeEnvironment(std::shared_ptr<Environment> &env, std::shared_ptr<octomap::OcTree> &tree, double maxDist) {
+void initializeEnvironment(std::shared_ptr<Environment> &env, octomap::OcTree *&tree, double maxDist) {
     initializeEnvironment(env, tree, true);
 //    DynamicEDTOctomap distmap(maxDist, tree, octomap::point3d(env->offset_x, env->offset_y, env->offset_z), octomap::point3d(env->x, env->y, env->z), false);
-    env->distmap = std::make_shared<DynamicEDTOctomap>(maxDist, &*tree, octomap::point3d(env->offset_x, env->offset_y, env->offset_z), octomap::point3d(env->x, env->y, env->z), false);
+
+    env->distmap = new DynamicEDTOctomap(maxDist, &*tree, octomap::point3d(env->offset_x, env->offset_y, env->offset_z),
+                                         octomap::point3d(env->x, env->y, env->z), false);
     env->distmap->update();
     std::cout << env->offset_x << " " << env->offset_y << " " << env->offset_z << std::endl;
     std::cout << env->x << " " << env->y << " " << env->z << std::endl;

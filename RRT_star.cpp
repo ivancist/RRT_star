@@ -43,9 +43,9 @@ double RRTStar::randomDouble(double min, double max) {
 // TODO Other sampling methods
 Node *RRTStar::sampleRandomNode() {
     // Generate random x and y within the environment bounds
-    double x = randomDouble(env->offset_x, env->x + env->offset_x);
-    double y = randomDouble(env->offset_y, env->y + env->offset_y);
-    double z = randomDouble(env->offset_z, env->z + env->offset_z);
+    double x = randomDouble(env.offset_x, env.x + env.offset_x);
+    double y = randomDouble(env.offset_y, env.y + env.offset_y);
+    double z = randomDouble(env.offset_z, env.z + env.offset_z);
 
     // Create a node with the random coordinates
     return new Node{x, y, z};
@@ -98,7 +98,7 @@ std::vector<Node *> RRTStar::nearestNodesInTree(std::vector<Node *> &tree, Node 
 }
 
 bool RRTStar::checkCollision(Node *node) {
-    return std::any_of(env->obstacles.begin(), env->obstacles.end(), [&](const Obstacle &obstacle) {
+    return std::any_of(env.obstacles.begin(), env.obstacles.end(), [&](const Obstacle &obstacle) {
         if (obstacle.type == Obstacle::CIRCLE) {
             double dist = distance(node, obstacle.circle.x, obstacle.circle.y);
             return dist <= obstacle.circle.radius + stayAway;
@@ -183,7 +183,7 @@ bool RRTStar::checkRayCollision(Node *node1, Node *node2) {
         return true;
     }
     octomap::point3d collisionPoint{};
-    if (env->tree->castRay(octomap::point3d(node1->x, node1->y, node1->z),
+    if (env.tree->castRay(octomap::point3d(node1->x, node1->y, node1->z),
                            octomap::point3d(versor.x, versor.y, versor.z),
                            collisionPoint, true, *node1 - *node2 + stayAway)) {
         return true;
@@ -198,7 +198,7 @@ bool RRTStar::checkMultipleRayCollision(Node *node1, Node *node2) {
         return true;
     }
     octomap::point3d collisionPoint{};
-    if (env->tree->castRay(octomap::point3d(node1->x, node1->y, node1->z),
+    if (env.tree->castRay(octomap::point3d(node1->x, node1->y, node1->z),
                            octomap::point3d(versor.x, versor.y, versor.z),
                            collisionPoint, true, *node1 - *node2 + stayAway)) {
         return true;
@@ -208,7 +208,7 @@ bool RRTStar::checkMultipleRayCollision(Node *node1, Node *node2) {
     octomap::point3d vertexes[4];
     calcolaVerticiQuadrato(&origin, &versorPoint, vertexes, stayAway);
     for (int i = 0; i < 4; i++) {
-        if (env->tree->castRay(vertexes[i], versorPoint, collisionPoint, true, *node1 - *node2 + stayAway)) {
+        if (env.tree->castRay(vertexes[i], versorPoint, collisionPoint, true, *node1 - *node2 + stayAway)) {
             return true;
         }
     }
@@ -229,7 +229,7 @@ bool RRTStar::checkLinkCollisionWithDistMap(Node *node1, Node *node2) {
         stepNode = octomap::point3d(versor.x * dist + stepNode.x(), versor.y * dist + stepNode.y(),
                                     versor.z * dist + stepNode.z());
         oldDist = dist;
-        dist = env->distmap->getDistance(stepNode);
+        dist = env.distmap->getDistance(stepNode);
         std::cout << dist << std::endl;
         if (dist < stayAway) {
             return true;
@@ -317,8 +317,8 @@ Node *RRTStar::extend3DTree(Node *nearestNode, Node *randomNode, std::vector<Nod
 //    double newCost = nearestNode->cost + distance(nearestNode, new Node{newX, newY, nullptr});
 
     Node tempNode{newX, newY, newZ, nullptr, std::numeric_limits<double>::max()};
-//    if (env->tree->search(tempNode.x, tempNode.y, tempNode.z, searchAtDepth) != nullptr) {
-    if (env->distmap->getDistance(octomap::point3d(tempNode.x, tempNode.y, tempNode.z)) < stayAway) {
+//    if (env.tree->search(tempNode.x, tempNode.y, tempNode.z, searchAtDepth) != nullptr) {
+    if (env.distmap->getDistance(octomap::point3d(tempNode.x, tempNode.y, tempNode.z)) < stayAway) {
         return nullptr; // Collision detected, do not extend the tree
     }
 
@@ -403,11 +403,11 @@ std::vector<Node *> RRTStar::getPath(Node *goal) {
 
 //TODO Read and optimize
 void RRTStar::visualize(const std::vector<Node *> &tree, Node *goal, bool finished) {
-    cv::Mat image(env->y, env->x, CV_8UC3, cv::Scalar(255, 255, 255));
+    cv::Mat image(env.y, env.x, CV_8UC3, cv::Scalar(255, 255, 255));
     cv::namedWindow("RRT* Visualization", cv::WINDOW_AUTOSIZE);
 
     // Draw the obstacles
-    for (const Obstacle &obstacle: env->obstacles) {
+    for (const Obstacle &obstacle: env.obstacles) {
         if (obstacle.type == Obstacle::CIRCLE) {
             cv::circle(image, cv::Point(static_cast<int>(obstacle.circle.x), static_cast<int>(obstacle.circle.y)),
                        static_cast<int>(obstacle.circle.radius),
@@ -460,7 +460,7 @@ void RRTStar::visualize(const std::vector<Node *> &tree, Node *goal, bool finish
     cv::waitKey(1); // Wait for 1 millisecond to allow the window to update
 }
 
-std::vector<Node *> RRTStar::rrtStar(Node *start, Node *goal, std::shared_ptr<Environment> &env) {
+std::vector<Node *> RRTStar::rrtStar(Node *start, Node *goal, Environment &env) {
     auto start_ts = std::chrono::high_resolution_clock::now();
 
     // Initialize the tree with the start node
@@ -510,13 +510,13 @@ std::vector<Node *> RRTStar::rrtStar(Node *start, Node *goal, std::shared_ptr<En
 }
 
 FinalReturn
-RRTStar::rrtStar(Node *start, Node *goal, std::shared_ptr<Environment> &environment, double stayAwayDesired,
+RRTStar::rrtStar(Node *start, Node *goal, Environment &environment, double stayAwayDesired,
                  void (*pathFoundCallback)(ReturnPath *, websocketpp::connection_hdl), websocketpp::connection_hdl hdl,
                  const std::shared_ptr<StoppableThread> &stoppableThreadPtr) {
     env = environment;
     stayAway = stayAwayDesired / cos(M_PI / 6);
-//        int depth = env->tree->getTreeDepth();
-//        double resolution = env->tree->getResolution();
+//        int depth = env.tree->getTreeDepth();
+//        double resolution = env.tree->getResolution();
 //        if (stayAway > resolution) {
 //            searchAtDepth = depth - ceil(log2(stayAway / resolution));
 //        }

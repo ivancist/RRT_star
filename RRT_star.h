@@ -41,13 +41,13 @@ class RRTStar {
 public:
     int MAX_OPTIMIZING_ITERATIONS = 1 * 1000;
     const int waitBeforeClosing = 3 * 1000;
-    double threshold = 2; // with distmap: threshold <= stayAway
+    double threshold = 2.5; // with distmap: threshold <= stayAway
     double stepLength = 1; // stepLength <= threshold
     double stayAway = .6;
     double bias = 0.2;
     const int refreshView = 1000;
     int searchAtDepth = 0;
-    std::shared_ptr<Environment> env;
+    Environment env;
 
     void getDirection(Node *node1, Node *node2, Node *direction);
 
@@ -57,9 +57,9 @@ public:
 
     bool checkLinkCollisionWithDistMap(Node *node1, Node *node2);
 
-    std::vector<Node *> rrtStar(Node *start, Node *goal, std::shared_ptr<Environment> &env);
+    std::vector<Node *> rrtStar(Node *start, Node *goal, Environment &env);
 
-    FinalReturn rrtStar(Node *start, Node *goal, std::shared_ptr<Environment> &environment, double stayAwayDesired,
+    FinalReturn rrtStar(Node *start, Node *goal, Environment &environment, double stayAwayDesired,
                         void (*pathFoundCallback)(ReturnPath *, websocketpp::connection_hdl),
                         websocketpp::connection_hdl hdl,
                         const std::shared_ptr<StoppableThread> &stoppableThreadPtr);
@@ -101,15 +101,5 @@ private:
     void visualize(const std::vector<Node *> &tree, Node *goal, bool finished = false);
 
 };
-
-std::vector<Node *> rrtStar(Node *start, Node *goal, int width, int height);
-
-FinalReturn rrtStar(Node *start, Node *goal, std::shared_ptr<Environment> &env, double stayAwayDesired,
-                    void (*pathFoundCallback)(ReturnPath *, websocketpp::connection_hdl) = nullptr,
-                    websocketpp::connection_hdl hdl = {}, const std::shared_ptr<StoppableThread> &stopReq = nullptr);
-
-bool checkMultipleRayCollision(Node *node1, Node *node2, std::shared_ptr<octomap::OcTree> &octree);
-
-bool checkLinkCollisionWithDistmap(Node *node1, Node *node2, std::shared_ptr<DynamicEDTOctomap> &distmap);
 
 #endif //RRT_STAR_RRT_STAR_H

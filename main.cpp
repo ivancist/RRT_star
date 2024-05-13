@@ -4,7 +4,7 @@
 
 WebSocketServer wsServer;
 std::shared_ptr<Environment> env = std::make_shared<Environment>();
-std::shared_ptr tree = std::make_shared<octomap::OcTree>("../octomap.bt");
+octomap::OcTree* tree = new octomap::OcTree("../octomap.bt");
 
 
 void myCallback(ReturnPath *returnPath, websocketpp::connection_hdl hdl) {
@@ -50,7 +50,7 @@ void onOpenCallback(websocketpp::connection_hdl hdl) {
 
         RRTStar rrt_star;
 
-        FinalReturn fRet = rrt_star.rrtStar(&start, &goal, env, .6, myCallback, hdl, rrtThreadPtr);
+        FinalReturn fRet = rrt_star.rrtStar(&start, &goal, *env, .6, myCallback, hdl, rrtThreadPtr);
 //        FinalReturn fRet = rrtStar(&start, &goal, "../octomap.bt", myCallback, hdl, rrtThreadPtr);
         if (!fRet.path->empty()) {
             std::cout << "Final path found in " << fRet.time_in_microseconds << " microseconds" << std::endl;
@@ -80,7 +80,7 @@ void onOpenCallback(websocketpp::connection_hdl hdl) {
                     octomap::point3d temp;
                     double distance = startNode.distance(goalNode);
 //                    if (!tree->castRay(startNode, direction, temp, true, distance)) {
-                    if (!rrt_star.checkMultipleRayCollision((*fRet.path)[i], (*fRet.path)[j])) {
+                    if (!rrt_star.checkLinkCollisionWithDistMap((*fRet.path)[i], (*fRet.path)[j])) {
                         for (int k = i + 1; k < j; ++k) {
                             delete (*fRet.path)[k];
                         }
