@@ -19,12 +19,6 @@ void myCallback(ReturnPath *returnPath, websocketpp::connection_hdl hdl) {
             {"time", returnPath->time_in_microseconds},
             {"path", pathArray}
     };
-//    nlohmann::json jsonArray;
-//    for (const auto &node: *nodes) {
-//        jsonArray.push_back({{"x", node->x},
-//                             {"y", node->y},
-//                             {"z", node->z}});
-//    }
     std::string jsonString = jsonArray.dump();
     wsServer.binarySend(hdl, "octomap_path", jsonString);
     return;
@@ -109,18 +103,6 @@ void onOpenCallback(websocketpp::connection_hdl hdl) {
         } else {
             std::cout << "Path not found" << std::endl;
         }
-
-//        octomap::point3d end;
-//        std::cout << "Collision result = " << tree->castRay(octomap::point3d(start.x, start.y, start.z),
-//                                                            octomap::point3d(1 * (goal.x - start.x),
-//                                                                             1 * (goal.y - start.y),
-//                                                                             1 * (goal.z - start.z)), end, true, 5)
-//                  << std::endl;
-//        std::cout << "End = " << end.x() << " " << end.y() << " " << end.z() << std::endl;
-//        endpointsJson["collision"] = {{"x", end.x()},
-//                                      {"y", end.y()},
-//                                      {"z", end.z()}};
-//        wsServer.binarySend(hdl, "octomap_endpoints", endpointsJson.dump());
     });
     rrtThreadPtr->detach();
     wsServer.runningThreads[hdl.lock().get()] = std::move(rrtThreadPtr);
@@ -128,7 +110,11 @@ void onOpenCallback(websocketpp::connection_hdl hdl) {
 
 
 int main() {
-    initializeEnvironment(env, tree, .6 / cos(M_PI / 6));
+    auto start_env = std::chrono::high_resolution_clock::now();
+    initializeEnvironment(env, tree, 1.0); // 1.0 is the maxDist = stepLength
+    std::cout << "Time for environment initialization: "
+              << std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::high_resolution_clock::now() - start_env).count() << "ms" << std::endl;
     wsServer.setOnOpenCallback([](websocketpp::connection_hdl hdl) {
         onOpenCallback(hdl); // Call your original onOpenCallback function
     });

@@ -19,7 +19,6 @@ find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 target_link_libraries(RRT_star ${OpenCV_LIBS})
 
-#set(octomap_DIR "/opt/ros/humble/share/octomap")
 set(octomap_DIR "/Users/ivancist/Documents/CLionProjects/lib/octomap-1.10.0/lib/cmake/octomap")
 find_package(octomap REQUIRED)
 include_directories(${OCTOMAP_INCLUDE_DIRS})
@@ -42,9 +41,5 @@ set(nlohmann_json_DIR "/Users/ivancist/Documents/CLionProjects/lib/json-develop/
 find_package(nlohmann_json REQUIRED)
 include_directories(${NLOHMANN_JSON_INCLUDE_DIR})
 target_link_libraries(RRT_star nlohmann_json::nlohmann_json)
-
-#find_package(Open3D REQUIRED)
-#include_directories(${Open3D_INCLUDE_DIRS})
-#target_link_libraries(RRT_star ${Open3D_LIBRARIES})
 
 

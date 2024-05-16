@@ -222,7 +222,7 @@ bool RRTStar::checkLinkCollisionWithDistMap(Node *node1, Node *node2) {
         return true;
     }
     double distToTarget = *node1 - *node2;
-    double dist = stayAway;
+    double dist = safeStayAway;
     double oldDist;
     octomap::point3d stepNode = octomap::point3d(node1->x, node1->y, node1->z);
     while (distToTarget > dist) {
@@ -230,14 +230,11 @@ bool RRTStar::checkLinkCollisionWithDistMap(Node *node1, Node *node2) {
                                     versor.z * dist + stepNode.z());
         oldDist = dist;
         dist = env.distmap->getDistance(stepNode);
-        std::cout << dist << std::endl;
-        if (dist < stayAway) {
+        if (dist < safeStayAway) {
             return true;
         }
         distToTarget -= oldDist;
-        std::cout << distToTarget << std::endl;
     }
-    std::cout << "FALSE" << std::endl;
     return false;
 }
 
@@ -514,7 +511,8 @@ RRTStar::rrtStar(Node *start, Node *goal, Environment &environment, double stayA
                  void (*pathFoundCallback)(ReturnPath *, websocketpp::connection_hdl), websocketpp::connection_hdl hdl,
                  const std::shared_ptr<StoppableThread> &stoppableThreadPtr) {
     env = environment;
-    stayAway = stayAwayDesired / cos(M_PI / 6);
+    stayAway = stayAwayDesired;
+    safeStayAway = stayAwayDesired / cos(M_PI / 6);
 //        int depth = env.tree->getTreeDepth();
 //        double resolution = env.tree->getResolution();
 //        if (stayAway > resolution) {
@@ -548,7 +546,7 @@ RRTStar::rrtStar(Node *start, Node *goal, Environment &environment, double stayA
 
         // If the new node is close enough to the goal, connect it to the goal
         double distanceToGoal = distance(newNode, goal);
-        if (distanceToGoal < threshold && (goal->cost > newNode->cost + distanceToGoal)) {
+        if (distanceToGoal < threshold && (goal->cost > newNode->cost + distanceToGoal) && !checkLinkCollisionWithDistMap(newNode, goal)) {
             connectToGoal(newNode, goal);
             std::vector<Node *> path = getPath(goal);
             if (pathFoundCallback != nullptr) {

@@ -44,6 +44,7 @@ public:
     double threshold = 2.5; // with distmap: threshold <= stayAway
     double stepLength = 1; // stepLength <= threshold
     double stayAway = .6;
+    double safeStayAway = stayAway / cos(M_PI / 6);
     double bias = 0.2;
     const int refreshView = 1000;
     int searchAtDepth = 0;
