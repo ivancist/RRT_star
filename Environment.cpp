@@ -53,7 +53,7 @@ void initializeEnvironment(std::shared_ptr<Environment> &env, octomap::OcTree *&
 //    DynamicEDTOctomap distmap(maxDist, tree, octomap::point3d(env->offset_x, env->offset_y, env->offset_z), octomap::point3d(env->x, env->y, env->z), false);
 
     env->distmap = new DynamicEDTOctomap(maxDist, &*tree, octomap::point3d(env->offset_x, env->offset_y, env->offset_z),
-                                         octomap::point3d(env->x, env->y, env->z), false);
+                                         octomap::point3d(env->x + env->offset_x, env->y + env->offset_y, env->z + env->offset_z), false);
     env->distmap->update();
     std::cout << env->offset_x << " " << env->offset_y << " " << env->offset_z << std::endl;
     std::cout << env->x << " " << env->y << " " << env->z << std::endl;

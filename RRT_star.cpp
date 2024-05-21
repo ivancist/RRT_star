@@ -184,8 +184,8 @@ bool RRTStar::checkRayCollision(Node *node1, Node *node2) {
     }
     octomap::point3d collisionPoint{};
     if (env.tree->castRay(octomap::point3d(node1->x, node1->y, node1->z),
-                           octomap::point3d(versor.x, versor.y, versor.z),
-                           collisionPoint, true, *node1 - *node2 + stayAway)) {
+                          octomap::point3d(versor.x, versor.y, versor.z),
+                          collisionPoint, true, *node1 - *node2 + stayAway)) {
         return true;
     }
     return false;
@@ -199,8 +199,8 @@ bool RRTStar::checkMultipleRayCollision(Node *node1, Node *node2) {
     }
     octomap::point3d collisionPoint{};
     if (env.tree->castRay(octomap::point3d(node1->x, node1->y, node1->z),
-                           octomap::point3d(versor.x, versor.y, versor.z),
-                           collisionPoint, true, *node1 - *node2 + stayAway)) {
+                          octomap::point3d(versor.x, versor.y, versor.z),
+                          collisionPoint, true, *node1 - *node2 + stayAway)) {
         return true;
     }
     octomap::point3d origin(node1->x, node1->y, node1->z);
@@ -546,7 +546,8 @@ RRTStar::rrtStar(Node *start, Node *goal, Environment &environment, double stayA
 
         // If the new node is close enough to the goal, connect it to the goal
         double distanceToGoal = distance(newNode, goal);
-        if (distanceToGoal < threshold && (goal->cost > newNode->cost + distanceToGoal) && !checkLinkCollisionWithDistMap(newNode, goal)) {
+        if (distanceToGoal < threshold && (goal->cost > newNode->cost + distanceToGoal) &&
+            !checkLinkCollisionWithDistMap(newNode, goal)) {
             connectToGoal(newNode, goal);
             std::vector<Node *> path = getPath(goal);
             if (pathFoundCallback != nullptr) {
@@ -567,7 +568,7 @@ RRTStar::rrtStar(Node *start, Node *goal, Environment &environment, double stayA
         if (finish) {
             iteration_after_finish++;
         }
-        if (iter % refreshView == 0) {
+        if (refreshView != -1 && iter % refreshView == 0) {
             auto stop_ts = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop_ts - start_ts);
             std::cout << "Iteration: " << iter << " Time: " << duration.count() << " microseconds | " << finish
@@ -587,4 +588,57 @@ RRTStar::rrtStar(Node *start, Node *goal, Environment &environment, double stayA
     }
     return FinalReturn{std::move(retPath), std::chrono::duration_cast<std::chrono::microseconds>(
             std::chrono::high_resolution_clock::now() - start_ts).count(), tree.size(), goal->cost};
+}
+
+void RRTStar::pathOptimization(std::shared_ptr<std::vector<Node *>> &path){
+    std::size_t numNodes = path->size();
+    for (int i = 0; i < numNodes - 2; ++i) {
+//                octomap::point3d startNode((*path.path)[i]->x, (*path.path)[i]->y, (*path.path)[i]->z);
+//                for (int j = i+2; j < numNodes; ++j) {
+        for (int j = numNodes - 1; j > i + 1; --j) {
+//                    octomap::point3d goalNode((*path.path)[j]->x, (*path.path)[j]->y, (*path.path)[j]->z);
+//                    octomap::point3d direction = goalNode - startNode;
+//                    octomap::point3d temp;
+//                    double distance = startNode.distance(goalNode);
+//                    if (!tree->castRay(startNode, direction, temp, true, distance)) {
+            if (!checkLinkCollisionWithDistMap((*path)[i], (*path)[j])) {
+                for (int k = i + 1; k < j; ++k) {
+                    delete (*path)[k];
+                }
+                path->erase(path->begin() + i + 1, path->begin() + j);
+                numNodes = path->size();
+                break;
+            }
+        }
+    }
+}
+
+void RRTStar::pathSmoothing(std::shared_ptr<std::vector<Node *>> &path, float percent, int density) {
+    // 3D Quadradic Bezier curve
+    for (int i = 0; i < path->size() - 2; i+=density) {
+        octomap::point3d p0 = octomap::point3d(path->at(i)->x, path->at(i)->y, path->at(i)->z);
+        octomap::point3d p1 = octomap::point3d(path->at(i + 1)->x, path->at(i + 1)->y, path->at(i + 1)->z);
+        octomap::point3d p2 = octomap::point3d(path->at(i + 2)->x, path->at(i + 2)->y, path->at(i + 2)->z);
+        octomap::point3d vers1, vers2;
+        double dist1 = p1.distance(p0);
+        double dist2 = p2.distance(p1);
+        vers1 = (p1 - p0) * (1.0 / dist1);
+        vers2 = (p2 - p1) * (1.0 / dist2);
+        p0 = p1 - vers1 * dist1 * percent;
+        p2 = p1 + vers2 * dist2 * percent;
+        path->erase(path->begin() + i + 1);
+        int count = 0;
+        for (float j = 0; j < 1; j += 1.0 / density) {
+            count++;
+            Node *newNode = new Node();
+            newNode->x = (1 - j) * (1 - j) * p0.x() + 2 * (1 - j) * j * p1.x() + j * j * p2.x();
+            newNode->y = (1 - j) * (1 - j) * p0.y() + 2 * (1 - j) * j * p1.y() + j * j * p2.y();
+            newNode->z = (1 - j) * (1 - j) * p0.z() + 2 * (1 - j) * j * p1.z() + j * j * p2.z();
+            path->insert(path->begin() + i + count, newNode);
+
+            if (env.distmap->getDistance(octomap::point3d(newNode->x, newNode->y, newNode->z)) < stayAway) {
+                break;
+            }
+        }
+    }
 }

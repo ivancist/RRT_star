@@ -4,7 +4,7 @@
 
 WebSocketServer wsServer;
 std::shared_ptr<Environment> env = std::make_shared<Environment>();
-octomap::OcTree* tree = new octomap::OcTree("../octomap.bt");
+octomap::OcTree *tree = new octomap::OcTree("../octomap.bt");
 
 
 void myCallback(ReturnPath *returnPath, websocketpp::connection_hdl hdl) {
@@ -43,7 +43,7 @@ void onOpenCallback(websocketpp::connection_hdl hdl) {
         wsServer.binarySend(hdl, "octomap_endpoints", endpointsJson.dump());
 
         RRTStar rrt_star;
-
+        auto start_time = std::chrono::high_resolution_clock::now();
         FinalReturn fRet = rrt_star.rrtStar(&start, &goal, *env, .6, myCallback, hdl, rrtThreadPtr);
 //        FinalReturn fRet = rrtStar(&start, &goal, "../octomap.bt", myCallback, hdl, rrtThreadPtr);
         if (!fRet.path->empty()) {
@@ -64,29 +64,10 @@ void onOpenCallback(websocketpp::connection_hdl hdl) {
             };
             wsServer.binarySend(hdl, "octomap_completed", completeJson.dump());
 
-            std::size_t numNodes = fRet.path->size();
-            for (int i = 0; i < numNodes - 2; ++i) {
-                octomap::point3d startNode((*fRet.path)[i]->x, (*fRet.path)[i]->y, (*fRet.path)[i]->z);
-//                for (int j = i+2; j < numNodes; ++j) {
-                for (int j = numNodes - 1; j > i + 1; --j) {
-                    octomap::point3d goalNode((*fRet.path)[j]->x, (*fRet.path)[j]->y, (*fRet.path)[j]->z);
-                    octomap::point3d direction = goalNode - startNode;
-                    octomap::point3d temp;
-                    double distance = startNode.distance(goalNode);
-//                    if (!tree->castRay(startNode, direction, temp, true, distance)) {
-                    if (!rrt_star.checkLinkCollisionWithDistMap((*fRet.path)[i], (*fRet.path)[j])) {
-                        for (int k = i + 1; k < j; ++k) {
-                            delete (*fRet.path)[k];
-                        }
-                        fRet.path->erase(fRet.path->begin() + i + 1, fRet.path->begin() + j);
-                        numNodes = fRet.path->size();
-                        break;
-                    }
-                }
-            }
-            std::cout << "Optimizing path with " << numNodes << " nodes" << std::endl;
+            rrt_star.pathOptimization(fRet.path);
+            std::cout << "Optimizing path with " << fRet.path->size() << " nodes" << std::endl;
             double newCost = 0;
-            for (int i = 0; i < numNodes - 1; ++i) {
+            for (int i = 0; i < fRet.path->size() - 1; ++i) {
                 newCost += *(*fRet.path)[i] - *((*fRet.path)[i + 1]);
             }
             std::cout << "Optimizing path with cost:" << newCost << std::endl;
@@ -100,6 +81,27 @@ void onOpenCallback(websocketpp::connection_hdl hdl) {
                                        {"path", optimizedPath}};
             std::string jsonString = optArray.dump();
             wsServer.binarySend(hdl, "octomap_optimized_path", jsonString);
+
+            std::cout << "Path smoothing" << std::endl;
+            optimizedPath.clear();
+            rrt_star.pathSmoothing(fRet.path, 0.5, 10);
+            std::cout << "Smoothed path with " << fRet.path->size() << " nodes" << std::endl;
+            for (const auto &node: *fRet.path) {
+                optimizedPath.push_back({{"x", node->x},
+                                         {"y", node->y},
+                                         {"z", node->z}});
+            }
+            newCost = 0;
+            for (int i = 0; i < fRet.path->size() - 1; ++i) {
+                newCost += *(*fRet.path)[i] - *((*fRet.path)[i + 1]);
+            }
+            optArray = {{"cost", newCost},
+                        {"path", optimizedPath}};
+            jsonString = optArray.dump();
+            wsServer.binarySend(hdl, "octomap_smoothed_path", jsonString);
+
+            std::cout << "Finish time "<< std::chrono::duration_cast<std::chrono::microseconds>(
+                    std::chrono::high_resolution_clock::now() - start_time).count() << "microseconds" << std::endl;
         } else {
             std::cout << "Path not found" << std::endl;
         }
@@ -114,7 +116,7 @@ int main() {
     initializeEnvironment(env, tree, 1.0); // 1.0 is the maxDist = stepLength
     std::cout << "Time for environment initialization: "
               << std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::high_resolution_clock::now() - start_env).count() << "ms" << std::endl;
+                      std::chrono::high_resolution_clock::now() - start_env).count() << "ms" << std::endl;
     wsServer.setOnOpenCallback([](websocketpp::connection_hdl hdl) {
         onOpenCallback(hdl); // Call your original onOpenCallback function
     });
