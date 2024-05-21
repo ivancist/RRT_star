@@ -39,14 +39,14 @@ struct FinalReturn {
 
 class RRTStar {
 public:
-    int MAX_OPTIMIZING_ITERATIONS = 1 * 1000;
+    int MAX_OPTIMIZING_ITERATIONS = 0 * 1000;
     const int waitBeforeClosing = 3 * 1000;
     double threshold = 2.5; // with distmap: threshold <= stayAway
     double stepLength = 1; // stepLength <= threshold
     double stayAway = .6;
     double safeStayAway = stayAway / cos(M_PI / 6);
     double bias = 0.2;
-    const int refreshView = 1000;
+    const int refreshView = -1;
     int searchAtDepth = 0;
     Environment env;
 
@@ -64,6 +64,10 @@ public:
                         void (*pathFoundCallback)(ReturnPath *, websocketpp::connection_hdl),
                         websocketpp::connection_hdl hdl,
                         const std::shared_ptr<StoppableThread> &stoppableThreadPtr);
+
+    void pathOptimization(std::shared_ptr<std::vector<Node *>> &path);
+
+    void pathSmoothing(std::shared_ptr<std::vector<Node *>> &path, float percent, int density);
 
 private:
     double distance(Node *node1, Node *node2);
