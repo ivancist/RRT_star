@@ -590,7 +590,7 @@ RRTStar::rrtStar(Node *start, Node *goal, Environment &environment, double stayA
             std::chrono::high_resolution_clock::now() - start_ts).count(), tree.size(), goal->cost};
 }
 
-void RRTStar::pathOptimization(std::shared_ptr<std::vector<Node *>> &path){
+void RRTStar::pathPruning(std::shared_ptr<std::vector<Node *>> &path) {
     std::size_t numNodes = path->size();
     for (int i = 0; i < numNodes - 2; ++i) {
 //                octomap::point3d startNode((*path.path)[i]->x, (*path.path)[i]->y, (*path.path)[i]->z);
@@ -616,7 +616,7 @@ void RRTStar::pathOptimization(std::shared_ptr<std::vector<Node *>> &path){
 // 3D Quadradic Bezier curve
 void RRTStar::pathSmoothing(std::shared_ptr<std::vector<Node *>> &path, float percent, int density) {
     int count;
-    for (int i = 0; i < path->size() - 2; i+=count) {
+    for (int i = 0; i < path->size() - 2; i += count) {
         octomap::point3d p0 = octomap::point3d(path->at(i)->x, path->at(i)->y, path->at(i)->z);
         octomap::point3d p1 = octomap::point3d(path->at(i + 1)->x, path->at(i + 1)->y, path->at(i + 1)->z);
         octomap::point3d p2 = octomap::point3d(path->at(i + 2)->x, path->at(i + 2)->y, path->at(i + 2)->z);
@@ -625,20 +625,35 @@ void RRTStar::pathSmoothing(std::shared_ptr<std::vector<Node *>> &path, float pe
         double dist2 = p2.distance(p1);
         vers1 = (p1 - p0) * (1.0 / dist1);
         vers2 = (p2 - p1) * (1.0 / dist2);
-        p0 = p1 - vers1 * dist1 * percent;
-        p2 = p1 + vers2 * dist2 * percent;
-        path->erase(path->begin() + i + 1);
-        count = 0;
-        for (float j = 0; j < 1; j += 1.0 / density) {
-            count++;
-            Node *newNode = new Node();
-            newNode->x = (1 - j) * (1 - j) * p0.x() + 2 * (1 - j) * j * p1.x() + j * j * p2.x();
-            newNode->y = (1 - j) * (1 - j) * p0.y() + 2 * (1 - j) * j * p1.y() + j * j * p2.y();
-            newNode->z = (1 - j) * (1 - j) * p0.z() + 2 * (1 - j) * j * p1.z() + j * j * p2.z();
-            path->insert(path->begin() + i + count, newNode);
+        bool collision = true;
+        while (collision) {
+            p0 = p1 - vers1 * dist1 * percent;
+            p2 = p1 + vers2 * dist2 * percent;
+            count = 0;
+            std::vector<Node *> bezier;
+            for (float j = 0; j < 1; j += 1.0 / density) {
+                count++;
+                Node *newNode = new Node();
+                newNode->x = (1 - j) * (1 - j) * p0.x() + 2 * (1 - j) * j * p1.x() + j * j * p2.x();
+                newNode->y = (1 - j) * (1 - j) * p0.y() + 2 * (1 - j) * j * p1.y() + j * j * p2.y();
+                newNode->z = (1 - j) * (1 - j) * p0.z() + 2 * (1 - j) * j * p1.z() + j * j * p2.z();
+                bezier.push_back(newNode);
 
-            if (env.distmap->getDistance(octomap::point3d(newNode->x, newNode->y, newNode->z)) < stayAway) {
-                break;
+                if (env.distmap->getDistance(octomap::point3d(newNode->x, newNode->y, newNode->z)) < stayAway) {
+                    std::cerr << "Collision detected in path smoothing" << std::endl;
+                    break;
+                }
+            }
+            if (count == density) {
+                path->erase(path->begin() + i + 1);
+                path->insert(path->begin() + i + 1, bezier.begin(), bezier.end());
+                collision = false;
+            } else {
+                percent /= 2;
+                density /= sqrt(2);
+                if (percent < 0.05 || density < 2) {
+                    break;
+                }
             }
         }
     }

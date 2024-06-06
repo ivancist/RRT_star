@@ -64,7 +64,7 @@ void onOpenCallback(websocketpp::connection_hdl hdl) {
             };
             wsServer.binarySend(hdl, "octomap_completed", completeJson.dump());
 
-            rrt_star.pathOptimization(fRet.path);
+            rrt_star.pathPruning(fRet.path);
             std::cout << "Optimizing path with " << fRet.path->size() << " nodes" << std::endl;
             double newCost = 0;
             for (int i = 0; i < fRet.path->size() - 1; ++i) {

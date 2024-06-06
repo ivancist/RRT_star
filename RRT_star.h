@@ -65,7 +65,7 @@ public:
                         websocketpp::connection_hdl hdl,
                         const std::shared_ptr<StoppableThread> &stoppableThreadPtr);
 
-    void pathOptimization(std::shared_ptr<std::vector<Node *>> &path);
+    void pathPruning(std::shared_ptr<std::vector<Node *>> &path);
 
     void pathSmoothing(std::shared_ptr<std::vector<Node *>> &path, float percent, int density);
 
