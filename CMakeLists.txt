@@ -13,6 +13,8 @@ add_executable(RRT_star
         main.cpp
         stoppableThread.cpp
         stoppableThread.h
+        base64.h
+        base64.cpp
 )
 
 find_package(OpenCV REQUIRED)

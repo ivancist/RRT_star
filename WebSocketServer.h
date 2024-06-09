@@ -32,6 +32,10 @@ public:
 
     void setOnOpenCallback(std::function<void(websocketpp::connection_hdl)> onOpenCallback);
 
+    void setOnMessageCallback(std::function<void(websocketpp::connection_hdl, const server::message_ptr msg)> onMessageCallback);
+
+    void setOnCloseCallback(std::function<void(websocketpp::connection_hdl)> onCloseCallback);
+
 private:
     server ws_server;
     std::set<websocketpp::connection_hdl, std::owner_less<websocketpp::connection_hdl>> connections;

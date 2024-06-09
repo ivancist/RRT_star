@@ -3,7 +3,6 @@
 server ws_server;
 std::thread wsThread;
 std::set<websocketpp::connection_hdl, std::owner_less<websocketpp::connection_hdl>> connections;
-std::map<void *, std::unique_ptr<StoppableThread>> runningThreads;
 
 server *WebSocketServer::getServer() {
     return &ws_server;
@@ -40,13 +39,18 @@ void WebSocketServer::binaryBroadcast(const std::string &topic, const std::strin
     }
 }
 
+std::function<void(websocketpp::connection_hdl, const server::message_ptr msg)> on_message_callback_ = nullptr;
+void WebSocketServer::setOnMessageCallback(std::function<void(websocketpp::connection_hdl, const server::message_ptr msg)> onMessageCallback) {
+    on_message_callback_ = std::move(onMessageCallback);
+}
+
 void on_message(websocketpp::connection_hdl hdl, const server::message_ptr msg, WebSocketServer *wsServer) {
     std::cout << "on_message called with hdl: " << hdl.lock().get() << " and message: " << msg->get_payload()
               << std::endl;
-    wsServer->getServer()->send(hdl, "Message received", msg->get_opcode());
+//    wsServer->getServer()->send(hdl, "Message received", msg->get_opcode());
 
-    if (msg->get_payload() == "stopServer") {
-        wsServer->stop();
+    if (on_message_callback_ != nullptr) {
+        on_message_callback_(hdl, msg);
     }
 }
 
@@ -63,13 +67,16 @@ void WebSocketServer::setOnOpenCallback(std::function<void(websocketpp::connecti
     on_open_callback_ = std::move(onOpenCallback);
 }
 
+std::function<void(websocketpp::connection_hdl)> on_close_callback_ = nullptr;
 void on_close(websocketpp::connection_hdl hdl, WebSocketServer *wsServer) {
-    if (wsServer->runningThreads.find(hdl.lock().get()) != wsServer->runningThreads.end()) {
-        wsServer->runningThreads[hdl.lock().get()]->stopThread();
-        wsServer->runningThreads.erase(hdl.lock().get());
+    if (on_close_callback_ != nullptr) {
+        on_close_callback_(hdl);
     }
     wsServer->getConnections()->erase(hdl);
+}
 
+void WebSocketServer::setOnCloseCallback(std::function<void(websocketpp::connection_hdl)> onCloseCallback) {
+    on_close_callback_ = std::move(onCloseCallback);
 }
 
 void WebSocketServer::start(int port, void (*onOpenCallback)(websocketpp::connection_hdl)) {

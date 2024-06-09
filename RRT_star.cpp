@@ -507,12 +507,11 @@ std::vector<Node *> RRTStar::rrtStar(Node *start, Node *goal, Environment &env) 
 }
 
 FinalReturn
-RRTStar::rrtStar(Node *start, Node *goal, Environment &environment, double stayAwayDesired,
+RRTStar::rrtStar(Node *start, Node *goal, Environment &environment,
                  void (*pathFoundCallback)(ReturnPath *, websocketpp::connection_hdl), websocketpp::connection_hdl hdl,
                  const std::shared_ptr<StoppableThread> &stoppableThreadPtr) {
     env = environment;
-    stayAway = stayAwayDesired;
-    safeStayAway = stayAwayDesired / cos(M_PI / 6);
+    safeStayAway = stayAway / cos(M_PI / 6);
 //        int depth = env.tree->getTreeDepth();
 //        double resolution = env.tree->getResolution();
 //        if (stayAway > resolution) {
@@ -530,6 +529,7 @@ RRTStar::rrtStar(Node *start, Node *goal, Environment &environment, double stayA
 
     while ((!finish || iteration_after_finish < MAX_OPTIMIZING_ITERATIONS) &&
            !stoppableThreadPtr->isStopRequested()) {
+
         // Sample a random point in the environment
         Node *randomNode = sampleRandomNode(goal);
 //        Node *randomNode = sampleRandomNode();

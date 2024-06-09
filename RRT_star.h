@@ -60,7 +60,7 @@ public:
 
     std::vector<Node *> rrtStar(Node *start, Node *goal, Environment &env);
 
-    FinalReturn rrtStar(Node *start, Node *goal, Environment &environment, double stayAwayDesired,
+    FinalReturn rrtStar(Node *start, Node *goal, Environment &environment,
                         void (*pathFoundCallback)(ReturnPath *, websocketpp::connection_hdl),
                         websocketpp::connection_hdl hdl,
                         const std::shared_ptr<StoppableThread> &stoppableThreadPtr);
