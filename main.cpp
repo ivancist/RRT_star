@@ -1,12 +1,16 @@
 #include "WebSocketServer.h"
 #include "RRT_star.h"
 #include <nlohmann/json.hpp>
-#include "base64.h"
 
 WebSocketServer wsServer;
 std::shared_ptr<Environment> env = std::make_shared<Environment>();
 octomap::OcTree *tree = new octomap::OcTree("../octomap.bt");
-std::map<void *, std::vector<std::shared_ptr<StoppableThread>> *> runningThreads;
+struct partialPathThread {
+    nlohmann::json start;
+    nlohmann::json goal;
+    std::shared_ptr<StoppableThread> thread;
+};
+std::map<void *, std::vector<partialPathThread> *> runningThreads;
 std::map<void *, std::map<std::string, double>> clientsPreferences;
 std::map<void *, std::shared_ptr<Environment>> clientEnvironments;
 
@@ -31,8 +35,8 @@ void onPathFoundCollback(ReturnPath *returnPath, websocketpp::connection_hdl hdl
 void onCloseCallback(websocketpp::connection_hdl hdl) {
     std::cout << "Connection closed" << std::endl;
     if (runningThreads.find(hdl.lock().get()) != runningThreads.end()) {
-        for (auto &thread: *runningThreads[hdl.lock().get()]) {
-            thread->stopThread();
+        for (auto &ppThread: *runningThreads[hdl.lock().get()]) {
+            ppThread.thread->stopThread();
         }
         runningThreads.erase(hdl.lock().get());
     }
@@ -75,8 +79,8 @@ void onMessageCallback(websocketpp::connection_hdl hdl,
         case 's': {
             // Stop
             if (runningThreads.find(hdl.lock().get()) != runningThreads.end()) {
-                for (auto &thread: *runningThreads[hdl.lock().get()]) {
-                    thread->stopThread();
+                for (auto &ppThread: *runningThreads[hdl.lock().get()]) {
+                    ppThread.thread->stopThread();
                 }
                 runningThreads.erase(hdl.lock().get());
             }
@@ -85,22 +89,65 @@ void onMessageCallback(websocketpp::connection_hdl hdl,
         case 'r': {
             // Run
             std::cout << "Received run command" << std::endl;
-            std::vector<octomap::point3d> waypoints;
+            std::map<int, octomap::point3d> waypointsMap;
             for (const auto &waypoint: json["waypoints"]) {
-                // waypoints have this structure [{id:0,coords:{x:"",y:"",z:""},color:"#ff0000"}, {id:1,coords:{x:"",y:"",z:""},color:"#0000ff"}]
-                waypoints.emplace_back(octomap::point3d(waypoint["coords"]["x"], waypoint["coords"]["y"],
-                                                     waypoint["coords"]["z"]));
+                waypointsMap[waypoint["id"]] = octomap::point3d(waypoint["coords"]["x"], waypoint["coords"]["y"],
+                                                                waypoint["coords"]["z"]);
             }
-            if (waypoints.size() < 2) {
+            // if there are less than 2 waypoints, return
+            if (waypointsMap.size() < 2) {
                 std::cout << "Not enough waypoints" << std::endl;
                 break;
             }
+
+            // find for threads containing ids not in the new waypoints, stop them and then remove them
+            if (runningThreads.find(hdl.lock().get()) != runningThreads.end()) {
+                for (auto it = runningThreads[hdl.lock().get()]->begin();
+                     it != runningThreads[hdl.lock().get()]->end();) {
+                    if (waypointsMap.find(it->start["id"]) == waypointsMap.end() ||
+                        waypointsMap.find(it->goal["id"]) == waypointsMap.end()) {
+                        it->thread->stopThread();
+                        it = runningThreads[hdl.lock().get()]->erase(it);
+                    } else {
+                        ++it;
+                    }
+                }
+            }
+
             // for each pair of waypoints, run RRT* in different threads
-            for (int i = 0; i < waypoints.size() - 1; ++i) {
+            for (int i = 0; i < waypointsMap.size() - 1; ++i) {
+
+                int startId = json["waypoints"][i]["id"];
+                int goalId = json["waypoints"][i + 1]["id"];
+                // if there is a thread with start id equal to the current start id, but the goal id is different from the current goal id, stop the thread
+                bool found = false;
+                std::cout << "Wi "<< json["waypoints"][i] << std::endl;
+                std::cout << "Wi+1 " << json["waypoints"][i + 1] << std::endl;
+                if (runningThreads.find(hdl.lock().get()) != runningThreads.end()) {
+                    for (auto it = runningThreads[hdl.lock().get()]->begin();
+                         it != runningThreads[hdl.lock().get()]->end();) {
+                        if (it->start["id"] == startId && it->goal["id"] == goalId) {
+                            if (it->start != json["waypoints"][i] || it->goal != json["waypoints"][i + 1]) {
+                                it->thread->stopThread();
+                                runningThreads[hdl.lock().get()]->erase(it);
+                            }else{
+                                found = true;
+                            }
+                            break;
+                        } else {
+                            ++it;
+                        }
+                    }
+                }
+                if (found) {
+                    continue;
+                }
+
+                std::vector<octomap::point3d> waypoints = {waypointsMap[i], waypointsMap[i + 1]};
                 auto rrtThreadPtr = std::make_shared<StoppableThread>();
-                rrtThreadPtr->startThread([hdl, rrtThreadPtr, i, waypoints]() {
-                    Node start = {waypoints[i].x(), waypoints[i].y(), waypoints[i].z(), nullptr, 0};
-                    Node goal = {waypoints[i + 1].x(), waypoints[i + 1].y(), waypoints[i + 1].z(), nullptr,
+                rrtThreadPtr->startThread([hdl, rrtThreadPtr, waypoints]() {
+                    Node start = {waypoints[0].x(), waypoints[0].y(), waypoints[0].z(), nullptr, 0};
+                    Node goal = {waypoints[1].x(), waypoints[1].y(), waypoints[1].z(), nullptr,
                                  std::numeric_limits<double>::max()};
                     RRTStar rrt_star;
                     // set preferences
@@ -152,8 +199,8 @@ void onMessageCallback(websocketpp::connection_hdl hdl,
                         rrt_star.pathPruning(fRet.path);
                         std::cout << "Optimizing path with " << fRet.path->size() << " nodes" << std::endl;
                         double newCost = 0;
-                        for (int i = 0; i < fRet.path->size() - 1; ++i) {
-                            newCost += *(*fRet.path)[i] - *((*fRet.path)[i + 1]);
+                        for (int j = 0; j < fRet.path->size() - 1; ++j) {
+                            newCost += *(*fRet.path)[j] - *((*fRet.path)[j + 1]);
                         }
                         std::cout << "Optimizing path with cost:" << newCost << std::endl;
                         nlohmann::json optimizedPath;
@@ -177,8 +224,8 @@ void onMessageCallback(websocketpp::connection_hdl hdl,
                                                      {"z", node->z}});
                         }
                         newCost = 0;
-                        for (int i = 0; i < fRet.path->size() - 1; ++i) {
-                            newCost += *(*fRet.path)[i] - *((*fRet.path)[i + 1]);
+                        for (int j = 0; j < fRet.path->size() - 1; ++j) {
+                            newCost += *(*fRet.path)[j] - *((*fRet.path)[j + 1]);
                         }
                         optArray = {{"cost", newCost},
                                     {"path", optimizedPath}};
@@ -190,9 +237,23 @@ void onMessageCallback(websocketpp::connection_hdl hdl,
                     } else {
                         std::cout << "Path not found" << std::endl;
                     }
+                    // stop the thread
+                    rrtThreadPtr->stopThread();
+
+                    // print number of threads not stopped
+                    if (runningThreads.find(hdl.lock().get()) != runningThreads.end()) {
+                        int runningThreadsCount = 0;
+                        for (const auto &ppThread: *runningThreads[hdl.lock().get()]) {
+                            if (!ppThread.thread->isStopRequested()) {
+                                runningThreadsCount++;
+                            }
+                        }
+                        std::cout << "Running threads: " << runningThreadsCount << std::endl;
+                    }
                 });
                 rrtThreadPtr->detach();
-                runningThreads[hdl.lock().get()]->push_back(rrtThreadPtr);
+                runningThreads[hdl.lock().get()]->emplace_back(
+                        partialPathThread{json["waypoints"][i], json["waypoints"][i + 1], rrtThreadPtr});
             }
         }
         default:
@@ -202,7 +263,7 @@ void onMessageCallback(websocketpp::connection_hdl hdl,
 }
 
 void onOpenCallback(websocketpp::connection_hdl hdl) {
-    runningThreads[hdl.lock().get()] = new std::vector<std::shared_ptr<StoppableThread>>();
+    runningThreads[hdl.lock().get()] = new std::vector<partialPathThread>();
 
     // TODO CHANGE THIS TO USE THE NEW ENVIRONMENT
     clientEnvironments[hdl.lock().get()] = env;

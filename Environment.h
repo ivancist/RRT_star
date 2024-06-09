@@ -2,6 +2,7 @@
 #define ENVIRONMENT_H
 
 #include <vector>
+#include <memory>
 #include <iostream>
 #include <octomap/OcTree.h>
 #include <dynamicEDT3D/dynamicEDTOctomap.h>
