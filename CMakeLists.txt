@@ -4,15 +4,17 @@ project(oppi)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(oppi
-        main.cpp
-        RRT_star.cpp
-        RRT_star.h
-        Environment.cpp
-        Environment.h
-        WebSocketServer.cpp
-        WebSocketServer.h
-        stoppableThread.cpp
-        stoppableThread.h
+        src/main.cpp
+        src/RRT_star.cpp
+        include/RRT_star.h
+        src/Environment.cpp
+        include/Environment.h
+        src/WebSocketServer.cpp
+        include/WebSocketServer.h
+        src/stoppableThread.cpp
+        include/stoppableThread.h
+        src/WebSocketClient.cpp
+        include/WebSocketClient.h
 )
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -25,7 +27,7 @@ else ()
     set(dynamicEDT3D_DIR "/opt/ros/humble/share/dynamicEDT3D")
 endif()
 
-include_directories(/usr/include/websocketpp /usr/include/nlohmann)
+include_directories(/usr/include/websocketpp /usr/include/nlohmann include)
 
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})

@@ -13,6 +13,7 @@ public:
     bool isStopRequested();
     void detach();
     void stopThread();
+    void join();
 
 private:
     bool stopRequested;

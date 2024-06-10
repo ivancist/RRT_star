@@ -25,3 +25,7 @@ void StoppableThread::stopThread() {
 bool StoppableThread::isStopRequested() {
     return stopRequested;
 }
+
+void StoppableThread::join() {
+    t.join();
+}
