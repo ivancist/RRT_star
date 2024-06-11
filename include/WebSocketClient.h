@@ -19,6 +19,7 @@ struct partialPathThread {
     nlohmann::json goal;
     std::shared_ptr<StoppableThread> thread;
     std::shared_ptr<ComputedPath> partialPath;
+    bool toDelete = false;
 };
 
 class WebSocketClient {

@@ -10,6 +10,7 @@ StoppableThread::~StoppableThread() {
 bool* StoppableThread::startThread(std::function<void()> func) {
     t = std::thread([this, func = std::move(func)] {
         func();
+        joined = true;
     });
     return &stopRequested;
 }
@@ -27,5 +28,15 @@ bool StoppableThread::isStopRequested() {
 }
 
 void StoppableThread::join() {
+    joined = false;
     t.join();
+    joined = true;
+}
+
+bool StoppableThread::isJoined() {
+    return joined;
+}
+
+void StoppableThread::setJoined(bool val) {
+    joined = val;
 }
