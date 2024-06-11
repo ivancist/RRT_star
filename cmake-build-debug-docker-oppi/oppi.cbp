@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="oppi"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\usr\;CMake Files\..\..\usr\lib\;CMake Files\..\..\usr\lib\aarch64-linux-gnu\;CMake Files\..\..\usr\lib\aarch64-linux-gnu\cmake\;CMake Files\..\..\usr\lib\aarch64-linux-gnu\cmake\opencv4\;CMake Files\..\..\usr\lib\aarch64-linux-gnu\cmake\websocketpp\;CMake Files\..\..\usr\lib\cmake\;CMake Files\..\..\usr\lib\cmake\nlohmann_json\;CMake Files\..\..\opt\;CMake Files\..\..\opt\ros\;CMake Files\..\..\opt\ros\humble\;CMake Files\..\..\opt\ros\humble\share\;CMake Files\..\..\opt\ros\humble\share\octomap\;CMake Files\..\..\opt\ros\humble\share\dynamicEDT3D\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/tmp/RRT_star/cmake-build-debug-docker-oppi"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="oppi">
+				<Option output="/tmp/RRT_star/cmake-build-debug-docker-oppi/oppi" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/RRT_star/cmake-build-debug-docker-oppi"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DJSON_USE_IMPLICIT_CONVERSIONS=1"/>
+					<Add option="-DJSON_DIAGNOSTICS=0"/>
+					<Add directory="/usr/include/websocketpp"/>
+					<Add directory="/usr/include/nlohmann"/>
+					<Add directory="/tmp/RRT_star/include"/>
+					<Add directory="/usr/include/opencv4"/>
+					<Add directory="/opt/ros/humble/include"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/aarch64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/aarch64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/aarch64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 oppi"/>
+					<CompileFile command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="oppi/fast">
+				<Option output="/tmp/RRT_star/cmake-build-debug-docker-oppi/oppi" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/RRT_star/cmake-build-debug-docker-oppi"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DJSON_USE_IMPLICIT_CONVERSIONS=1"/>
+					<Add option="-DJSON_DIAGNOSTICS=0"/>
+					<Add directory="/usr/include/websocketpp"/>
+					<Add directory="/usr/include/nlohmann"/>
+					<Add directory="/tmp/RRT_star/include"/>
+					<Add directory="/usr/include/opencv4"/>
+					<Add directory="/opt/ros/humble/include"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/aarch64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/aarch64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/aarch64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 oppi/fast"/>
+					<CompileFile command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/tmp/RRT_star/cmake-build-debug-docker-oppi"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/tmp/RRT_star/cmake-build-debug-docker-oppi"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j10 -f &quot;/tmp/RRT_star/cmake-build-debug-docker-oppi/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/tmp/RRT_star/include/Environment.h">
+			<Option target="oppi"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/include/RRT_star.h">
+			<Option target="oppi"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/include/WebSocketClient.h">
+			<Option target="oppi"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/include/WebSocketServer.h">
+			<Option target="oppi"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/include/stoppableThread.h">
+			<Option target="oppi"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/src/Environment.cpp">
+			<Option target="oppi"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/src/RRT_star.cpp">
+			<Option target="oppi"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/src/WebSocketClient.cpp">
+			<Option target="oppi"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/src/WebSocketServer.cpp">
+			<Option target="oppi"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/src/main.cpp">
+			<Option target="oppi"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/src/stoppableThread.cpp">
+			<Option target="oppi"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../usr/lib/aarch64-linux-gnu/cmake/opencv4/OpenCVConfig-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\lib\aarch64-linux-gnu\cmake\opencv4\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../usr/lib/aarch64-linux-gnu/cmake/opencv4/OpenCVConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\lib\aarch64-linux-gnu\cmake\opencv4\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../usr/lib/aarch64-linux-gnu/cmake/opencv4/OpenCVModules-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\lib\aarch64-linux-gnu\cmake\opencv4\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../usr/lib/aarch64-linux-gnu/cmake/opencv4/OpenCVModules.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\lib\aarch64-linux-gnu\cmake\opencv4\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../usr/lib/aarch64-linux-gnu/cmake/websocketpp/websocketpp-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\lib\aarch64-linux-gnu\cmake\websocketpp\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../usr/lib/aarch64-linux-gnu/cmake/websocketpp/websocketpp-configVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\lib\aarch64-linux-gnu\cmake\websocketpp\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../usr/lib/cmake/nlohmann_json/nlohmann_jsonConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\lib\cmake\nlohmann_json\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../usr/lib/cmake/nlohmann_json/nlohmann_jsonConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\lib\cmake\nlohmann_json\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../usr/lib/cmake/nlohmann_json/nlohmann_jsonTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\lib\cmake\nlohmann_json\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../opt/ros/humble/share/octomap/octomap-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\opt\ros\humble\share\octomap\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../opt/ros/humble/share/octomap/octomap-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\opt\ros\humble\share\octomap\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../opt/ros/humble/share/octomap/octomap-targets-none.cmake">
+			<Option virtualFolder="CMake Files\..\..\opt\ros\humble\share\octomap\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../opt/ros/humble/share/octomap/octomap-targets.cmake">
+			<Option virtualFolder="CMake Files\..\..\opt\ros\humble\share\octomap\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../opt/ros/humble/share/dynamicEDT3D/dynamicEDT3DConfig-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\opt\ros\humble\share\dynamicEDT3D\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../opt/ros/humble/share/dynamicEDT3D/dynamicEDT3DConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\opt\ros\humble\share\dynamicEDT3D\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../opt/ros/humble/share/dynamicEDT3D/dynamicEDT3DTargets-none.cmake">
+			<Option virtualFolder="CMake Files\..\..\opt\ros\humble\share\dynamicEDT3D\"/>
+		</Unit>
+		<Unit filename="/tmp/RRT_star/../../opt/ros/humble/share/dynamicEDT3D/dynamicEDT3DTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\opt\ros\humble\share\dynamicEDT3D\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
