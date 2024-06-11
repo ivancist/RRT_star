@@ -27,5 +27,21 @@ bool StoppableThread::isStopRequested() {
 }
 
 void StoppableThread::join() {
-    t.join();
+    if (joined == nullptr || !*joined) {
+        joined = new bool(false);
+        t.join();
+        *joined = true;
+    }
+}
+
+bool* StoppableThread::isJoined() {
+    return joined;
+}
+
+void StoppableThread::setJoined(bool val) {
+    if (joined != nullptr){
+        *joined = val;
+    }else{
+        joined = new bool(val);
+    }
 }

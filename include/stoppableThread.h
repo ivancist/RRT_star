@@ -14,9 +14,12 @@ public:
     void detach();
     void stopThread();
     void join();
+    bool* isJoined();
+    void setJoined(bool val);
 
 private:
     bool stopRequested;
+    bool* joined = nullptr;
     std::thread t;
 };
 

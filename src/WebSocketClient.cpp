@@ -78,10 +78,13 @@ void WebSocketClient::deleteOldWaypoints(std::map<int, octomap::point3d> &waypoi
 
         if (waypointsMap.find(it->start["id"]) == waypointsMap.end() ||
             waypointsMap.find(it->goal["id"]) == waypointsMap.end()) {
-            std::cout << "Stopping thread" << std::endl;
+            std::cout << "Stopping thread, "<< threads_->size() << std::endl;
 
             it->thread->stopThread();
+            it->toDelete = true;
+            it->thread->join();
             it = threads_->erase(it);
+            std::cout << "Thread stopped and erased, " << threads_->size() << " remaining" << std::endl;
         } else {
             ++it;
         }
@@ -92,18 +95,47 @@ std::shared_ptr<ComputedPath> WebSocketClient::stopUselessThreads(nlohmann::json
     std::shared_ptr<ComputedPath> cp = nullptr;
     int startId = waypoints[i]["id"];
     int goalId = waypoints[i + 1]["id"];
+    bool toDelete = false;
+
     for (auto it = threads_->begin(); it != threads_->end();) {
         if (it->start["id"] == startId) { // same startId
+            std::cout << "Same startId" << std::endl;
             if (it->goal["id"] != goalId || it->start != waypoints[i] || it->goal != waypoints[i + 1]) {
+                toDelete = true;
                 // different goalId or position changed
+                std::cout << "Different goalId or position changed" << std::endl;
                 it->thread->stopThread();
-                it = threads_->erase(it);
+                it->toDelete = true;
+                std::cout << "Thread stopped" << std::endl;
             } else { // same start and goal
-                cp = it->partialPath;
-                ++it;
+                std::cout << "Same start and goal" << std::endl;
+                cp = std::make_shared<ComputedPath>(*it->partialPath);
+                std::cout << "Path found in thread with size: " << cp->path->size() << std::endl;
             }
-        } else {
             ++it;
+        } else {
+            std::cout << "Different startId" << std::endl;
+            ++it;
+        }
+    }
+    if (toDelete) {
+        std::cout << "Erasing threads" << std::endl;
+        try {
+            for (auto it = threads_->begin(); it != threads_->end();) {
+                if (it->toDelete) {
+                    std::cout << "Trying to erase thread, " << threads_->size() << std::endl;
+                    while (it->thread->isJoined() != nullptr && *(it->thread->isJoined()) == false) {}
+                    std::cout << "Thread is joined: " << it->start << std::endl;
+                    it->thread->join();
+                    it = threads_->erase(it);
+                    std::cout << "Thread erased, " << threads_->size() << " remaining" << std::endl;
+                } else {
+                    ++it;
+                }
+            }
+            std::cout << "Threads erased" << std::endl;
+        } catch (std::exception &e) {
+            std::cout << "Exception: " << e.what() << std::endl;
         }
     }
     return cp;
@@ -131,22 +163,25 @@ std::string WebSocketClient::computedPathToString(std::shared_ptr<ComputedPath> 
     } else {
         jsonArray["cost"] = path->cost;
     }
-    std::cout << "Computed path: " << jsonArray.dump() << std::endl;
     return jsonArray.dump();
 }
 
 std::shared_ptr<ComputedPath> WebSocketClient::pathPlanningThread(std::shared_ptr<StoppableThread> thread,
                                                                   std::vector<octomap::point3d> waypoints) {
-    Node start = {waypoints[0].x(), waypoints[0].y(), waypoints[0].z(), nullptr, 0};
-    Node goal = {waypoints[1].x(), waypoints[1].y(), waypoints[1].z(), nullptr,
-                 std::numeric_limits<double>::max()};
+    std::cout << "Starting thread" << std::endl;
+    std::cout << "Waypoints: " << waypoints[0].x() << " " << waypoints[0].y() << " " << waypoints[0].z() << " "
+              << waypoints[1].x() << " " << waypoints[1].y() << " " << waypoints[1].z() << std::endl;
+    Node *start = new Node{waypoints[0].x(), waypoints[0].y(), waypoints[0].z(), nullptr, 0};
+    Node *goal = new Node{waypoints[1].x(), waypoints[1].y(), waypoints[1].z(), nullptr,
+                          std::numeric_limits<double>::max()};
 
     auto start_time = std::chrono::high_resolution_clock::now();
 
     std::cout << "Before RRT*" << std::endl;
     // bind function to call when path is found.
-    std::shared_ptr<ComputedPath> fRet = rrtStar_->rrtStar(&waypoints[0], &waypoints[1], env_, std::bind(&WebSocketClient::onPathFoundCallback, this,
-                                                                        std::placeholders::_1), thread);
+    std::shared_ptr<ComputedPath> fRet = rrtStar_->rrtStar(start, goal, env_,
+                                                           std::bind(&WebSocketClient::onPathFoundCallback, this,
+                                                                     std::placeholders::_1), thread);
     std::cout << "After RRT*" << std::endl;
 
     if (!fRet->path->empty()) {
@@ -156,7 +191,9 @@ std::shared_ptr<ComputedPath> WebSocketClient::pathPlanningThread(std::shared_pt
         wsServer_->binarySend(hdl_, "octomap_completed", completePathString);
 
         rrtStar_->pathPruning(fRet->path);
+        std::cout << "Pruned found" << std::endl;
         std::string prunedPathString = computedPathToString(fRet, false);
+        std::cout << "Sending pruned path" << std::endl;
         wsServer_->binarySend(hdl_, "octomap_optimized_path", prunedPathString);
     } else {
         std::cout << "Path not found" << std::endl;
@@ -172,10 +209,6 @@ std::shared_ptr<ComputedPath> WebSocketClient::pathPlanningThread(std::shared_pt
         }
     }
     std::cout << "Running threads: " << runningThreadsCount << std::endl;
-
-    for (auto node: *fRet->path) {
-        std::cout << node->x << " " << node->y << " " << node->z << std::endl;
-    }
     std::cout << "***************" << std::endl;
 
     return fRet;
@@ -199,12 +232,19 @@ void WebSocketClient::handleRunMessage(nlohmann::json &msg) {
 
     std::vector<std::shared_ptr<ComputedPath>> partialPaths(waypointsMap.size() - 1);
 
-// Per ogni coppia di waypoints, eseguire RRT* in diversi thread
     for (int i = 0; i < waypointsMap.size() - 1; ++i) {
-
         std::shared_ptr<ComputedPath> foundPath = stopUselessThreads(msg["waypoints"], i);
         if (foundPath != nullptr) {
             partialPaths[i] = foundPath;
+        } else {
+            partialPaths[i] = nullptr;
+        }
+    }
+
+// Per ogni coppia di waypoints, eseguire RRT* in diversi thread
+    for (int i = 0; i < waypointsMap.size() - 1; ++i) {
+std::cout << "Checking waypoint " << i << std::endl;
+        if (partialPaths[i] != nullptr) {
             continue;
         }
 
@@ -212,60 +252,100 @@ void WebSocketClient::handleRunMessage(nlohmann::json &msg) {
 
         std::cout << "Before thread" << std::endl;
         std::vector<octomap::point3d> waypoints = {waypointsMap[i], waypointsMap[i + 1]};
+        std::cout << "Waypoints: " << waypoints[0].x() << " " << waypoints[0].y() << " " << waypoints[0].z() << " "
+                  << waypoints[1].x() << " " << waypoints[1].y() << " " << waypoints[1].z() << std::endl;
 
         auto partialPathPtr = partialPaths[i];
 
         auto rrtThreadPtr = std::make_shared<StoppableThread>();
-        rrtThreadPtr->startThread([this, rrtThreadPtr, waypoints, partialPathPtr]() {
+        rrtThreadPtr->startThread([this, rrtThreadPtr, waypoints, partialPathPtr, msg, i]() {
             std::cout << "Thread started" << std::endl;
 
             std::shared_ptr<ComputedPath> computedPath = std::move(pathPlanningThread(rrtThreadPtr, waypoints));
 
-            std::cout << "Computed" << std::endl;
-            for (const auto &node: *computedPath->path) {
-                std::cout << node->x << " " << node->y << " " << node->z << std::endl;
+            std::cout << "ppThread finished" << std::endl;
+            // find thread in threads_ and update the path. Search by start and goal
+            for (auto &thread: *threads_) {
+                if (thread.start == msg["waypoints"][i] && thread.goal == msg["waypoints"][i + 1]) {
+                    thread.partialPath = computedPath;
+                    break;
+                }
             }
-            std::cout << "------------" << std::endl;
 
-            // Salvare il percorso calcolato in partialPathPtr
-            partialPathPtr->path = computedPath->path;
-            partialPathPtr->cost = computedPath->cost;
-            partialPathPtr->time_in_microseconds = computedPath->time_in_microseconds;
+            *partialPathPtr = *computedPath;
+
             std::cout << "Thread finished" << std::endl;
         });
-        std::cout << "After thread" << std::endl;
         threads_->emplace_back(partialPathThread{msg["waypoints"][i], msg["waypoints"][i + 1], rrtThreadPtr});
+        std::cout << "Thread added" << std::endl;
     }
 
-    // wait for all threads to finish
-    for (auto &thread: *threads_) {
-        thread.thread->join();
-    }
 
-    std::cout << "All threads finished" << std::endl;
+    std::cout << "Starting smooth thread" << std::endl;
+    std::thread smoothThread(
+            [this, partialPaths]() {
+                // create a vector with all current threads
+                std::vector<std::shared_ptr<StoppableThread>> threadsPtrs;
+                for (auto &thread: *threads_) {
+                    if (!thread.partialPath) {
+                        threadsPtrs.push_back(thread.thread);
+                    }
+                }
+                std::cout << "Threads pointers copied" << std::endl;
+                // wait for all threads to finish
+                bool stillAlive = true;
+                for (auto &ppt: threadsPtrs) {
+                    std::cout << "Joining thread" << std::endl;
+                    try {
+                        ppt->join();
+                        std::cout << "Thread joined" << std::endl;
+                        // if threads_ have still contains the thread (thread == ppt), then is still alive
+                        if (std::find_if(threads_->begin(), threads_->end(),
+                                         [ppt](const partialPathThread &ppt2) { return ppt2.thread == ppt; }) ==
+                            threads_->end()) {
+                            stillAlive = false;
+                        }
+                    } catch (std::exception &e) {
+                        std::cout << "Exception: " << e.what() << std::endl;
+                        stillAlive = false;
+                    }
 
-    // concatenate all partial paths (create a new ComputedPath object that contains all points always avoid adding last point except for last path)
-    std::shared_ptr<ComputedPath> fRet = std::make_shared<ComputedPath>();
-    fRet->path = std::make_shared<std::vector<Node *>>();
+                }
+                if (!stillAlive) {
+                    std::cout << "Partial paths not ready" << std::endl;
+                    return;
+                }
 
-    std::cout << "Concatenating paths" << std::endl;
+                std::cout << "All threads finished" << std::endl;
 
-    for (int i = 0; i < partialPaths.size(); ++i) {
-        for (int j = 0; j < partialPaths[i]->path->size(); ++j) {
-            std::cout << "Adding point " << j << " from path " << i << std::endl;
-            std::cout << (*partialPaths[i]->path)[j]->x << " " << (*partialPaths[i]->path)[j]->y << " "
-                      << (*partialPaths[i]->path)[j]->z << std::endl;
-            fRet->path->push_back((*partialPaths[i]->path)[j]);
-        }
-        if (i != partialPaths.size() - 1) {
-            fRet->path->pop_back();
-        }
-    }
+                // concatenate all partial paths (create a new ComputedPath object that contains all points always avoid adding last point except for last path)
+                std::shared_ptr<ComputedPath> fRet = std::make_shared<ComputedPath>();
+                fRet->path = std::make_shared<std::vector<Node *>>();
 
-    std::cout << "Path smoothing" << std::endl;
-    rrtStar_->pathSmoothing(fRet->path, 0.5, 10);
-    std::string jsonString = computedPathToString(fRet, true, true);
-    wsServer_->binarySend(hdl_, "octomap_smoothed_path", jsonString);
+                std::cout << "Concatenating paths" << std::endl;
+
+                for (int i = 0; i < partialPaths.size(); ++i) {
+                    for (int j = 0; j < partialPaths[i]->path->size(); ++j) {
+                        std::cout << "Adding point " << j << " from path " << i << std::endl;
+                        std::cout << (*partialPaths[i]->path)[j]->x << " " << (*partialPaths[i]->path)[j]->y << " "
+                                  << (*partialPaths[i]->path)[j]->z << std::endl;
+                        fRet->path->push_back((*partialPaths[i]->path)[j]);
+                    }
+                    if (i != partialPaths.size() - 1) {
+                        fRet->path->pop_back();
+                    }
+                }
+
+                std::cout << "Path smoothing" << std::endl;
+                rrtStar_->pathSmoothing(fRet->path, 0.5, 10);
+                std::string jsonString = computedPathToString(fRet, true, true);
+                wsServer_->binarySend(hdl_, "octomap_smoothed_path", jsonString);
+                std::cout << std::endl << std::endl << "-------------------------------" << std::endl << std::endl;
+            }
+    );
+    std::cout << "Smooth thread started" << std::endl;
+    smoothThread.detach();
+    std::cout << "Smooth thread detached" << std::endl;
 }
 
 void WebSocketClient::handleMessage(const websocketpp::server<websocketpp::config::asio>::message_ptr msg) {

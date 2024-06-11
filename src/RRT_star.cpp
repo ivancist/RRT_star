@@ -507,7 +507,7 @@ std::vector<Node *> RRTStar::rrtStar(Node *start, Node *goal, Environment &env) 
 }
 
 std::shared_ptr<ComputedPath>
-RRTStar::rrtStar(octomap::point3d* startPt, octomap::point3d* goalPt, std::shared_ptr<Environment> environment,
+RRTStar::rrtStar(Node* start, Node* goal, std::shared_ptr<Environment> environment,
                  std::function<void(std::shared_ptr<ComputedPath>)> pathFoundCallback,
                  const std::shared_ptr<StoppableThread> &stoppableThreadPtr) {
     std::cout << "RRT* started" << std::endl;
@@ -526,8 +526,6 @@ RRTStar::rrtStar(octomap::point3d* startPt, octomap::point3d* goalPt, std::share
     // Initialize the tree with the start node
     std::vector<Node *> tree;
     tree.reserve(parameters->MAX_OPTIMIZING_ITERATIONS);
-    Node *start = new Node{startPt->x(), startPt->y(), startPt->z(), nullptr, 0};
-    Node *goal = new Node{goalPt->x(), goalPt->y(), goalPt->z(), nullptr, std::numeric_limits<double>::max()};
     tree.push_back(start);
     bool finish = false;
     int iteration_after_finish = 0;
@@ -536,7 +534,6 @@ RRTStar::rrtStar(octomap::point3d* startPt, octomap::point3d* goalPt, std::share
 
     while ((!finish || iteration_after_finish < parameters->MAX_OPTIMIZING_ITERATIONS) &&
            !stoppableThreadPtr->isStopRequested()) {
-std::cout << "Iteration: " << iter << std::endl;
         // Sample a random point in the environment
         Node *randomNode = sampleRandomNode(goal);
 //        Node *randomNode = sampleRandomNode();
