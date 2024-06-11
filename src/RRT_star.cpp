@@ -507,10 +507,12 @@ std::vector<Node *> RRTStar::rrtStar(Node *start, Node *goal, Environment &env) 
 }
 
 std::shared_ptr<ComputedPath>
-RRTStar::rrtStar(Node* start, Node* goal, std::shared_ptr<Environment> environment,
+RRTStar::rrtStar(octomap::point3d &startPt, octomap::point3d &goalPt, std::shared_ptr<Environment> environment,
                  std::function<void(std::shared_ptr<ComputedPath>)> pathFoundCallback,
                  const std::shared_ptr<StoppableThread> &stoppableThreadPtr) {
     std::cout << "RRT* started" << std::endl;
+    Node *start = new Node{startPt.x(), startPt.y(), startPt.z(), nullptr, 0};
+    Node *goal = new Node{goalPt.x(), goalPt.y(), goalPt.z(), nullptr, std::numeric_limits<double>::max()};
     env = environment;
     std::cout << "Environment set" << parameters->stayAway << std::endl;
     parameters->safeStayAway = parameters->stayAway / cos(M_PI / 6);

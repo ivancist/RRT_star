@@ -1,6 +1,5 @@
 #include "WebSocketServer.h"
 
-server ws_server;
 std::thread wsThread;
 std::set<websocketpp::connection_hdl, std::owner_less<websocketpp::connection_hdl>> connections;
 

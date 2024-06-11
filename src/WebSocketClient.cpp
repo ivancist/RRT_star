@@ -78,7 +78,7 @@ void WebSocketClient::deleteOldWaypoints(std::map<int, octomap::point3d> &waypoi
 
         if (waypointsMap.find(it->start["id"]) == waypointsMap.end() ||
             waypointsMap.find(it->goal["id"]) == waypointsMap.end()) {
-            std::cout << "Stopping thread, "<< threads_->size() << std::endl;
+            std::cout << "Stopping thread, " << threads_->size() << std::endl;
 
             it->thread->stopThread();
             it->toDelete = true;
@@ -171,15 +171,12 @@ std::shared_ptr<ComputedPath> WebSocketClient::pathPlanningThread(std::shared_pt
     std::cout << "Starting thread" << std::endl;
     std::cout << "Waypoints: " << waypoints[0].x() << " " << waypoints[0].y() << " " << waypoints[0].z() << " "
               << waypoints[1].x() << " " << waypoints[1].y() << " " << waypoints[1].z() << std::endl;
-    Node *start = new Node{waypoints[0].x(), waypoints[0].y(), waypoints[0].z(), nullptr, 0};
-    Node *goal = new Node{waypoints[1].x(), waypoints[1].y(), waypoints[1].z(), nullptr,
-                          std::numeric_limits<double>::max()};
 
     auto start_time = std::chrono::high_resolution_clock::now();
 
     std::cout << "Before RRT*" << std::endl;
     // bind function to call when path is found.
-    std::shared_ptr<ComputedPath> fRet = rrtStar_->rrtStar(start, goal, env_,
+    std::shared_ptr<ComputedPath> fRet = rrtStar_->rrtStar(waypoints[0], waypoints[1], env_,
                                                            std::bind(&WebSocketClient::onPathFoundCallback, this,
                                                                      std::placeholders::_1), thread);
     std::cout << "After RRT*" << std::endl;
@@ -215,8 +212,10 @@ std::shared_ptr<ComputedPath> WebSocketClient::pathPlanningThread(std::shared_pt
 }
 
 void WebSocketClient::handleRunMessage(nlohmann::json &msg) {
-    std::map<int, octomap::point3d> waypointsMap;
+    std::map<int, octomap::point3d> waypointsMap = std::map<int, octomap::point3d>();
+    std::vector<int> waypointsIds;
     for (const auto &waypoint: msg["waypoints"]) {
+        waypointsIds.push_back(waypoint["id"]);
         waypointsMap[waypoint["id"]] = octomap::point3d(waypoint["coords"]["x"], waypoint["coords"]["y"],
                                                         waypoint["coords"]["z"]);
     }
@@ -235,28 +234,32 @@ void WebSocketClient::handleRunMessage(nlohmann::json &msg) {
     for (int i = 0; i < waypointsMap.size() - 1; ++i) {
         std::shared_ptr<ComputedPath> foundPath = stopUselessThreads(msg["waypoints"], i);
         if (foundPath != nullptr) {
-            partialPaths[i] = foundPath;
+            partialPaths[i] = std::move(foundPath);
         } else {
             partialPaths[i] = nullptr;
         }
     }
-
+    std::cout<<"n Waypoints: "<<waypointsMap.size()<<std::endl;
 // Per ogni coppia di waypoints, eseguire RRT* in diversi thread
     for (int i = 0; i < waypointsMap.size() - 1; ++i) {
-std::cout << "Checking waypoint " << i << std::endl;
+        std::cout << "Checking waypoint " << i <<" of" <<waypointsMap.size()<< std::endl;
         if (partialPaths[i] != nullptr) {
             continue;
         }
-
+std::cout<<"A:"<<waypointsMap.size()<<std::endl;
         partialPaths[i] = std::make_shared<ComputedPath>();
+        std::cout<<"B:"<<waypointsMap.size()<<std::endl;
 
         std::cout << "Before thread" << std::endl;
-        std::vector<octomap::point3d> waypoints = {waypointsMap[i], waypointsMap[i + 1]};
+        std::vector<octomap::point3d> waypoints = {waypointsMap[waypointsIds[i]], waypointsMap[waypointsIds[i + 1]]};
+        std::cout<<"C:"<<waypointsMap.size()<<std::endl;
+
         std::cout << "Waypoints: " << waypoints[0].x() << " " << waypoints[0].y() << " " << waypoints[0].z() << " "
                   << waypoints[1].x() << " " << waypoints[1].y() << " " << waypoints[1].z() << std::endl;
+        std::cout<<"D:"<<waypointsMap.size()<<std::endl;
 
         auto partialPathPtr = partialPaths[i];
-
+        std::cout << "Before threadPtr" << std::endl;
         auto rrtThreadPtr = std::make_shared<StoppableThread>();
         rrtThreadPtr->startThread([this, rrtThreadPtr, waypoints, partialPathPtr, msg, i]() {
             std::cout << "Thread started" << std::endl;
@@ -276,6 +279,8 @@ std::cout << "Checking waypoint " << i << std::endl;
 
             std::cout << "Thread finished" << std::endl;
         });
+        std::cout<<"E:"<<waypointsMap.size()<<std::endl;
+
         threads_->emplace_back(partialPathThread{msg["waypoints"][i], msg["waypoints"][i + 1], rrtThreadPtr});
         std::cout << "Thread added" << std::endl;
     }
@@ -341,11 +346,13 @@ std::cout << "Checking waypoint " << i << std::endl;
                 std::string jsonString = computedPathToString(fRet, true, true);
                 wsServer_->binarySend(hdl_, "octomap_smoothed_path", jsonString);
                 std::cout << std::endl << std::endl << "-------------------------------" << std::endl << std::endl;
+
             }
     );
     std::cout << "Smooth thread started" << std::endl;
     smoothThread.detach();
     std::cout << "Smooth thread detached" << std::endl;
+    waypointsMap.clear();
 }
 
 void WebSocketClient::handleMessage(const websocketpp::server<websocketpp::config::asio>::message_ptr msg) {
