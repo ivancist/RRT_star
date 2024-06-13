@@ -56,7 +56,7 @@ private:
 
     std::shared_ptr<ComputedPath> stopUselessThreads(nlohmann::json &waypoints, int i);
 
-    std::shared_ptr<ComputedPath> pathPlanningThread(std::shared_ptr<StoppableThread> thread, std::vector<octomap::point3d> waypoints);
+    std::shared_ptr<ComputedPath> pathPlanningThread(std::shared_ptr<StoppableThread> thread, nlohmann::json waypoints);
 };
 
 

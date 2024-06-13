@@ -507,12 +507,12 @@ std::vector<Node *> RRTStar::rrtStar(Node *start, Node *goal, Environment &env) 
 }
 
 std::shared_ptr<ComputedPath>
-RRTStar::rrtStar(octomap::point3d &startPt, octomap::point3d &goalPt, std::shared_ptr<Environment> environment,
+RRTStar::rrtStar(nlohmann::json waypoints, std::shared_ptr<Environment> environment,
                  std::function<void(std::shared_ptr<ComputedPath>)> pathFoundCallback,
                  const std::shared_ptr<StoppableThread> &stoppableThreadPtr) {
     std::cout << "RRT* started" << std::endl;
-    Node *start = new Node{startPt.x(), startPt.y(), startPt.z(), nullptr, 0};
-    Node *goal = new Node{goalPt.x(), goalPt.y(), goalPt.z(), nullptr, std::numeric_limits<double>::max()};
+    Node *start = new Node{waypoints[0]["coords"]["x"], waypoints[0]["coords"]["y"], waypoints[0]["coords"]["z"], nullptr, 0};
+    Node *goal = new Node{waypoints[1]["coords"]["x"], waypoints[1]["coords"]["y"], waypoints[1]["coords"]["z"], nullptr, std::numeric_limits<double>::max()};
     env = environment;
     std::cout << "Environment set" << parameters->stayAway << std::endl;
     parameters->safeStayAway = parameters->stayAway / cos(M_PI / 6);
@@ -557,7 +557,7 @@ RRTStar::rrtStar(octomap::point3d &startPt, octomap::point3d &goalPt, std::share
             connectToGoal(newNode, goal);
             std::vector<Node *> path = getPath(goal);
             if (pathFoundCallback != nullptr) {
-                std::shared_ptr<ComputedPath> returnPath = std::make_shared<ComputedPath>(ComputedPath{std::make_shared<std::vector<Node *>>(path), std::chrono::duration_cast<std::chrono::microseconds>(
+                std::shared_ptr<ComputedPath> returnPath = std::make_shared<ComputedPath>(ComputedPath{waypoints[0],waypoints[1],std::make_shared<std::vector<Node *>>(path), std::chrono::duration_cast<std::chrono::microseconds>(
                         std::chrono::high_resolution_clock::now() - start_ts).count(), goal->cost});
                 std::cout << "Path found with " << path.size() << " nodes" << std::endl;
                 pathFoundCallback(returnPath);
@@ -590,11 +590,11 @@ RRTStar::rrtStar(octomap::point3d &startPt, octomap::point3d &goalPt, std::share
         if (!finish) {
             //clear the path
             retPath->clear();
-            return std::make_shared<ComputedPath>(ComputedPath{std::move(retPath), std::chrono::duration_cast<std::chrono::microseconds>(
+            return std::make_shared<ComputedPath>(ComputedPath{waypoints[0],waypoints[1],std::move(retPath), std::chrono::duration_cast<std::chrono::microseconds>(
                     std::chrono::high_resolution_clock::now() - start_ts).count()});
         }
     }
-    return std::make_shared<ComputedPath>(ComputedPath{std::move(retPath), std::chrono::duration_cast<std::chrono::microseconds>(
+    return std::make_shared<ComputedPath>(ComputedPath{waypoints[0],waypoints[1],std::move(retPath), std::chrono::duration_cast<std::chrono::microseconds>(
             std::chrono::high_resolution_clock::now() - start_ts).count(), goal->cost});
 }
 

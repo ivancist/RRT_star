@@ -7,9 +7,11 @@
 #include <cmath>
 #include <random>
 #include <chrono>
+#include <nlohmann/json.hpp>
 
 #include "Environment.h"
 #include "WebSocketServer.h"
+
 
 struct Node {
     double x{}, y{}, z{};
@@ -26,6 +28,8 @@ struct Node {
 };
 
 struct ComputedPath {
+    nlohmann::json start{};
+    nlohmann::json goal{};
     std::shared_ptr<std::vector<Node *>> path{};
     long time_in_microseconds{};
     double cost{};
@@ -59,7 +63,7 @@ public:
     std::vector<Node *> rrtStar(Node *start, Node *goal, Environment &env);
 
     // pathFoundCallback with one argument
-    std::shared_ptr<ComputedPath> rrtStar(octomap::point3d &startPt, octomap::point3d &goalPt, std::shared_ptr<Environment> environment,
+    std::shared_ptr<ComputedPath> rrtStar(nlohmann::json waypoints, std::shared_ptr<Environment> environment,
                             std::function<void(std::shared_ptr<ComputedPath>)> pathFoundCallback,
                         const std::shared_ptr<StoppableThread> &stoppableThreadPtr);
 
