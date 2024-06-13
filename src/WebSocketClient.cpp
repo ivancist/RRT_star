@@ -152,6 +152,8 @@ std::string WebSocketClient::computedPathToString(std::shared_ptr<ComputedPath> 
                              {"z", node->z}});
     }
     nlohmann::json jsonArray = {
+            {"start", path->start},
+            {"goal", path->goal},
             {"path", pathArray}
     };
     if (time) {

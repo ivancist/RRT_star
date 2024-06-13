@@ -753,6 +753,69 @@ CMakeFiles/oppi.dir/src/RRT_star.cpp.o: ../src/RRT_star.cpp \
   /usr/include/c++/11/numeric \
   /usr/include/c++/11/bits/stl_numeric.h \
   /usr/include/c++/11/pstl/glue_numeric_defs.h \
+  /usr/include/nlohmann/json.hpp \
+  /usr/include/c++/11/iterator \
+  /usr/include/c++/11/bits/stream_iterator.h \
+  /usr/include/nlohmann/adl_serializer.hpp \
+  /usr/include/nlohmann/detail/conversions/from_json.hpp \
+  /usr/include/c++/11/forward_list \
+  /usr/include/c++/11/bits/forward_list.h \
+  /usr/include/c++/11/bits/forward_list.tcc \
+  /usr/include/c++/11/valarray \
+  /usr/include/c++/11/bits/valarray_array.h \
+  /usr/include/c++/11/bits/valarray_array.tcc \
+  /usr/include/c++/11/bits/valarray_before.h \
+  /usr/include/c++/11/bits/slice_array.h \
+  /usr/include/c++/11/bits/valarray_after.h \
+  /usr/include/c++/11/bits/gslice.h \
+  /usr/include/c++/11/bits/gslice_array.h \
+  /usr/include/c++/11/bits/mask_array.h \
+  /usr/include/c++/11/bits/indirect_array.h \
+  /usr/include/nlohmann/detail/exceptions.hpp \
+  /usr/include/nlohmann/detail/value_t.hpp \
+  /usr/include/nlohmann/detail/string_escape.hpp \
+  /usr/include/nlohmann/detail/macro_scope.hpp \
+  /usr/include/nlohmann/thirdparty/hedley/hedley.hpp \
+  /usr/include/nlohmann/detail/meta/detected.hpp \
+  /usr/include/nlohmann/detail/meta/void_t.hpp \
+  /usr/include/c++/11/cassert \
+  /usr/include/nlohmann/detail/input/position_t.hpp \
+  /usr/include/nlohmann/detail/meta/cpp_future.hpp \
+  /usr/include/nlohmann/detail/meta/identity_tag.hpp \
+  /usr/include/nlohmann/detail/meta/type_traits.hpp \
+  /usr/include/nlohmann/detail/iterators/iterator_traits.hpp \
+  /usr/include/nlohmann/detail/meta/call_std/begin.hpp \
+  /usr/include/nlohmann/detail/meta/call_std/end.hpp \
+  /usr/include/nlohmann/json_fwd.hpp \
+  /usr/include/c++/11/filesystem \
+  /usr/include/c++/11/bits/fs_fwd.h \
+  /usr/include/c++/11/bits/fs_path.h \
+  /usr/include/c++/11/codecvt \
+  /usr/include/c++/11/bits/fs_dir.h \
+  /usr/include/c++/11/bits/fs_ops.h \
+  /usr/include/nlohmann/detail/conversions/to_json.hpp \
+  /usr/include/nlohmann/detail/iterators/iteration_proxy.hpp \
+  /usr/include/nlohmann/byte_container_with_subtype.hpp \
+  /usr/include/nlohmann/detail/hash.hpp \
+  /usr/include/nlohmann/detail/input/binary_reader.hpp \
+  /usr/include/nlohmann/detail/input/input_adapters.hpp \
+  /usr/include/nlohmann/detail/input/json_sax.hpp \
+  /usr/include/nlohmann/detail/input/lexer.hpp \
+  /usr/include/nlohmann/detail/meta/is_sax.hpp \
+  /usr/include/nlohmann/detail/input/parser.hpp \
+  /usr/include/nlohmann/detail/iterators/internal_iterator.hpp \
+  /usr/include/nlohmann/detail/iterators/primitive_iterator.hpp \
+  /usr/include/nlohmann/detail/iterators/iter_impl.hpp \
+  /usr/include/nlohmann/detail/iterators/json_reverse_iterator.hpp \
+  /usr/include/nlohmann/detail/json_pointer.hpp \
+  /usr/include/nlohmann/detail/json_ref.hpp \
+  /usr/include/nlohmann/detail/output/binary_writer.hpp \
+  /usr/include/nlohmann/detail/output/output_adapters.hpp \
+  /usr/include/nlohmann/detail/output/serializer.hpp \
+  /usr/include/nlohmann/detail/conversions/to_chars.hpp \
+  /usr/include/nlohmann/ordered_map.hpp \
+  /usr/include/nlohmann/detail/macro_unscope.hpp \
+  /usr/include/nlohmann/thirdparty/hedley/hedley_undef.hpp \
   ../include/Environment.h \
   /opt/ros/humble/include/octomap/OcTree.h \
   /opt/ros/humble/include/octomap/OccupancyOcTreeBase.h \
@@ -765,8 +828,6 @@ CMakeFiles/oppi.dir/src/RRT_star.cpp.o: ../src/RRT_star.cpp \
   /opt/ros/humble/include/octomap/octomap_deprecated.h \
   /opt/ros/humble/include/octomap/octomap_utils.h \
   /opt/ros/humble/include/octomap/OcTreeBaseImpl.h \
-  /usr/include/c++/11/iterator \
-  /usr/include/c++/11/bits/stream_iterator.h \
   /usr/include/c++/11/stack \
   /usr/include/c++/11/bits/stl_stack.h \
   /usr/include/c++/11/bitset \
@@ -794,7 +855,6 @@ CMakeFiles/oppi.dir/src/RRT_star.cpp.o: ../src/RRT_star.cpp \
   /opt/ros/humble/include/octomap/OcTreeNode.h \
   /opt/ros/humble/include/octomap/OcTreeDataNode.h \
   /opt/ros/humble/include/octomap/OcTreeDataNode.hxx \
-  /usr/include/c++/11/cassert \
   /opt/ros/humble/include/octomap/OccupancyOcTreeBase.hxx \
   /opt/ros/humble/include/octomap/MCTables.h \
   /opt/ros/humble/include/dynamicEDT3D/dynamicEDTOctomap.h \
@@ -6460,70 +6520,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 ../src/WebSocketServer.cpp:
 
-/usr/include/nlohmann/detail/macro_unscope.hpp:
-
-/usr/include/nlohmann/ordered_map.hpp:
-
-/usr/include/nlohmann/detail/conversions/to_chars.hpp:
-
-/usr/include/nlohmann/detail/output/output_adapters.hpp:
-
-/usr/include/nlohmann/detail/output/binary_writer.hpp:
-
-/usr/include/nlohmann/detail/json_ref.hpp:
-
-/usr/include/nlohmann/detail/iterators/internal_iterator.hpp:
-
-/usr/include/nlohmann/detail/input/lexer.hpp:
-
-/usr/include/nlohmann/detail/input/binary_reader.hpp:
-
-/usr/include/nlohmann/detail/hash.hpp:
-
-/usr/include/nlohmann/byte_container_with_subtype.hpp:
-
-/usr/include/nlohmann/detail/conversions/to_json.hpp:
-
-/usr/include/c++/11/bits/fs_path.h:
-
-/usr/include/c++/11/bits/fs_fwd.h:
-
-/usr/include/nlohmann/detail/meta/call_std/begin.hpp:
-
-/usr/include/nlohmann/detail/iterators/iterator_traits.hpp:
-
-/usr/include/nlohmann/detail/meta/identity_tag.hpp:
-
-/usr/include/nlohmann/detail/meta/void_t.hpp:
-
-/usr/include/nlohmann/thirdparty/hedley/hedley.hpp:
-
-/usr/include/nlohmann/detail/string_escape.hpp:
-
-/usr/include/c++/11/bits/gslice_array.h:
-
-/usr/include/c++/11/bits/gslice.h:
-
-/usr/include/c++/11/bits/valarray_after.h:
-
-/usr/include/c++/11/bits/valarray_before.h:
-
-../src/stoppableThread.cpp:
-
-/usr/include/c++/11/bits/valarray_array.tcc:
-
-/usr/include/c++/11/bits/valarray_array.h:
-
-/usr/include/c++/11/bits/forward_list.tcc:
-
-/usr/include/nlohmann/adl_serializer.hpp:
-
-/usr/include/nlohmann/json.hpp:
-
-/usr/include/nlohmann/detail/meta/cpp_future.hpp:
-
-/usr/include/websocketpp/roles/client_endpoint.hpp:
-
 /usr/include/websocketpp/client.hpp:
 
 /usr/include/websocketpp/impl/endpoint_impl.hpp:
@@ -6560,10 +6556,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/asio/use_awaitable.hpp:
 
-/usr/include/c++/11/valarray:
-
-/usr/include/boost/asio/this_coro.hpp:
-
 /usr/include/boost/asio/system_timer.hpp:
 
 /usr/include/boost/asio/detail/impl/strand_executor_service.hpp:
@@ -6574,10 +6566,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/asio/impl/thread_pool.hpp:
 
-/usr/include/nlohmann/detail/exceptions.hpp:
-
-/usr/include/boost/asio/thread_pool.hpp:
-
 /usr/include/boost/asio/traits/require_concept_free.hpp:
 
 /usr/include/boost/asio/require_concept.hpp:
@@ -6587,10 +6575,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/boost/predef/hardware/simd/ppc.h:
 
 /usr/include/boost/predef/hardware/simd/arm/versions.h:
-
-/usr/include/c++/11/forward_list:
-
-/usr/include/boost/predef/hardware/simd/arm.h:
 
 /usr/include/boost/predef/hardware/simd/x86_amd/versions.h:
 
@@ -6728,10 +6712,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/predef/compiler/dignus.h:
 
-/usr/include/nlohmann/detail/input/position_t.hpp:
-
-/usr/include/boost/predef/compiler/diab.h:
-
 /usr/include/boost/predef/compiler/compaq.h:
 
 /usr/include/boost/predef/compiler/comeau.h:
@@ -6832,10 +6812,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/asio/ip/icmp.hpp:
 
-/usr/include/c++/11/bits/fs_ops.h:
-
-/usr/include/boost/asio/ip/impl/host_name.ipp:
-
 /usr/include/boost/asio/windows/random_access_handle.hpp:
 
 /usr/include/boost/asio/detail/impl/resolver_service_base.ipp:
@@ -6847,12 +6823,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/boost/asio/detail/resolver_service.hpp:
 
 /usr/include/boost/asio/ip/resolver_base.hpp:
-
-/usr/include/c++/11/bits/forward_list.h:
-
-/usr/include/boost/asio/ip/basic_resolver_results.hpp:
-
-/usr/include/boost/asio/ip/basic_resolver_query.hpp:
 
 /usr/include/boost/asio/ip/basic_resolver_entry.hpp:
 
@@ -6873,10 +6843,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/boost/asio/ip/address_v6_iterator.hpp:
 
 /usr/include/boost/asio/ip/address_v4_range.hpp:
-
-/usr/include/c++/11/bits/indirect_array.h:
-
-/usr/include/boost/asio/ip/impl/address.ipp:
 
 /usr/include/boost/asio/ip/impl/address.hpp:
 
@@ -6976,10 +6942,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/aarch64-linux-gnu/bits/termios-struct.h:
 
-/usr/include/nlohmann/detail/value_t.hpp:
-
-/usr/include/aarch64-linux-gnu/bits/termios.h:
-
 /usr/include/boost/asio/basic_raw_socket.hpp:
 
 /usr/include/boost/asio/detail/resolve_query_op.hpp:
@@ -6990,91 +6952,133 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/asio/detail/reactive_wait_op.hpp:
 
-/usr/include/boost/config/stdlib/libstdcpp3.hpp:
+/usr/include/boost/asio/read_at.hpp:
 
-/usr/include/boost/asio/detail/noncopyable.hpp:
+/usr/include/boost/asio/basic_serial_port.hpp:
 
-/usr/include/boost/config/detail/select_compiler_config.hpp:
+/usr/include/boost/asio/detail/reactive_socket_recvmsg_op.hpp:
 
-/usr/include/aarch64-linux-gnu/sys/poll.h:
+/usr/include/boost/asio/detail/reactive_socket_recv_op.hpp:
 
-/usr/include/boost/config.hpp:
+/usr/include/boost/asio/detail/reactive_socket_service_base.hpp:
 
-/usr/include/boost/predef/platform/android.h:
+/usr/include/boost/asio/detail/reactive_socket_sendto_op.hpp:
 
-/usr/include/boost/asio/detail/config.hpp:
+/usr/include/boost/asio/detail/reactive_socket_recvfrom_op.hpp:
 
-/usr/include/boost/version.hpp:
+/usr/include/boost/asio/detail/reactive_socket_connect_op.hpp:
 
-/usr/include/boost/asio/version.hpp:
+/usr/include/boost/asio/detail/reactive_socket_accept_op.hpp:
 
-/usr/include/aarch64-linux-gnu/bits/types/sigevent_t.h:
+/usr/include/boost/asio/detail/reactive_null_buffers_op.hpp:
 
-/usr/include/c++/11/chrono:
+/usr/include/boost/asio/traits/static_require_concept.hpp:
 
-/usr/include/websocketpp/common/type_traits.hpp:
+/usr/include/boost/asio/detail/buffer_sequence_adapter.hpp:
 
-/usr/include/boost/date_time/posix_time/posix_time_config.hpp:
+/usr/include/boost/asio/detail/string_view.hpp:
 
-/usr/include/websocketpp/connection_base.hpp:
+/usr/include/boost/asio/buffer.hpp:
 
-/usr/include/aarch64-linux-gnu/gnu/stubs-lp64.h:
+/usr/include/boost/asio/ip/impl/network_v6.ipp:
 
-/usr/include/boost/preprocessor/list/adt.hpp:
+/usr/include/boost/asio/detail/io_control.hpp:
 
-/usr/include/websocketpp/endpoint_base.hpp:
+/usr/include/boost/asio/socket_base.hpp:
 
-/usr/include/asm-generic/ioctls.h:
+/usr/include/boost/asio/impl/post.hpp:
 
-/usr/include/boost/predef/compiler/hp_acc.h:
+/usr/include/boost/asio/post.hpp:
 
-/usr/include/websocketpp/random/none.hpp:
+/usr/include/boost/asio/basic_socket.hpp:
 
-/usr/include/boost/predef/platform/windows_runtime.h:
+/usr/include/boost/asio/basic_datagram_socket.hpp:
 
-/usr/include/aarch64-linux-gnu/bits/in.h:
+/usr/include/boost/asio.hpp:
 
-/usr/include/websocketpp/transport/asio/endpoint.hpp:
+/usr/include/websocketpp/common/chrono.hpp:
 
-/usr/include/c++/11/bits/stl_tempbuf.h:
+/usr/include/boost/predef/platform/ios.h:
 
-/usr/include/aarch64-linux-gnu/bits/sockaddr.h:
+/usr/include/boost/asio/detail/chrono.hpp:
 
-/usr/include/boost/predef/compiler/digitalmars.h:
+/usr/include/boost/asio/detail/wrapped_handler.hpp:
 
-/usr/include/aarch64-linux-gnu/sys/socket.h:
+/usr/include/boost/asio/ip/impl/address_v4.ipp:
 
-/usr/include/boost/cerrno.hpp:
+/usr/include/boost/asio/detail/io_object_impl.hpp:
 
-/usr/include/netinet/in.h:
+/usr/include/boost/asio/detail/impl/buffer_sequence_adapter.ipp:
 
-/usr/include/boost/asio/detail/scoped_lock.hpp:
+/usr/include/boost/asio/detail/wait_handler.hpp:
 
-/usr/include/websocketpp/frame.hpp:
+/usr/include/boost/asio/detail/impl/timer_queue_ptime.ipp:
 
-/usr/include/websocketpp/utilities.hpp:
+/usr/include/boost/asio/windows/basic_random_access_handle.hpp:
 
-/usr/include/websocketpp/logger/levels.hpp:
+/usr/include/boost/date_time/posix_time/time_period.hpp:
 
-/usr/include/websocketpp/uri.hpp:
+/usr/include/boost/asio/detail/timer_scheduler.hpp:
 
-/usr/include/nlohmann/detail/macro_scope.hpp:
+/usr/include/boost/numeric/conversion/detail/preprocessed/numeric_cast_traits_common.hpp:
 
-/usr/include/c++/11/bits/predefined_ops.h:
+/usr/include/boost/predef/hardware/simd/x86/versions.h:
 
-/usr/include/websocketpp/common/connection_hdl.hpp:
+/usr/include/boost/numeric/conversion/numeric_cast_traits.hpp:
 
-/usr/include/opencv4/opencv2/flann/defines.h:
+/usr/include/boost/asio/ip/address_v4_iterator.hpp:
 
-/usr/include/websocketpp/common/functional.hpp:
+/usr/include/boost/numeric/conversion/detail/bounds.hpp:
 
-/usr/include/boost/mpl/aux_/preprocessed/gcc/apply_wrap.hpp:
+/usr/include/boost/numeric/conversion/detail/converter.hpp:
+
+/usr/include/boost/mpl/aux_/preprocessed/gcc/less.hpp:
+
+/usr/include/boost/mpl/less.hpp:
+
+/usr/include/boost/mpl/aux_/preprocessed/gcc/times.hpp:
+
+/usr/include/boost/mpl/aux_/largest_int.hpp:
 
 /usr/include/websocketpp/transport/iostream/endpoint.hpp:
 
 /usr/include/websocketpp/common/thread.hpp:
 
-/usr/include/c++/11/numeric:
+/usr/include/boost/asio/io_service_strand.hpp:
+
+/usr/include/errno.h:
+
+/usr/include/c++/11/bits/alloc_traits.h:
+
+/usr/include/nlohmann/detail/macro_unscope.hpp:
+
+/usr/include/websocketpp/common/functional.hpp:
+
+/usr/include/boost/mpl/aux_/preprocessed/gcc/apply_wrap.hpp:
+
+/usr/include/boost/predef/language.h:
+
+/usr/include/boost/operators.hpp:
+
+/usr/include/nlohmann/detail/output/binary_writer.hpp:
+
+/usr/include/c++/11/pstl/glue_numeric_defs.h:
+
+/usr/include/nlohmann/detail/hash.hpp:
+
+/usr/include/nlohmann/byte_container_with_subtype.hpp:
+
+/usr/include/aarch64-linux-gnu/bits/pthread_stack_min-dynamic.h:
+
+/usr/include/nlohmann/detail/meta/call_std/begin.hpp:
+
+/usr/include/boost/regex/config/cwchar.hpp:
+
+/usr/include/aarch64-linux-gnu/bits/sigthread.h:
+
+/usr/include/boost/smart_ptr/detail/spinlock_pool.hpp:
+
+/usr/include/nlohmann/detail/iterators/iterator_traits.hpp:
 
 /usr/include/c++/11/bits/random.h:
 
@@ -7082,11 +7086,79 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/mpl/aux_/has_apply.hpp:
 
+/usr/include/c++/11/bits/stl_iterator_base_types.h:
+
+/usr/include/boost/preprocessor/list/fold_left.hpp:
+
+/usr/include/websocketpp/roles/client_endpoint.hpp:
+
+/usr/include/nlohmann/detail/meta/cpp_future.hpp:
+
+/usr/include/boost/predef/compiler/diab.h:
+
+/usr/include/nlohmann/detail/input/position_t.hpp:
+
+/usr/include/nlohmann/detail/meta/void_t.hpp:
+
+/usr/include/c++/11/unordered_map:
+
+/usr/include/nlohmann/thirdparty/hedley/hedley.hpp:
+
+/usr/include/asm-generic/ioctl.h:
+
+/usr/include/boost/type_traits/is_base_of.hpp:
+
+/usr/include/aarch64-linux-gnu/bits/termios.h:
+
+/usr/include/nlohmann/detail/value_t.hpp:
+
+/usr/include/websocketpp/processors/hybi13.hpp:
+
+/usr/include/boost/throw_exception.hpp:
+
+/usr/include/c++/11/bits/valarray_after.h:
+
+/usr/include/c++/11/bits/valarray_before.h:
+
+/usr/include/c++/11/bits/stl_bvector.h:
+
+/usr/include/c++/11/bits/valarray_array.h:
+
+/usr/include/boost/asio/this_coro.hpp:
+
+/usr/include/c++/11/valarray:
+
+/usr/include/boost/asio/ip/basic_resolver_results.hpp:
+
+/usr/include/boost/asio/ip/basic_resolver_query.hpp:
+
+/usr/include/c++/11/bits/forward_list.h:
+
+/opt/ros/humble/include/octomap/OccupancyOcTreeBase.h:
+
+/usr/include/nlohmann/adl_serializer.hpp:
+
+/usr/include/boost/asio/detail/future.hpp:
+
+/usr/include/aarch64-linux-gnu/sys/ucontext.h:
+
+/usr/include/nlohmann/json.hpp:
+
+/usr/include/aarch64-linux-gnu/bits/epoll.h:
+
+/usr/include/c++/11/numeric:
+
 /usr/include/c++/11/random:
 
 /usr/include/opencv4/opencv2/video/background_segm.hpp:
 
 /usr/include/opencv4/opencv2/video.hpp:
+
+/usr/include/boost/asio/generic/datagram_protocol.hpp:
+
+/usr/include/boost/asio/impl/io_context.hpp:
+
+/usr/include/opencv4/opencv2/stitching/detail/seam_finders.hpp:
 
 /usr/include/boost/smart_ptr/detail/local_sp_deleter.hpp:
 
@@ -7106,8 +7178,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/c++/11/iosfwd:
 
-/usr/include/c++/11/pstl/glue_numeric_defs.h:
-
 /usr/include/opencv4/opencv2/stitching/detail/matchers.hpp:
 
 /usr/include/boost/predef/version.h:
@@ -7117,6 +7187,8 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/boost/preprocessor/list/fold_right.hpp:
 
 /usr/include/boost/preprocessor/punctuation/comma_if.hpp:
+
+/usr/include/c++/11/bits/fs_path.h:
 
 /usr/include/opencv4/opencv2/core/cuda.inl.hpp:
 
@@ -7128,6 +7200,16 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/opencv4/opencv2/flann/ground_truth.h:
 
+/usr/include/nlohmann/detail/json_ref.hpp:
+
+/usr/include/boost/numeric/conversion/detail/udt_builtin_mixture.hpp:
+
+/usr/include/boost/asio/impl/thread_pool.ipp:
+
+/usr/include/boost/asio/traits/set_done_member.hpp:
+
+/usr/include/opencv4/opencv2/flann/autotuned_index.h:
+
 /usr/include/boost/numeric/conversion/converter_policies.hpp:
 
 /usr/include/opencv4/opencv2/flann/random.h:
@@ -7136,7 +7218,9 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/aarch64-linux-gnu/bits/types/struct_sched_param.h:
 
-/usr/include/aarch64-linux-gnu/bits/posix_opt.h:
+/usr/include/boost/asio/thread_pool.hpp:
+
+/usr/include/nlohmann/detail/exceptions.hpp:
 
 /usr/include/c++/11/bits/locale_conv.h:
 
@@ -7148,13 +7232,11 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/asio/detail/reactor.hpp:
 
+/usr/include/websocketpp/transport/base/endpoint.hpp:
+
+/usr/include/libintl.h:
+
 /usr/include/c++/11/functional:
-
-/usr/include/websocketpp/http/impl/response.hpp:
-
-/opt/ros/humble/include/octomap/octomap_utils.h:
-
-/usr/include/boost/asio/detail/memory.hpp:
 
 /usr/include/opencv4/opencv2/flann/hierarchical_clustering_index.h:
 
@@ -7163,10 +7245,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/aarch64-linux-gnu/sys/epoll.h:
 
 /usr/include/opencv4/opencv2/flann/allocator.h:
-
-/usr/include/websocketpp/http/response.hpp:
-
-/usr/include/opencv4/opencv2/flann/heap.h:
 
 /usr/include/boost/preprocessor/control/while.hpp:
 
@@ -7189,6 +7267,10 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/opencv4/opencv2/flann/index_testing.h:
 
 /usr/include/opencv4/opencv2/flann/matrix.h:
+
+/usr/include/boost/mpl/void_fwd.hpp:
+
+/usr/include/opencv4/opencv2/flann.hpp:
 
 /usr/include/opencv4/opencv2/dnn/version.hpp:
 
@@ -7216,25 +7298,27 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/c++/11/condition_variable:
 
-/usr/include/boost/asio/detail/wrapped_handler.hpp:
-
 /usr/include/c++/11/ratio:
 
-/usr/include/websocketpp/transport/asio/connection.hpp:
+/usr/include/nlohmann/detail/input/lexer.hpp:
 
-/usr/include/aarch64-linux-gnu/bits/types/struct___jmp_buf_tag.h:
+/usr/include/c++/11/bits/forward_list.tcc:
+
+/usr/include/c++/11/chrono:
 
 /usr/include/boost/asio/detail/epoll_reactor.hpp:
+
+/usr/include/aarch64-linux-gnu/gnu/stubs-lp64.h:
+
+/usr/include/websocketpp/connection_base.hpp:
+
+/usr/include/boost/preprocessor/list/adt.hpp:
 
 /usr/include/boost/predef/architecture/alpha.h:
 
 /usr/include/c++/11/complex:
 
 /usr/include/boost/smart_ptr/detail/local_counted_base.hpp:
-
-/usr/include/boost/predef/hardware/simd/x86/versions.h:
-
-/usr/include/boost/numeric/conversion/numeric_cast_traits.hpp:
 
 /usr/lib/gcc/aarch64-linux-gnu/11/include/float.h:
 
@@ -7249,16 +7333,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/opencv4/opencv2/core/saturate.hpp:
 
 /usr/include/boost/asio/execution/detail/as_invocable.hpp:
-
-/usr/include/c++/11/codecvt:
-
-/usr/include/websocketpp/utf8_validator.hpp:
-
-/usr/include/opencv4/opencv2/core/matx.hpp:
-
-/usr/include/nlohmann/detail/conversions/from_json.hpp:
-
-/usr/include/boost/asio/require.hpp:
 
 /usr/include/opencv4/opencv2/core/vsx_utils.hpp:
 
@@ -7286,10 +7360,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/aarch64-linux-gnu/bits/types/sigset_t.h:
 
-../include/stoppableThread.h:
-
-/usr/include/websocketpp/message_buffer/message.hpp:
-
 /usr/lib/gcc/aarch64-linux-gnu/11/include/arm_fp16.h:
 
 /usr/include/c++/11/bits/locale_facets_nonio.h:
@@ -7299,6 +7369,8 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/opencv4/opencv2/core/cv_cpu_dispatch.h:
 
 /usr/include/boost/asio/handler_invoke_hook.hpp:
+
+/usr/include/nlohmann/detail/conversions/to_chars.hpp:
 
 /usr/include/opencv4/opencv2/core.hpp:
 
@@ -7313,10 +7385,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/stdc-predef.h:
 
 /usr/include/aarch64-linux-gnu/bits/types/locale_t.h:
-
-/usr/include/libintl.h:
-
-/usr/include/websocketpp/transport/base/endpoint.hpp:
 
 /opt/ros/humble/include/dynamicEDT3D/point.h:
 
@@ -7338,21 +7406,7 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/aarch64-linux-gnu/bits/posix2_lim.h:
 
-/opt/ros/humble/include/octomap/MCTables.h:
-
 /usr/include/aarch64-linux-gnu/bits/local_lim.h:
-
-/usr/include/boost/asio/windows/basic_object_handle.hpp:
-
-/usr/include/boost/asio/impl/redirect_error.hpp:
-
-/usr/include/boost/asio/buffered_stream.hpp:
-
-/usr/include/websocketpp/transport/base/connection.hpp:
-
-/usr/include/websocketpp/concurrency/basic.hpp:
-
-/usr/include/boost/preprocessor/cat.hpp:
 
 /usr/include/c++/11/filesystem:
 
@@ -7364,9 +7418,15 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/aarch64-linux-gnu/sys/stat.h:
 
+/usr/include/boost/config/pragma_message.hpp:
+
+/usr/lib/gcc/aarch64-linux-gnu/11/include/limits.h:
+
 /usr/include/boost/config/platform/linux.hpp:
 
 /usr/include/boost/smart_ptr/detail/sp_convertible.hpp:
+
+/opt/ros/humble/include/octomap/MCTables.h:
 
 /usr/include/opencv4/opencv2/imgcodecs.hpp:
 
@@ -7376,21 +7436,19 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/type_traits/is_arithmetic.hpp:
 
-/usr/include/websocketpp/common/asio.hpp:
-
 /usr/include/c++/11/bits/hashtable_policy.h:
 
 /usr/include/c++/11/bits/hashtable.h:
 
 /usr/include/aarch64-linux-gnu/bits/siginfo-arch.h:
 
-/usr/include/c++/11/unordered_map:
-
-/usr/include/websocketpp/http/parser.hpp:
-
 /usr/include/websocketpp/transport/iostream/connection.hpp:
 
 /usr/include/c++/11/algorithm:
+
+/usr/include/nlohmann/detail/input/binary_reader.hpp:
+
+/usr/include/c++/11/bits/locale_facets.tcc:
 
 /usr/include/c++/11/math.h:
 
@@ -7408,9 +7466,7 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/date_time/microsec_time_clock.hpp:
 
-/usr/include/boost/asio/traits/require_free.hpp:
-
-/usr/include/aarch64-linux-gnu/bits/eventfd.h:
+/usr/include/nlohmann/ordered_map.hpp:
 
 /usr/include/opencv4/opencv2/core/cuda_types.hpp:
 
@@ -7424,11 +7480,9 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /opt/ros/humble/include/octomap/OcTreeBaseImpl.hxx:
 
+/usr/include/nlohmann/detail/meta/identity_tag.hpp:
+
 /opt/ros/humble/include/octomap/OcTreeIterator.hxx:
-
-/usr/include/boost/config/detail/select_stdlib_config.hpp:
-
-/usr/include/boost/mpl/equal_to.hpp:
 
 /usr/include/boost/asio/strand.hpp:
 
@@ -7448,11 +7502,15 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/c++/11/debug/debug.h:
 
-/usr/include/boost/numeric/conversion/detail/udt_builtin_mixture.hpp:
-
 /usr/include/boost/asio/execution.hpp:
 
 /usr/include/c++/11/bits/allocated_ptr.h:
+
+/usr/include/websocketpp/utf8_validator.hpp:
+
+/usr/include/opencv4/opencv2/core/matx.hpp:
+
+/usr/include/c++/11/codecvt:
 
 /usr/include/c++/11/bitset:
 
@@ -7460,15 +7518,15 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/mpl/lambda_fwd.hpp:
 
+/usr/include/boost/asio/ip/impl/address.ipp:
+
+/usr/include/c++/11/bits/indirect_array.h:
+
+/usr/include/opencv4/opencv2/dnn/dnn.inl.hpp:
+
 /usr/include/aarch64-linux-gnu/bits/types/__sigset_t.h:
 
 /usr/include/aarch64-linux-gnu/bits/struct_mutex.h:
-
-/usr/include/boost/asio/detail/static_mutex.hpp:
-
-/usr/include/aarch64-linux-gnu/asm/posix_types.h:
-
-/usr/include/boost/asio/detail/handler_invoke_helpers.hpp:
 
 /usr/include/aarch64-linux-gnu/bits/setjmp.h:
 
@@ -7476,15 +7534,11 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/c++/11/tr1/unordered_set.h:
 
-/usr/include/aarch64-linux-gnu/bits/types/mbstate_t.h:
+../include/stoppableThread.h:
 
-/usr/include/linux/posix_types.h:
-
-/usr/include/aarch64-linux-gnu/bits/pthreadtypes-arch.h:
+/usr/include/websocketpp/message_buffer/message.hpp:
 
 /usr/include/aarch64-linux-gnu/bits/types/timer_t.h:
-
-/usr/include/websocketpp/logger/basic.hpp:
 
 /usr/include/boost/asio/ip/unicast.hpp:
 
@@ -7500,9 +7554,13 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/lib/gcc/aarch64-linux-gnu/11/include/stdint.h:
 
+/usr/include/c++/11/bits/gslice.h:
+
 /usr/include/boost/asio/detail/dependent_type.hpp:
 
 /usr/include/boost/asio/execution/context.hpp:
+
+/usr/include/c++/11/bits/gslice_array.h:
 
 /usr/include/c++/11/bits/stl_set.h:
 
@@ -7520,8 +7578,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/aarch64-linux-gnu/c++/11/bits/gthr.h:
 
-/usr/include/linux/stddef.h:
-
 /usr/include/c++/11/bits/refwrap.h:
 
 /usr/include/opencv4/opencv2/flann/any.h:
@@ -7532,9 +7588,15 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/mpl/aux_/config/eti.hpp:
 
+/usr/include/nlohmann/detail/output/output_adapters.hpp:
+
 /usr/include/opencv4/opencv2/flann/config.h:
 
 /usr/include/c++/11/fstream:
+
+/usr/include/boost/asio/ip/impl/host_name.ipp:
+
+/usr/include/c++/11/bits/fs_ops.h:
 
 /usr/include/aarch64-linux-gnu/bits/types/__FILE.h:
 
@@ -7570,8 +7632,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/c++/11/bits/string_view.tcc:
 
-/usr/include/opencv4/opencv2/dnn/dnn.inl.hpp:
-
 /usr/include/opencv4/opencv2/stitching/detail/warpers_inl.hpp:
 
 /usr/include/c++/11/backward/binders.h:
@@ -7594,9 +7654,9 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/c++/11/cassert:
 
-/usr/include/asm-generic/posix_types.h:
+/usr/include/boost/asio/detail/completion_handler.hpp:
 
-/usr/include/opencv4/opencv2/objdetect/face.hpp:
+/usr/include/nlohmann/detail/iterators/primitive_iterator.hpp:
 
 /usr/include/aarch64-linux-gnu/bits/types/__fpos64_t.h:
 
@@ -7612,10 +7672,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/asio/traits/static_query.hpp:
 
-/usr/include/boost/exception/exception.hpp:
-
-/usr/include/boost/asio/detail/conditionally_enabled_event.hpp:
-
 /usr/include/c++/11/bits/stl_algobase.h:
 
 /usr/include/c++/11/bits/postypes.h:
@@ -7623,8 +7679,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /opt/ros/humble/include/octomap/octomap_types.h:
 
 /usr/include/c++/11/bits/stringfwd.h:
-
-/usr/include/boost/asio/detail/recycling_allocator.hpp:
 
 /usr/include/boost/asio/impl/defer.hpp:
 
@@ -7639,8 +7693,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/c++/11/bits/invoke.h:
 
 /usr/include/aarch64-linux-gnu/bits/types/struct_timespec.h:
-
-/usr/include/aarch64-linux-gnu/asm/bitsperlong.h:
 
 /usr/include/opencv4/opencv2/core/cvstd.inl.hpp:
 
@@ -7662,6 +7714,10 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/mpl/aux_/value_wknd.hpp:
 
+/usr/include/boost/date_time/dst_rules.hpp:
+
+/usr/include/c++/11/bits/uses_allocator.h:
+
 /usr/include/boost/mpl/aux_/config/workaround.hpp:
 
 /usr/include/aarch64-linux-gnu/bits/fcntl-linux.h:
@@ -7676,17 +7732,7 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/asio/detail/non_const_lvalue.hpp:
 
-/usr/include/boost/asio/impl/post.hpp:
-
 /usr/include/aarch64-linux-gnu/bits/struct_rwlock.h:
-
-/usr/include/aarch64-linux-gnu/bits/pthread_stack_min-dynamic.h:
-
-/usr/include/aarch64-linux-gnu/bits/termios-c_oflag.h:
-
-/usr/include/unistd.h:
-
-/usr/include/boost/numeric/conversion/detail/preprocessed/numeric_cast_traits_long_long.hpp:
 
 /usr/include/c++/11/ext/aligned_buffer.h:
 
@@ -7696,11 +7742,7 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/c++/11/bits/this_thread_sleep.h:
 
-/usr/include/c++/11/bits/locale_facets.tcc:
-
 /opt/ros/humble/include/octomap/OcTreeBaseImpl.h:
-
-/usr/include/aarch64-linux-gnu/bits/byteswap.h:
 
 /usr/include/aarch64-linux-gnu/c++/11/bits/c++allocator.h:
 
@@ -7740,6 +7782,12 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/websocketpp/common/platforms.hpp:
 
+/usr/include/boost/predef/hardware/simd/arm.h:
+
+/usr/include/c++/11/forward_list:
+
+/usr/include/boost/core/enable_if.hpp:
+
 /usr/include/opencv4/opencv2/flann/all_indices.h:
 
 /usr/include/boost/asio/detail/eventfd_select_interrupter.hpp:
@@ -7750,23 +7798,17 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/locale.h:
 
+/usr/include/nlohmann/detail/conversions/to_json.hpp:
+
 /usr/include/boost/asio/executor.hpp:
 
 /usr/include/c++/11/tr1/exp_integral.tcc:
 
 /usr/include/c++/11/bit:
 
-/usr/include/c++/11/bits/stl_iterator_base_types.h:
+/usr/include/boost/predef/platform/android.h:
 
-/usr/lib/gcc/aarch64-linux-gnu/11/include/limits.h:
-
-/usr/include/boost/config/pragma_message.hpp:
-
-/usr/include/opencv4/opencv2/flann.hpp:
-
-/usr/include/boost/mpl/void_fwd.hpp:
-
-/usr/include/boost/preprocessor/list/fold_left.hpp:
+/usr/include/boost/asio/detail/config.hpp:
 
 /usr/include/aarch64-linux-gnu/bits/libc-header-start.h:
 
@@ -7806,10 +7848,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/ctype.h:
 
-/usr/include/boost/predef/hardware/simd.h:
-
-/usr/include/aarch64-linux-gnu/bits/types/struct_iovec.h:
-
 /usr/include/nlohmann/detail/input/json_sax.hpp:
 
 /usr/include/aarch64-linux-gnu/c++/11/bits/c++config.h:
@@ -7819,6 +7857,8 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/boost/asio/static_thread_pool.hpp:
 
 /usr/include/boost/date_time/time_defs.hpp:
+
+/usr/include/nlohmann/detail/iterators/internal_iterator.hpp:
 
 /usr/include/aarch64-linux-gnu/bits/errno.h:
 
@@ -7830,9 +7870,7 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/c++/11/new:
 
-/usr/include/nlohmann/detail/iterators/iteration_proxy.hpp:
-
-/usr/include/boost/preprocessor/arithmetic/inc.hpp:
+/usr/include/aarch64-linux-gnu/bits/posix_opt.h:
 
 /usr/include/aarch64-linux-gnu/bits/cpu-set.h:
 
@@ -7849,8 +7887,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/boost/asio/detail/impl/posix_event.ipp:
 
 /usr/include/boost/preprocessor/control/iif.hpp:
-
-/usr/include/boost/mpl/aux_/largest_int.hpp:
 
 /usr/include/c++/11/bits/codecvt.h:
 
@@ -7874,13 +7910,21 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/aarch64-linux-gnu/c++/11/bits/time_members.h:
 
-/usr/include/boost/asio/ip/impl/network_v6.ipp:
-
-/usr/include/boost/asio/detail/io_control.hpp:
-
 /usr/include/c++/11/limits:
 
-/usr/include/boost/asio/detail/reactive_socket_sendto_op.hpp:
+/usr/include/boost/preprocessor/arithmetic/inc.hpp:
+
+/usr/include/nlohmann/detail/iterators/iteration_proxy.hpp:
+
+/usr/include/aarch64-linux-gnu/bits/termios-c_iflag.h:
+
+/usr/include/boost/asio/detail/cstdint.hpp:
+
+/usr/include/nlohmann/detail/macro_scope.hpp:
+
+/usr/include/c++/11/bits/predefined_ops.h:
+
+/usr/include/websocketpp/uri.hpp:
 
 /usr/include/aarch64-linux-gnu/bits/fp-logb.h:
 
@@ -7903,12 +7947,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/boost/predef/version_number.h:
 
 /usr/include/aarch64-linux-gnu/bits/procfs-prregset.h:
-
-/usr/include/boost/asio/io_service_strand.hpp:
-
-/usr/include/errno.h:
-
-/usr/include/c++/11/bits/alloc_traits.h:
 
 /usr/include/boost/asio/io_service.hpp:
 
@@ -7942,6 +7980,8 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/aarch64-linux-gnu/sys/types.h:
 
+/usr/include/nlohmann/detail/string_escape.hpp:
+
 /usr/include/c++/11/typeinfo:
 
 /usr/include/aarch64-linux-gnu/sys/ioctl.h:
@@ -7960,11 +8000,7 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/c++/11/initializer_list:
 
-/usr/include/c++/11/bits/stl_bvector.h:
-
-/usr/include/boost/asio/execution/any_executor.hpp:
-
-/usr/include/c++/11/bits/quoted_string.h:
+/usr/include/c++/11/bits/fs_fwd.h:
 
 /usr/include/opencv4/opencv2/stitching/detail/util.hpp:
 
@@ -7975,8 +8011,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/aarch64-linux-gnu/c++/11/bits/c++locale.h:
 
 /usr/include/boost/asio/traits/query_static_constexpr_member.hpp:
-
-/usr/include/websocketpp/http/impl/request.hpp:
 
 /usr/include/c++/11/bits/std_thread.h:
 
@@ -8000,6 +8034,12 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/c++/11/bits/stl_uninitialized.h:
 
+/usr/include/boost/asio/require.hpp:
+
+/usr/include/nlohmann/detail/conversions/from_json.hpp:
+
+/usr/include/boost/mpl/aux_/na_spec.hpp:
+
 /usr/include/opencv4/opencv2/dnn/utils/inference_engine.hpp:
 
 /usr/include/c++/11/backward/auto_ptr.h:
@@ -8008,13 +8048,15 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/assert.hpp:
 
+/usr/include/boost/asio/detail/buffer_resize_guard.hpp:
+
+/usr/include/boost/asio/detail/work_dispatcher.hpp:
+
+/usr/include/c++/11/ext/new_allocator.h:
+
 /usr/include/c++/11/bits/functional_hash.h:
 
 /usr/include/boost/date_time/gregorian/greg_ymd.hpp:
-
-/usr/include/asm-generic/sockios.h:
-
-/usr/include/opencv4/opencv2/flann/miniflann.hpp:
 
 /usr/include/boost/asio/detail/impl/service_registry.hpp:
 
@@ -8042,9 +8084,11 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/net/if.h:
 
-/usr/include/websocketpp/common/chrono.hpp:
-
 /usr/include/aarch64-linux-gnu/bits/select.h:
+
+/usr/include/boost/asio/wait_traits.hpp:
+
+/usr/include/aarch64-linux-gnu/gnu/stubs.h:
 
 /usr/include/boost/smart_ptr/detail/spinlock.hpp:
 
@@ -8053,6 +8097,12 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/aarch64-linux-gnu/bits/math-vector.h:
 
 /usr/include/aarch64-linux-gnu/bits/time64.h:
+
+/usr/include/boost/asio/detail/impl/strand_service.ipp:
+
+/usr/include/boost/system/api_config.hpp:
+
+/usr/include/aarch64-linux-gnu/sys/timerfd.h:
 
 /usr/include/boost/date_time/date_duration.hpp:
 
@@ -8072,13 +8122,15 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/preprocessor/control/expr_iif.hpp:
 
+/usr/include/opencv4/opencv2/flann/miniflann.hpp:
+
+/usr/include/asm-generic/sockios.h:
+
 /usr/include/aarch64-linux-gnu/bits/types/struct_itimerspec.h:
 
 /usr/include/c++/11/vector:
 
 /usr/include/aarch64-linux-gnu/sys/time.h:
-
-/usr/include/asm-generic/bitsperlong.h:
 
 /usr/include/nlohmann/detail/meta/call_std/end.hpp:
 
@@ -8088,8 +8140,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/asio/detail/thread.hpp:
 
-/usr/include/boost/asio/post.hpp:
-
 /usr/include/boost/regex_fwd.hpp:
 
 /usr/include/c++/11/bits/locale_facets_nonio.tcc:
@@ -8097,10 +8147,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/boost/date_time/gregorian/gregorian_types.hpp:
 
 /usr/include/opencv4/opencv2/flann/composite_index.h:
-
-/usr/include/boost/predef/language.h:
-
-/usr/include/boost/operators.hpp:
 
 /usr/include/c++/11/cmath:
 
@@ -8146,6 +8192,12 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/c++/11/queue:
 
+../src/stoppableThread.cpp:
+
+/usr/include/c++/11/bits/valarray_array.tcc:
+
+/usr/include/boost/numeric/conversion/detail/meta.hpp:
+
 /usr/include/boost/asio/traits/require_concept_member.hpp:
 
 /usr/include/aarch64-linux-gnu/bits/typesizes.h:
@@ -8164,6 +8216,12 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/mpl/aux_/nested_type_wknd.hpp:
 
+/usr/include/aarch64-linux-gnu/bits/byteswap.h:
+
+/usr/include/boost/mpl/multiplies.hpp:
+
+/usr/include/boost/asio/detail/op_queue.hpp:
+
 /usr/include/c++/11/tr1/bessel_function.tcc:
 
 /usr/include/c++/11/pstl/execution_defs.h:
@@ -8177,8 +8235,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/boost/asio/detail/impl/scheduler.ipp:
 
 /usr/include/boost/asio/impl/system_context.ipp:
-
-/usr/include/boost/config/compiler/gcc.hpp:
 
 /usr/include/boost/asio/posix/basic_descriptor.hpp:
 
@@ -8202,12 +8258,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/asio/time_traits.hpp:
 
-/usr/include/websocketpp/impl/utilities_impl.hpp:
-
-/usr/include/c++/11/tr1/hashtable_policy.h:
-
-/usr/include/aarch64-linux-gnu/bits/locale.h:
-
 /usr/include/c++/11/bits/shared_ptr_atomic.h:
 
 /usr/include/c++/11/iomanip:
@@ -8226,16 +8276,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/c++/11/bits/stl_multimap.h:
 
-/usr/include/boost/predef/compiler/palm.h:
-
-/usr/include/boost/predef/compiler/greenhills.h:
-
-/usr/include/aarch64-linux-gnu/bits/long-double.h:
-
-/usr/include/aarch64-linux-gnu/asm/errno.h:
-
-/usr/include/boost/asio/detail/string_view.hpp:
-
 /usr/include/c++/11/string:
 
 /opt/ros/humble/include/octomap/ScanGraph.h:
@@ -8248,11 +8288,11 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/aarch64-linux-gnu/bits/types/struct_FILE.h:
 
+/usr/include/boost/asio/detail/socket_holder.hpp:
+
+/usr/include/c++/11/bits/shared_ptr_base.h:
+
 /usr/include/c++/11/bits/basic_string.h:
-
-/usr/include/boost/asio/detail/signal_op.hpp:
-
-/usr/include/websocketpp/http/impl/parser.hpp:
 
 /usr/include/c++/11/cstdlib:
 
@@ -8270,17 +8310,17 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/aarch64-linux-gnu/bits/waitflags.h:
 
-/usr/include/aarch64-linux-gnu/bits/socket_type.h:
+/usr/include/opencv4/opencv2/flann/defines.h:
 
-/usr/include/boost/asio/detail/reactive_socket_recvfrom_op.hpp:
+/usr/include/websocketpp/common/connection_hdl.hpp:
 
 /usr/include/nlohmann/detail/input/input_adapters.hpp:
 
 /usr/include/aarch64-linux-gnu/bits/waitstatus.h:
 
-/usr/include/nlohmann/thirdparty/hedley/hedley_undef.hpp:
-
 /usr/include/boost/asio/ip/detail/socket_option.hpp:
+
+/usr/include/nlohmann/thirdparty/hedley/hedley_undef.hpp:
 
 /usr/include/c++/11/tr1/beta_function.tcc:
 
@@ -8306,29 +8346,29 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/asio/associated_executor.hpp:
 
+/usr/include/boost/asio/detail/reactive_socket_service.hpp:
+
+/usr/include/aarch64-linux-gnu/sys/select.h:
+
 /usr/include/c++/11/bits/ostream.tcc:
 
 /usr/include/c++/11/tr1/modified_bessel_func.tcc:
 
 /usr/include/aarch64-linux-gnu/bits/posix1_lim.h:
 
+/usr/include/boost/predef/compiler/palm.h:
+
+/usr/include/boost/predef/compiler/greenhills.h:
+
+/usr/include/aarch64-linux-gnu/asm/errno.h:
+
+/usr/include/aarch64-linux-gnu/bits/long-double.h:
+
+/usr/include/websocketpp/http/parser.hpp:
+
 /usr/include/c++/11/bits/std_abs.h:
 
 ../include/RRT_star.h:
-
-/usr/include/boost/asio/prefer.hpp:
-
-/usr/include/boost/predef/library/std/cxx.h:
-
-/usr/include/boost/asio/impl/multiple_exceptions.ipp:
-
-/usr/include/boost/preprocessor/logical/and.hpp:
-
-/usr/include/nlohmann/json_fwd.hpp:
-
-/usr/include/c++/11/bits/mask_array.h:
-
-/usr/include/boost/mpl/aux_/config/compiler.hpp:
 
 /usr/include/time.h:
 
@@ -8338,35 +8378,13 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/c++/11/bits/stl_multiset.h:
 
-/usr/include/boost/numeric/conversion/detail/is_subranged.hpp:
+/usr/include/boost/asio/io_context.hpp:
 
-/usr/include/c++/11/ext/alloc_traits.h:
-
-/usr/include/boost/asio/detail/impl/handler_tracking.ipp:
+/usr/include/boost/system/detail/system_category_posix.hpp:
 
 /usr/include/boost/asio/detail/regex_fwd.hpp:
 
 /usr/include/asm-generic/errno.h:
-
-/usr/include/boost/regex/config.hpp:
-
-/usr/include/boost/preprocessor/control/detail/while.hpp:
-
-/usr/include/websocketpp/message_buffer/alloc.hpp:
-
-/usr/include/boost/asio/use_future.hpp:
-
-/usr/include/c++/11/bits/stl_algo.h:
-
-/usr/include/boost/date_time/date.hpp:
-
-/usr/include/opencv4/opencv2/core/bufferpool.hpp:
-
-/usr/include/boost/asio/detail/executor_function.hpp:
-
-/opt/ros/humble/include/octomap/OcTreeStamped.h:
-
-/usr/include/boost/preprocessor/config/config.hpp:
 
 /usr/include/websocketpp/transport/iostream/base.hpp:
 
@@ -8384,9 +8402,21 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/linux/close_range.h:
 
+/opt/ros/humble/include/octomap/octomap_utils.h:
+
+/usr/include/websocketpp/http/impl/response.hpp:
+
+/usr/include/boost/asio/detail/memory.hpp:
+
 /usr/include/c++/11/bits/uniform_int_dist.h:
 
 /usr/include/boost/asio/traits/submit_free.hpp:
+
+/usr/include/boost/asio/placeholders.hpp:
+
+/usr/include/boost/asio/impl/system_context.hpp:
+
+/usr/include/c++/11/bits/exception.h:
 
 /usr/include/c++/11/bits/memoryfwd.h:
 
@@ -8398,9 +8428,9 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/c++/11/cwctype:
 
-/usr/include/boost/asio/detail/descriptor_read_op.hpp:
+/usr/include/boost/mpl/times.hpp:
 
-/usr/include/boost/config/user.hpp:
+/usr/include/sched.h:
 
 /usr/include/netdb.h:
 
@@ -8430,29 +8460,23 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/aarch64-linux-gnu/c++/11/bits/ctype_inline.h:
 
-/usr/include/websocketpp/http/constants.hpp:
-
-/usr/include/websocketpp/common/stdint.hpp:
-
-/usr/include/boost/asio/execution/impl/receiver_invocation_error.ipp:
-
-/usr/include/boost/predef/compiler/gcc_xml.h:
-
-/usr/include/websocketpp/extensions/permessage_deflate/disabled.hpp:
-
-/usr/include/boost/system/detail/generic_category.hpp:
-
 /usr/include/aarch64-linux-gnu/asm/sve_context.h:
 
 /usr/include/c++/11/istream:
 
 /usr/include/boost/date_time/time_resolution_traits.hpp:
 
-/opt/ros/humble/include/octomap/OccupancyOcTreeBase.h:
+/usr/include/boost/asio/is_read_buffered.hpp:
 
-/usr/include/asm-generic/socket.h:
+/usr/include/boost/asio/awaitable.hpp:
 
-/usr/include/opencv4/opencv2/flann/saving.h:
+/usr/include/c++/11/clocale:
+
+/usr/include/c++/11/bits/istream.tcc:
+
+/usr/include/aarch64-linux-gnu/bits/types/struct___jmp_buf_tag.h:
+
+/usr/include/websocketpp/transport/asio/connection.hpp:
 
 /usr/include/boost/asio/connect.hpp:
 
@@ -8480,11 +8504,11 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/c++/11/cstring:
 
-/usr/include/boost/asio/ip/address_v6_range.hpp:
+/usr/include/c++/11/bits/mask_array.h:
 
-/usr/include/boost/asio/steady_timer.hpp:
+/usr/include/boost/mpl/aux_/config/compiler.hpp:
 
-/usr/include/boost/mpl/aux_/preprocessor/default_params.hpp:
+/usr/include/nlohmann/json_fwd.hpp:
 
 /usr/include/boost/bind/arg.hpp:
 
@@ -8503,10 +8527,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /opt/ros/humble/include/octomap/math/Quaternion.h:
 
 /opt/ros/humble/include/octomap/octomap_deprecated.h:
-
-/usr/include/boost/asio/redirect_error.hpp:
-
-/usr/include/aarch64-linux-gnu/bits/types/struct_osockaddr.h:
 
 /usr/include/opencv4/opencv2/stitching/detail/motion_estimators.hpp:
 
@@ -8532,7 +8552,209 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/c++/11/bits/stl_stack.h:
 
-/usr/include/boost/numeric/conversion/detail/converter.hpp:
+/usr/include/boost/asio/windows/basic_object_handle.hpp:
+
+/usr/include/boost/asio/impl/redirect_error.hpp:
+
+/usr/include/boost/asio/buffered_stream.hpp:
+
+/usr/include/websocketpp/transport/base/connection.hpp:
+
+/usr/include/websocketpp/concurrency/basic.hpp:
+
+/usr/include/boost/preprocessor/cat.hpp:
+
+/usr/include/websocketpp/logger/levels.hpp:
+
+/usr/include/websocketpp/utilities.hpp:
+
+/usr/include/c++/11/tr1/hashtable_policy.h:
+
+/usr/include/aarch64-linux-gnu/bits/locale.h:
+
+/usr/include/websocketpp/impl/utilities_impl.hpp:
+
+/usr/include/websocketpp/http/constants.hpp:
+
+/usr/include/websocketpp/common/stdint.hpp:
+
+/usr/include/boost/asio/execution/impl/receiver_invocation_error.ipp:
+
+/usr/include/boost/asio/detail/signal_op.hpp:
+
+/usr/include/websocketpp/http/impl/parser.hpp:
+
+/usr/include/websocketpp/http/impl/request.hpp:
+
+/usr/include/opencv4/opencv2/flann/heap.h:
+
+/usr/include/websocketpp/http/response.hpp:
+
+/usr/include/websocketpp/frame.hpp:
+
+/usr/include/netinet/in.h:
+
+/usr/include/boost/asio/detail/scoped_lock.hpp:
+
+/usr/include/boost/predef/compiler/digitalmars.h:
+
+/usr/include/aarch64-linux-gnu/sys/socket.h:
+
+/usr/include/boost/cerrno.hpp:
+
+/usr/include/boost/predef/hardware/simd.h:
+
+/usr/include/aarch64-linux-gnu/bits/types/struct_iovec.h:
+
+/usr/include/c++/11/bits/quoted_string.h:
+
+/usr/include/boost/asio/execution/any_executor.hpp:
+
+/usr/include/aarch64-linux-gnu/bits/socket_type.h:
+
+/usr/include/aarch64-linux-gnu/bits/sockaddr.h:
+
+/usr/include/opencv4/opencv2/flann/saving.h:
+
+/usr/include/asm-generic/socket.h:
+
+/usr/include/boost/asio/detail/recycling_allocator.hpp:
+
+/usr/include/aarch64-linux-gnu/bits/pthreadtypes-arch.h:
+
+/usr/include/aarch64-linux-gnu/bits/types/mbstate_t.h:
+
+/usr/include/linux/posix_types.h:
+
+/usr/include/linux/stddef.h:
+
+/usr/include/boost/asio/detail/static_mutex.hpp:
+
+/usr/include/aarch64-linux-gnu/asm/posix_types.h:
+
+/usr/include/boost/asio/detail/handler_invoke_helpers.hpp:
+
+/usr/include/opencv4/opencv2/objdetect/face.hpp:
+
+/usr/include/asm-generic/posix_types.h:
+
+/usr/include/boost/asio/traits/require_free.hpp:
+
+/usr/include/aarch64-linux-gnu/bits/eventfd.h:
+
+/usr/include/aarch64-linux-gnu/asm/bitsperlong.h:
+
+/usr/include/asm-generic/bitsperlong.h:
+
+/usr/include/boost/asio/redirect_error.hpp:
+
+/usr/include/aarch64-linux-gnu/bits/types/struct_osockaddr.h:
+
+/usr/include/boost/predef/platform/windows_runtime.h:
+
+/usr/include/aarch64-linux-gnu/bits/in.h:
+
+/usr/include/boost/regex/config.hpp:
+
+/usr/include/boost/preprocessor/control/detail/while.hpp:
+
+/usr/include/websocketpp/message_buffer/alloc.hpp:
+
+/usr/include/boost/asio/use_future.hpp:
+
+/usr/include/c++/11/bits/stl_algo.h:
+
+/usr/include/boost/date_time/date.hpp:
+
+/usr/include/opencv4/opencv2/core/bufferpool.hpp:
+
+/usr/include/boost/asio/detail/executor_function.hpp:
+
+/opt/ros/humble/include/octomap/OcTreeStamped.h:
+
+/usr/include/boost/preprocessor/config/config.hpp:
+
+/usr/include/websocketpp/logger/basic.hpp:
+
+/usr/include/boost/predef/compiler/hp_acc.h:
+
+/usr/include/websocketpp/random/none.hpp:
+
+/usr/include/websocketpp/endpoint_base.hpp:
+
+/usr/include/asm-generic/ioctls.h:
+
+/usr/include/boost/predef/compiler/gcc_xml.h:
+
+/usr/include/boost/system/detail/generic_category.hpp:
+
+/usr/include/websocketpp/extensions/permessage_deflate/disabled.hpp:
+
+/usr/include/boost/asio/prefer.hpp:
+
+/usr/include/boost/predef/library/std/cxx.h:
+
+/usr/include/boost/asio/impl/multiple_exceptions.ipp:
+
+/usr/include/boost/preprocessor/logical/and.hpp:
+
+/usr/include/c++/11/bits/stl_tempbuf.h:
+
+/usr/include/websocketpp/transport/asio/endpoint.hpp:
+
+/usr/include/websocketpp/common/type_traits.hpp:
+
+/usr/include/boost/date_time/posix_time/posix_time_config.hpp:
+
+/usr/include/websocketpp/common/asio.hpp:
+
+/usr/include/boost/version.hpp:
+
+/usr/include/boost/asio/version.hpp:
+
+/usr/include/aarch64-linux-gnu/bits/types/sigevent_t.h:
+
+/usr/include/boost/asio/ip/address_v6_range.hpp:
+
+/usr/include/boost/mpl/aux_/preprocessor/default_params.hpp:
+
+/usr/include/boost/asio/steady_timer.hpp:
+
+/usr/include/boost/numeric/conversion/detail/is_subranged.hpp:
+
+/usr/include/c++/11/ext/alloc_traits.h:
+
+/usr/include/boost/asio/detail/impl/handler_tracking.ipp:
+
+/usr/include/boost/config.hpp:
+
+/usr/include/boost/asio/detail/descriptor_read_op.hpp:
+
+/usr/include/boost/config/user.hpp:
+
+/usr/include/boost/config/detail/select_compiler_config.hpp:
+
+/usr/include/aarch64-linux-gnu/sys/poll.h:
+
+/usr/include/boost/config/compiler/gcc.hpp:
+
+/usr/include/boost/config/detail/select_stdlib_config.hpp:
+
+/usr/include/boost/mpl/equal_to.hpp:
+
+/usr/include/boost/config/stdlib/libstdcpp3.hpp:
+
+/usr/include/boost/asio/detail/noncopyable.hpp:
+
+/usr/include/aarch64-linux-gnu/bits/termios-c_oflag.h:
+
+/usr/include/boost/numeric/conversion/detail/preprocessed/numeric_cast_traits_long_long.hpp:
+
+/usr/include/unistd.h:
+
+/usr/include/boost/exception/exception.hpp:
+
+/usr/include/boost/asio/detail/conditionally_enabled_event.hpp:
 
 /usr/include/boost/asio/generic/raw_protocol.hpp:
 
@@ -8546,15 +8768,17 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/numeric/conversion/conversion_traits.hpp:
 
+/usr/include/boost/asio/executor_work_guard.hpp:
+
+/usr/include/opencv4/opencv2/objdetect/detection_based_tracker.hpp:
+
+/usr/include/aarch64-linux-gnu/bits/unistd_ext.h:
+
 /usr/include/boost/asio/execution/detail/as_receiver.hpp:
 
 /usr/include/boost/asio/detail/thread_context.hpp:
 
 /usr/include/boost/config/detail/select_platform_config.hpp:
-
-/usr/include/boost/asio/detail/impl/timer_queue_ptime.ipp:
-
-/usr/include/boost/asio/basic_socket.hpp:
 
 /usr/include/boost/config/helper_macros.hpp:
 
@@ -8572,6 +8796,10 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/asio/any_io_executor.hpp:
 
+/usr/include/boost/asio/detail/timer_scheduler_fwd.hpp:
+
+/usr/include/boost/mpl/aux_/numeric_op.hpp:
+
 /usr/include/boost/asio/execution/executor.hpp:
 
 /usr/include/boost/predef/library/std/_prefix.h:
@@ -8586,17 +8814,11 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/asm-generic/int-ll64.h:
 
-/usr/include/nlohmann/detail/iterators/json_reverse_iterator.hpp:
-
 /usr/include/c++/11/bits/random.tcc:
 
+/usr/include/nlohmann/detail/iterators/json_reverse_iterator.hpp:
+
 /usr/include/boost/asio/detail/pop_options.hpp:
-
-/usr/include/boost/asio/impl/thread_pool.ipp:
-
-/usr/include/opencv4/opencv2/flann/autotuned_index.h:
-
-/usr/include/boost/asio/traits/set_done_member.hpp:
 
 /usr/include/boost/asio/traits/set_error_member.hpp:
 
@@ -8616,9 +8838,11 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/asio/traits/set_value_free.hpp:
 
-/usr/include/boost/asio/traits/execute_member.hpp:
+/usr/include/boost/asio/detail/socket_option.hpp:
 
-/usr/include/boost/asio/socket_base.hpp:
+/usr/include/boost/mpl/aux_/config/ctps.hpp:
+
+/usr/include/boost/asio/traits/execute_member.hpp:
 
 /usr/include/boost/asio/traits/equality_comparable.hpp:
 
@@ -8662,14 +8886,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/system/error_code.hpp:
 
-/usr/include/boost/asio/detail/impl/strand_service.ipp:
-
-/usr/include/aarch64-linux-gnu/sys/timerfd.h:
-
-/usr/include/boost/system/api_config.hpp:
-
-/usr/include/boost/core/enable_if.hpp:
-
 /opt/ros/humble/include/dynamicEDT3D/dynamicEDT3D.h:
 
 /usr/include/aarch64-linux-gnu/bits/types/__sigval_t.h:
@@ -8681,10 +8897,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/websocketpp/common/system_error.hpp:
 
 /usr/include/boost/asio/detail/throw_exception.hpp:
-
-/usr/include/websocketpp/processors/hybi13.hpp:
-
-/usr/include/boost/throw_exception.hpp:
 
 /usr/include/rpc/netdb.h:
 
@@ -8704,19 +8916,11 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/asio/detail/scoped_ptr.hpp:
 
-/usr/include/boost/asio/detail/future.hpp:
-
-/usr/include/aarch64-linux-gnu/sys/ucontext.h:
-
 /usr/include/boost/is_placeholder.hpp:
 
 /usr/include/wchar.h:
 
 /usr/include/boost/asio/execution/impl/bad_executor.ipp:
-
-/usr/include/boost/system/detail/system_category_posix.hpp:
-
-/usr/include/boost/asio/io_context.hpp:
 
 /usr/include/boost/asio/traits/prefer_free.hpp:
 
@@ -8784,9 +8988,9 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/asio/traits/submit_member.hpp:
 
-/usr/include/nlohmann/detail/json_pointer.hpp:
-
 /usr/include/boost/asio/defer.hpp:
+
+/usr/include/nlohmann/detail/json_pointer.hpp:
 
 /usr/include/boost/asio/execution_context.hpp:
 
@@ -8803,10 +9007,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/boost/asio/detail/chrono_time_traits.hpp:
 
 /usr/include/boost/date_time/gregorian/greg_year.hpp:
-
-/usr/include/aarch64-linux-gnu/bits/termios-c_iflag.h:
-
-/usr/include/boost/asio/detail/cstdint.hpp:
 
 /usr/include/boost/asio/detail/deadline_timer_service.hpp:
 
@@ -8857,12 +9057,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/aarch64-linux-gnu/bits/atomic_wide_counter.h:
 
 /usr/include/boost/asio/detail/limits.hpp:
-
-/usr/include/boost/asio/detail/buffer_resize_guard.hpp:
-
-/usr/include/c++/11/ext/new_allocator.h:
-
-/usr/include/boost/asio/detail/work_dispatcher.hpp:
 
 /usr/include/nlohmann/detail/input/parser.hpp:
 
@@ -8922,12 +9116,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/aarch64-linux-gnu/asm/ioctl.h:
 
-/usr/include/asm-generic/ioctl.h:
-
-/usr/include/boost/type_traits/is_base_of.hpp:
-
-/usr/include/boost/asio.hpp:
-
 /usr/include/websocketpp/impl/connection_impl.hpp:
 
 /usr/include/boost/asio/buffered_stream_fwd.hpp:
@@ -8946,8 +9134,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/asio/detail/timer_queue_set.hpp:
 
-/usr/include/boost/mpl/less.hpp:
-
 /usr/include/boost/asio/detail/impl/epoll_reactor.hpp:
 
 /usr/include/boost/asio/detail/impl/epoll_reactor.ipp:
@@ -8955,8 +9141,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/boost/system/detail/std_interoperability.hpp:
 
 /usr/include/boost/type_traits/is_class.hpp:
-
-/usr/include/aarch64-linux-gnu/bits/epoll.h:
 
 /usr/include/boost/asio/detail/signal_blocker.hpp:
 
@@ -9002,10 +9186,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/aarch64-linux-gnu/bits/types/stack_t.h:
 
-/usr/include/boost/predef/platform/ios.h:
-
-/usr/include/boost/asio/detail/chrono.hpp:
-
 /usr/include/aarch64-linux-gnu/sys/user.h:
 
 /usr/include/aarch64-linux-gnu/bits/procfs.h:
@@ -9042,23 +9222,11 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/aarch64-linux-gnu/bits/types/struct_sigstack.h:
 
-/usr/include/boost/regex/config/cwchar.hpp:
-
-/usr/include/aarch64-linux-gnu/bits/sigthread.h:
-
-/usr/include/boost/smart_ptr/detail/spinlock_pool.hpp:
-
 /usr/include/boost/date_time/gregorian/greg_duration_types.hpp:
 
 /usr/include/aarch64-linux-gnu/bits/signal_ext.h:
 
 /usr/include/boost/asio/detail/thread_group.hpp:
-
-/usr/include/boost/asio/placeholders.hpp:
-
-/usr/include/c++/11/bits/exception.h:
-
-/usr/include/boost/asio/impl/system_context.hpp:
 
 /usr/include/boost/asio/handler_continuation_hook.hpp:
 
@@ -9071,6 +9239,10 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/boost/asio/detail/reactor_op.hpp:
 
 /usr/include/boost/preprocessor/detail/is_binary.hpp:
+
+/usr/include/boost/asio/impl/io_context.ipp:
+
+/usr/include/boost/date_time/time_clock.hpp:
 
 /usr/include/boost/mpl/aux_/preprocessor/def_params_tail.hpp:
 
@@ -9089,10 +9261,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/boost/config/auto_link.hpp:
 
 /usr/include/boost/smart_ptr/shared_ptr.hpp:
-
-/usr/include/boost/date_time/time_clock.hpp:
-
-/usr/include/boost/asio/impl/io_context.ipp:
 
 /usr/include/boost/core/checked_delete.hpp:
 
@@ -9178,10 +9346,6 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/date_time/date_iterator.hpp:
 
-/usr/include/c++/11/bits/shared_ptr_base.h:
-
-/usr/include/boost/asio/detail/socket_holder.hpp:
-
 /usr/include/websocketpp/version.hpp:
 
 /usr/include/boost/date_time/gregorian/greg_weekday.hpp:
@@ -9220,9 +9384,9 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/date_time/gregorian/greg_duration.hpp:
 
-/usr/include/websocketpp/common/cpp11.hpp:
-
 /usr/include/boost/asio/execution/bad_executor.hpp:
+
+/usr/include/websocketpp/common/cpp11.hpp:
 
 /usr/include/boost/date_time/date_generators.hpp:
 
@@ -9240,15 +9404,11 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/numeric/conversion/detail/conversion_traits.hpp:
 
-/usr/include/boost/numeric/conversion/detail/meta.hpp:
-
 /usr/include/boost/mpl/aux_/config/msvc.hpp:
 
-/usr/include/boost/mpl/aux_/na_spec.hpp:
+/usr/include/boost/numeric/conversion/bounds.hpp:
 
 /usr/include/nlohmann/detail/iterators/iter_impl.hpp:
-
-/usr/include/boost/numeric/conversion/bounds.hpp:
 
 /usr/include/boost/mpl/aux_/config/gcc.hpp:
 
@@ -9430,9 +9590,9 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 
 /usr/include/boost/numeric/conversion/int_float_mixture_enum.hpp:
 
-/usr/include/opencv4/opencv2/flann/timer.h:
-
 /usr/include/c++/11/pstl/pstl_config.h:
+
+/usr/include/opencv4/opencv2/flann/timer.h:
 
 /usr/include/boost/mpl/integral_c.hpp:
 
@@ -9443,103 +9603,3 @@ CMakeFiles/oppi.dir/src/stoppableThread.cpp.o: ../src/stoppableThread.cpp \
 /usr/include/boost/numeric/conversion/sign_mixture_enum.hpp:
 
 /usr/include/boost/numeric/conversion/udt_builtin_mixture_enum.hpp:
-
-/usr/include/boost/asio/detail/op_queue.hpp:
-
-/usr/include/boost/mpl/multiplies.hpp:
-
-/usr/include/sched.h:
-
-/usr/include/boost/mpl/times.hpp:
-
-/usr/include/boost/mpl/aux_/preprocessed/gcc/times.hpp:
-
-/usr/include/boost/mpl/aux_/preprocessed/gcc/less.hpp:
-
-/usr/include/boost/asio/ip/address_v4_iterator.hpp:
-
-/usr/include/boost/numeric/conversion/detail/bounds.hpp:
-
-/usr/include/boost/asio/windows/basic_random_access_handle.hpp:
-
-/usr/include/boost/date_time/posix_time/time_period.hpp:
-
-/usr/include/c++/11/bits/uses_allocator.h:
-
-/usr/include/boost/date_time/dst_rules.hpp:
-
-/usr/include/boost/numeric/conversion/detail/preprocessed/numeric_cast_traits_common.hpp:
-
-/usr/include/boost/asio/detail/timer_scheduler.hpp:
-
-/usr/include/boost/mpl/aux_/numeric_op.hpp:
-
-/usr/include/boost/asio/detail/timer_scheduler_fwd.hpp:
-
-/usr/include/boost/asio/detail/impl/buffer_sequence_adapter.ipp:
-
-/usr/include/boost/asio/detail/wait_handler.hpp:
-
-/usr/include/opencv4/opencv2/objdetect/detection_based_tracker.hpp:
-
-/usr/include/aarch64-linux-gnu/bits/unistd_ext.h:
-
-/usr/include/boost/asio/executor_work_guard.hpp:
-
-/usr/include/boost/asio/ip/impl/address_v4.ipp:
-
-/usr/include/boost/asio/detail/io_object_impl.hpp:
-
-/usr/include/boost/asio/generic/datagram_protocol.hpp:
-
-/usr/include/opencv4/opencv2/stitching/detail/seam_finders.hpp:
-
-/usr/include/boost/asio/impl/io_context.hpp:
-
-/usr/include/nlohmann/detail/iterators/primitive_iterator.hpp:
-
-/usr/include/boost/asio/detail/completion_handler.hpp:
-
-/usr/include/aarch64-linux-gnu/gnu/stubs.h:
-
-/usr/include/boost/asio/wait_traits.hpp:
-
-/usr/include/boost/asio/is_read_buffered.hpp:
-
-/usr/include/c++/11/clocale:
-
-/usr/include/c++/11/bits/istream.tcc:
-
-/usr/include/boost/asio/awaitable.hpp:
-
-/usr/include/boost/asio/basic_datagram_socket.hpp:
-
-/usr/include/boost/mpl/aux_/config/ctps.hpp:
-
-/usr/include/boost/asio/detail/socket_option.hpp:
-
-/usr/include/aarch64-linux-gnu/sys/select.h:
-
-/usr/include/boost/asio/detail/reactive_socket_service.hpp:
-
-/usr/include/boost/asio/buffer.hpp:
-
-/usr/include/boost/asio/traits/static_require_concept.hpp:
-
-/usr/include/boost/asio/detail/buffer_sequence_adapter.hpp:
-
-/usr/include/boost/asio/detail/reactive_null_buffers_op.hpp:
-
-/usr/include/boost/asio/detail/reactive_socket_accept_op.hpp:
-
-/usr/include/boost/asio/detail/reactive_socket_connect_op.hpp:
-
-/usr/include/boost/asio/detail/reactive_socket_service_base.hpp:
-
-/usr/include/boost/asio/detail/reactive_socket_recv_op.hpp:
-
-/usr/include/boost/asio/read_at.hpp:
-
-/usr/include/boost/asio/basic_serial_port.hpp:
-
-/usr/include/boost/asio/detail/reactive_socket_recvmsg_op.hpp:
