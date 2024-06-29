@@ -5,3 +5,4 @@ cmake-build-debug/
 cmmake-build-debug-docker/
 log/
 install/
+oppi/

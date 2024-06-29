@@ -68,9 +68,14 @@ void WebSocketClient::handleParametersMessage(const nlohmann::json &msg) {
 
 void WebSocketClient::handleMapMessage(const nlohmann::json &msg) {
     std::string map = msg["map"];
-    auto *selectedOctoMap = new octomap::OcTree("../maps/" + map);
+    auto *selectedOctoMap = new octomap::OcTree("../oppi/maps/" + map);
     env_ = std::make_shared<Environment>();
     initializeEnvironment(env_, selectedOctoMap, parameters_->stepLength);
+    std::stringstream buffer;
+    env_->tree->writeBinaryData(buffer);
+    std::string str = buffer.str();
+    wsServer_->binarySend(hdl_, "octomap", str);
+    setEnvironment(env_);
 }
 
 void WebSocketClient::deleteOldWaypoints(std::map<int, octomap::point3d> &waypointsMap) {

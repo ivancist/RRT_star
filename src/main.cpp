@@ -28,12 +28,12 @@ void onMessageCallback(websocketpp::connection_hdl hdl,
 void onOpenCallback(websocketpp::connection_hdl hdl) {
     const auto client = std::make_shared<WebSocketClient>(hdl, &wsServer);
 
-    // TODO CHANGE THIS TO USE THE NEW ENVIRONMENT
-    client->setEnvironment(env);
-    std::stringstream buffer;
-    env->tree->writeBinaryData(buffer);
-    std::string str = buffer.str();
-    wsServer.binarySend(hdl, "octomap", str);
+//    // TODO CHANGE THIS TO USE THE NEW ENVIRONMENT
+//    client->setEnvironment(env);
+//    std::stringstream buffer;
+//    env->tree->writeBinaryData(buffer);
+//    std::string str = buffer.str();
+//    wsServer.binarySend(hdl, "octomap", str);
 
     clients[hdl.lock().get()] = client;
 }
