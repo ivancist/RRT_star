@@ -70,7 +70,9 @@ void WebSocketClient::handleMapMessage(const nlohmann::json &msg) {
     std::string map = msg["map"];
     auto *selectedOctoMap = new octomap::OcTree("../oppi/maps/" + map);
     env_ = std::make_shared<Environment>();
-    initializeEnvironment(env_, selectedOctoMap, parameters_->stepLength);
+
+    //TODO param
+    initializeEnvironment(env_, selectedOctoMap, 1.0);
     std::stringstream buffer;
     env_->tree->writeBinaryData(buffer);
     std::string str = buffer.str();
