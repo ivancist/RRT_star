@@ -517,7 +517,7 @@ RRTStar::rrtStar(nlohmann::json waypoints, std::shared_ptr<Environment> environm
     std::cout << "Environment set" << parameters->stayAway << std::endl;
     parameters->safeStayAway = parameters->stayAway / cos(M_PI / 6);
 
-    std::cout << "Stay away: " << parameters->stayAway << " Safe stay away: " << parameters->safeStayAway << std::endl;
+    std::cout << "Stay away: " << parameters->stayAway<<std::endl << " Safe stay away: " << parameters->safeStayAway << std::endl;
 
 //        int depth = env->tree->getTreeDepth();
 //        double resolution = env->tree->getResolution();
@@ -534,8 +534,10 @@ RRTStar::rrtStar(nlohmann::json waypoints, std::shared_ptr<Environment> environm
     int iter = 0;
     auto start_ts = std::chrono::high_resolution_clock::now();
 
+    std::cout<<"start iteration"<<std::endl;
     while ((!finish || iteration_after_finish < parameters->MAX_OPTIMIZING_ITERATIONS) &&
            !stoppableThreadPtr->isStopRequested()) {
+
         // Sample a random point in the environment
         Node *randomNode = sampleRandomNode(goal);
 //        Node *randomNode = sampleRandomNode();

@@ -11,6 +11,7 @@ public:
     ~StoppableThread();
     bool* startThread(std::function<void()> func);
     bool isStopRequested();
+    bool isTerminated();
     void detach();
     void stopThread();
     void join();
@@ -20,6 +21,7 @@ public:
 private:
     bool stopRequested;
     bool* joined = nullptr;
+    bool terminated = false;
     std::thread t;
 };
 

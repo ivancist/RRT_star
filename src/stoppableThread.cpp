@@ -1,3 +1,4 @@
+#include <iostream>
 #include "stoppableThread.h"
 
 StoppableThread::StoppableThread() : stopRequested(false) {}
@@ -8,8 +9,10 @@ StoppableThread::~StoppableThread() {
 
 
 bool* StoppableThread::startThread(std::function<void()> func) {
+    terminated = false;
     t = std::thread([this, func = std::move(func)] {
         func();
+        terminated = true;
     });
     return &stopRequested;
 }
@@ -26,11 +29,16 @@ bool StoppableThread::isStopRequested() {
     return stopRequested;
 }
 
+bool StoppableThread::isTerminated() {
+    return terminated;
+}
+
 void StoppableThread::join() {
     if (joined == nullptr || !*joined) {
         joined = new bool(false);
         t.join();
         *joined = true;
+        std::cout << "Thread joined" << std::endl;
     }
 }
 

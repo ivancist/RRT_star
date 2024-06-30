@@ -6,7 +6,7 @@
 
 WebSocketServer wsServer;
 std::shared_ptr<Environment> env = std::make_shared<Environment>();
-octomap::OcTree *tree = new octomap::OcTree("../octomap.bt");
+//octomap::OcTree *tree = new octomap::OcTree("../octomap.bt");
 std::map<void*, std::shared_ptr<WebSocketClient>> clients;
 
 void onCloseCallback(websocketpp::connection_hdl hdl) {
@@ -40,8 +40,8 @@ void onOpenCallback(websocketpp::connection_hdl hdl) {
 
 
 int main() {
-    auto start_env = std::chrono::high_resolution_clock::now();
-    initializeEnvironment(env, tree, 1.0); // 1.0 is the maxDist = stepLength
+//    auto start_env = std::chrono::high_resolution_clock::now();
+//    initializeEnvironment(env, tree, 1.0); // 1.0 is the maxDist = stepLength
 //    std::cout << "Time for environment initialization: "
 //              << std::chrono::duration_cast<std::chrono::milliseconds>(
 //                      std::chrono::high_resolution_clock::now() - start_env).count() << "ms" << std::endl;

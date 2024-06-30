@@ -36,6 +36,9 @@ void WebSocketClient::setEnvironment(std::shared_ptr<Environment> env) {
 
 void WebSocketClient::setParameters(std::shared_ptr<RRTStarParameters> parameters) {
     parameters_ = std::move(parameters);
+    rrtStar_->parameters = parameters_;
+    std::cout << "Parameters set" << std::endl;
+    std::cout << "stepLegth: " << rrtStar_->parameters->stepLength << std::endl;
 }
 
 void WebSocketClient::close() {
@@ -46,21 +49,23 @@ void WebSocketClient::close() {
 
 void WebSocketClient::handleParametersMessage(const nlohmann::json &msg) {
     const RRTStarParameters parameters{};
+    // get parameters from json msg.parameters
+    const auto &parametersJson = msg["parameters"];
 
-    if (msg.find("threshold") != msg.end()) {
-        parameters_->threshold = msg["threshold"];
+    if (parametersJson.find("threshold") != parametersJson.end()) {
+        parameters_->threshold = parametersJson["threshold"];
     }
-    if (msg.find("stepLength") != msg.end()) {
-        parameters_->stepLength = msg["stepLength"];
+    if (parametersJson.find("stepLength") != parametersJson.end()) {
+        parameters_->stepLength = parametersJson["stepLength"];
     }
-    if (msg.find("stayAway") != msg.end()) {
-        parameters_->stayAway = msg["stayAway"];
+    if (parametersJson.find("stayAway") != parametersJson.end()) {
+        parameters_->stayAway = parametersJson["stayAway"];
     }
-    if (msg.find("bias") != msg.end()) {
-        parameters_->bias = msg["bias"];
+    if (parametersJson.find("bias") != parametersJson.end()) {
+        parameters_->bias = parametersJson["bias"];
     }
-    if (msg.find("MAX_OPTIMIZING_ITERATIONS") != msg.end()) {
-        parameters_->MAX_OPTIMIZING_ITERATIONS = msg["MAX_OPTIMIZING_ITERATIONS"];
+    if (parametersJson.find("MAX_OPTIMIZING_ITERATIONS") != parametersJson.end()) {
+        parameters_->MAX_OPTIMIZING_ITERATIONS = parametersJson["MAX_OPTIMIZING_ITERATIONS"];
     }
 
     setParameters(parameters_);
@@ -71,12 +76,14 @@ void WebSocketClient::handleMapMessage(const nlohmann::json &msg) {
     auto *selectedOctoMap = new octomap::OcTree("../oppi/maps/" + map);
     env_ = std::make_shared<Environment>();
 
+    double resolution = selectedOctoMap->getResolution();
     //TODO param
     initializeEnvironment(env_, selectedOctoMap, 1.0);
     std::stringstream buffer;
     env_->tree->writeBinaryData(buffer);
     std::string str = buffer.str();
-    wsServer_->binarySend(hdl_, "octomap", str);
+    wsServer_->binarySend(hdl_, "octomap("+std::to_string(resolution)+")", str);
+    std::cout << "Map sent" << std::endl;
     setEnvironment(env_);
 }
 
@@ -184,27 +191,27 @@ std::shared_ptr<ComputedPath> WebSocketClient::pathPlanningThread(std::shared_pt
     auto start_time = std::chrono::high_resolution_clock::now();
 
     // bind function to call when path is found.
-    std::shared_ptr<ComputedPath> fRet = rrtStar_->rrtStar(waypoints, env_,
-                                                           std::bind(&WebSocketClient::onPathFoundCallback, this,
-                                                                     std::placeholders::_1), thread);
+    try {
+        std::shared_ptr<ComputedPath> fRet = rrtStar_->rrtStar(waypoints, env_,
+                                                               std::bind(&WebSocketClient::onPathFoundCallback, this,
+                                                                         std::placeholders::_1), thread);
 
-    if (!fRet->path->empty()) {
-        std::string completePathString = computedPathToString(fRet, true);
-        wsServer_->binarySend(hdl_, "octomap_completed", completePathString);
+        if (!fRet->path->empty()) {
+            std::string completePathString = computedPathToString(fRet, true);
+            wsServer_->binarySend(hdl_, "octomap_completed", completePathString);
 
-        rrtStar_->pathPruning(fRet->path);
-        std::string prunedPathString = computedPathToString(fRet, false);
-        wsServer_->binarySend(hdl_, "octomap_optimized_path", prunedPathString);
-    } else {
-        std::cout << "Path not found" << std::endl;
-    }
-    // set stop flag
-    thread->stopThread();
+            rrtStar_->pathPruning(fRet->path);
+            std::string prunedPathString = computedPathToString(fRet, false);
+            wsServer_->binarySend(hdl_, "octomap_optimized_path", prunedPathString);
+        } else {
+            std::cout << "Path not found" << std::endl;
+        }
+
 
     // print number of threads not stopped
     int runningThreadsCount = 0;
     for (const auto &ppThread: *threads_) {
-        if (!ppThread.thread->isStopRequested()) {
+        if (!ppThread.thread->isStopRequested() && !ppThread.thread->isJoined() && !ppThread.thread->isTerminated()) {
             runningThreadsCount++;
         }
     }
@@ -212,6 +219,10 @@ std::shared_ptr<ComputedPath> WebSocketClient::pathPlanningThread(std::shared_pt
     std::cout << "***************" << std::endl;
 
     return fRet;
+    }catch (std::exception &e) {
+        std::cout << "Exception in RRT*: " << e.what() << std::endl;
+        return nullptr;
+    }
 }
 
 void WebSocketClient::handleRunMessage(nlohmann::json &msg) {
@@ -234,14 +245,15 @@ void WebSocketClient::handleRunMessage(nlohmann::json &msg) {
 
     std::vector<std::shared_ptr<ComputedPath>> partialPaths(waypointsMap.size() - 1);
 
-    for (int i = 0; i < waypointsMap.size() - 1; ++i) {
-        std::shared_ptr<ComputedPath> foundPath = stopUselessThreads(msg["waypoints"], i);
-        if (foundPath != nullptr) {
-            partialPaths[i] = std::move(foundPath);
-        } else {
-            partialPaths[i] = nullptr;
+        for (int i = 0; i < waypointsMap.size() - 1; ++i) {
+            std::shared_ptr<ComputedPath> foundPath = stopUselessThreads(msg["waypoints"], i);
+            if (foundPath != nullptr) {
+                partialPaths[i] = std::move(foundPath);
+            } else {
+                partialPaths[i] = nullptr;
+            }
         }
-    }
+
     std::cout << "n Waypoints: " << waypointsMap.size() << std::endl;
 // Per ogni coppia di waypoints, eseguire RRT* in diversi thread
     for (int i = 0; i < waypointsMap.size() - 1; ++i) {
@@ -294,15 +306,15 @@ void WebSocketClient::handleRunMessage(nlohmann::json &msg) {
                     std::cout << "Joining thread" << std::endl;
                     try {
                         ppt->join();
-                        std::cout << "Thread joined" << std::endl;
-                        // if threads_ have still contains the thread (thread == ppt), then is still alive
+                        std::cout << "Thread joined in smoothThread" << std::endl;
+                        // if threads_ still contains the thread (thread == ppt), then is still alive
                         if (std::find_if(threads_->begin(), threads_->end(),
                                          [ppt](const partialPathThread &ppt2) { return ppt2.thread == ppt; }) ==
-                            threads_->end()) {
+                            threads_->end() || ppt->isStopRequested()) {
                             stillAlive = false;
                         }
                     } catch (std::exception &e) {
-                        std::cout << "Exception: " << e.what() << std::endl;
+                        std::cout << "Exception in joining: " << e.what() << std::endl;
                         stillAlive = false;
                     }
 
@@ -365,7 +377,11 @@ void WebSocketClient::handleMessage(const websocketpp::server<websocketpp::confi
         case 'r': {
             // Run
             std::cout << "Received run command" << std::endl;
-            handleRunMessage(json);
+            try {
+                handleRunMessage(json);
+            } catch (std::exception &e) {
+                std::cout << "Exception in run command: " << e.what() << std::endl;
+            }
         }
         default:
             break;
